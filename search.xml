@@ -642,9 +642,9 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
+            
+            <tag> 后端 </tag>
             
             <tag> 黑马头条 </tag>
             
@@ -677,9 +677,9 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
+            
+            <tag> 后端 </tag>
             
             <tag> minio </tag>
             
@@ -706,9 +706,9 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
+            
+            <tag> 后端 </tag>
             
             <tag> Freemarker </tag>
             
@@ -737,13 +737,13 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
             
             <tag> ElasticSearch </tag>
             
             <tag> 搜索 </tag>
+            
+            <tag> 后端 </tag>
             
         </tags>
       
@@ -768,13 +768,13 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
             
             <tag> ElasticSearch </tag>
             
             <tag> 搜索 </tag>
+            
+            <tag> 后端 </tag>
             
         </tags>
       
@@ -799,9 +799,9 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
+            
+            <tag> 后端 </tag>
             
             <tag> RabbitMQ </tag>
             
@@ -861,9 +861,9 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
+            
+            <tag> 后端 </tag>
             
             <tag> nacos </tag>
             
@@ -958,9 +958,9 @@
       
         <tags>
             
-            <tag> 后端 </tag>
-            
             <tag> 微服务 </tag>
+            
+            <tag> 后端 </tag>
             
             <tag> springcloud </tag>
             
@@ -987,11 +987,11 @@
       
         <tags>
             
+            <tag> 后端 </tag>
+            
             <tag> docker </tag>
             
             <tag> 容器 </tag>
-            
-            <tag> 后端 </tag>
             
         </tags>
       
