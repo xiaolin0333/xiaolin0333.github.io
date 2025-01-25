@@ -1,0 +1,405 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ElasticSearch上 | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --na">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch上">
+<meta property="og:url" content="http://example.com/post/88db839a.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --na">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover5.jpg">
+<meta property="article:published_time" content="2025-01-25T07:36:49.000Z">
+<meta property="article:modified_time" content="2025-01-25T07:50:22.095Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="ElasticSearch">
+<meta property="article:tag" content="搜索">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover5.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ElasticSearch上",
+  "url": "http://example.com/post/88db839a.html",
+  "image": "http://example.com/img/default_cover5.jpg",
+  "datePublished": "2025-01-25T07:36:49.000Z",
+  "dateModified": "2025-01-25T07:50:22.095Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/88db839a.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ElasticSearch上',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-微服务" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">ElasticSearch上</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">ElasticSearch上</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-25T07:36:49.000Z" title="发表于 2025-01-25 15:36:49">2025-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-25T07:50:22.095Z" title="更新于 2025-01-25 15:50:22">2025-01-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/88db839a.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h1 id="安装ElasticSearch"><a href="#安装ElasticSearch" class="headerlink" title="安装ElasticSearch"></a>安装ElasticSearch</h1><ul>
+<li>Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引）</li>
+<li>Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用</li>
+<li>Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。<br><img src="/assets/930b9838c9514033be11e0400478269a.png" alt="930b9838c9514033be11e0400478269a.png"></li>
+</ul>
+<h2 id="安装ElasticSearch-1"><a href="#安装ElasticSearch-1" class="headerlink" title="安装ElasticSearch"></a>安装ElasticSearch</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name es \</span><br><span class="line">  -e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot; \</span><br><span class="line">  -e &quot;discovery.type=single-node&quot; \</span><br><span class="line">  -v es-data:/usr/share/elasticsearch/data \</span><br><span class="line">  -v es-plugins:/usr/share/elasticsearch/plugins \</span><br><span class="line">  --privileged \</span><br><span class="line">  --network hm-net \</span><br><span class="line">  -p 9200:9200 \</span><br><span class="line">  -p 9300:9300 \</span><br><span class="line">  --restart=always \</span><br><span class="line">  elasticsearch:7.12.1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot;</code> ：配置JVM的最大最小内存</li>
+<li><code>-e &quot;discovery.type=single-node&quot;</code>：配置运行模式（集群模式、单点模式）</li>
+<li><code>-v es-data:/usr/share/elasticsearch/data</code>：es的数据存储目录</li>
+<li><code>-v es-plugins:/usr/share/elasticsearch/plugins</code>：es的插件目录</li>
+<li><code>-p 9200:9200</code>：访问的http端口</li>
+<li><code>-p 9300:9300</code>：集群间通信端口</li>
+</ul>
+<blockquote>
+<p>查看es的日志：<code> docker logs -f es</code><br><img src="/assets/5bf4577a4b594756b3bf188e79fe0cfd.png" alt="5bf4577a4b594756b3bf188e79fe0cfd.png"><br><img src="/assets/28d478f9ecc14c87b0b46d9900bddf77.png" alt="28d478f9ecc14c87b0b46d9900bddf77.png"></p>
+</blockquote>
+<h2 id="安装Kibana"><a href="#安装Kibana" class="headerlink" title="安装Kibana"></a>安装Kibana</h2><p>Kibana是个图形界面，帮助我们连接es</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">--name kibana \</span><br><span class="line">-e ELASTICSEARCH_HOSTS=http://es:9200 \</span><br><span class="line">--network=hm-net \</span><br><span class="line">-p 5601:5601  \</span><br><span class="line">--restart=always \</span><br><span class="line">kibana:7.12.1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-e ELASTICSEARCH_HOSTS=http://es:9200 \</code>：因为kibana和es在同一个网络下，所以可以通过容器名直接连接es<br><img src="/assets/d7e47a8ae9324d3baeea300602dfc6e4.png" alt="d7e47a8ae9324d3baeea300602dfc6e4.png"></li>
+</ul>
+<blockquote>
+<p>安装成功后，在浏览器输入：<code>http://192.168.140.101:5601/</code>，看到响应即安装成功。<br><img src="/assets/c40ab9bb8a294d60a4402f1380cdabd6.png" alt="c40ab9bb8a294d60a4402f1380cdabd6.png"><br>可以利用kibana中<code>Dev Tools</code>控制台向es发送http请求</p>
+</blockquote>
+<h1 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h1><p>MySQL采用的是正向索引：<br><img src="/assets/4001096f000443a9b7421bc5e89416ac.png" alt="4001096f000443a9b7421bc5e89416ac.png"></p>
+<blockquote>
+<p>查询词条时需要<code>逐行遍历文档</code>，再判断文档中是否包含了词条</p>
+</blockquote>
+<p>Elasticsearch采用倒排索引：</p>
+<ul>
+<li>文档（document）：每条数据就是一个文档</li>
+<li>词条（term）：文档按照语义分成的词语<br><img src="/assets/831fb28a305940a7a15ea2292f0d9863.png" alt="831fb28a305940a7a15ea2292f0d9863.png"></li>
+</ul>
+<blockquote>
+<p>用户搜索的时候，先对用户搜索的数据进行分词，将分词后的词条放到<code>词条列表</code>中得到文档id，根据文档id去<code>文档列表</code>中查询。虽然有两次查询，但是每次查询都是有索引，搜索速度快。</p>
+</blockquote>
+<h1 id="IK分词器"><a href="#IK分词器" class="headerlink" title="IK分词器"></a>IK分词器</h1><p>中文分词往往需要根据语义，比较复杂，这就需要用到中文分词器，例如：<code>IK分词器</code>。<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.12.1/elasticsearch-analysis-ik-7.12.1.zip">IK分词器</a></p>
+<h2 id="安装IK分词器"><a href="#安装IK分词器" class="headerlink" title="安装IK分词器"></a>安装IK分词器</h2><p>只需要把IK分词器下载后放到<code>es的插件目录</code>后<code>重启es</code>即可生效。<br><img src="/assets/065c15d57a1e4149ae334cb4176c6253.png" alt="065c15d57a1e4149ae334cb4176c6253.png"></p>
+<h2 id="测试IK分词器是否安装成功"><a href="#测试IK分词器是否安装成功" class="headerlink" title="测试IK分词器是否安装成功"></a>测试IK分词器是否安装成功</h2><h3 id="ik-smart"><a href="#ik-smart" class="headerlink" title="ik_smart"></a>ik_smart</h3><p>智能切分，粗粒度</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST /_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;ik_smart&quot;,</span><br><span class="line">  &quot;text&quot;: &quot;今天天气真好&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/bcd463bbd34c4d8aae5c8156aab1a128.png" alt="bcd463bbd34c4d8aae5c8156aab1a128.png"></p>
+<h3 id="ik-max-word"><a href="#ik-max-word" class="headerlink" title="ik_max_word"></a>ik_max_word</h3><p>最细切分，细粒度IK分词器</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">POST /_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">  &quot;text&quot;: &quot;今天天气真好&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/f672e0f46f2d4537b0cbd985ebd8a65e.png" alt="f672e0f46f2d4537b0cbd985ebd8a65e.png"></p>
+<h2 id="自定义词典"><a href="#自定义词典" class="headerlink" title="自定义词典"></a>自定义词典</h2><p>可以在ik插件的config目录下的IKAnalyzer.cfg.xml文件配置<code>扩展词典</code>、<code>停止词典</code><br><img src="/assets/3dee2da829594868a3380a1284a3f975.png" alt="3dee2da829594868a3380a1284a3f975.png"></p>
+<h1 id="ElasticSearch中基础概念"><a href="#ElasticSearch中基础概念" class="headerlink" title="ElasticSearch中基础概念"></a>ElasticSearch中基础概念</h1><p><img src="/assets/8d52bf4e8af14734ae540e7c7384115b.png" alt="8d52bf4e8af14734ae540e7c7384115b.png"></p>
+<h1 id="索引库操作"><a href="#索引库操作" class="headerlink" title="索引库操作"></a>索引库操作</h1><p>索引库相当于MySQL里的表，Mapping相当于对表字段的约束</p>
+<h2 id="Mapping映射属性"><a href="#Mapping映射属性" class="headerlink" title="Mapping映射属性"></a>Mapping映射属性</h2><p>mapping是对索引库中文档的约束。</p>
+<ol>
+<li>type：字段数据类型<ul>
+<li>字符串：text（可分词文本）、keyword（精确值，不能分词，例如：品牌、国家、ip地址）</li>
+<li>数值：long、integer、short、byte、double、float</li>
+<li>布尔：boolean</li>
+<li>日期：date（es自己把日期对象做了序列化）</li>
+<li>对象：object</li>
+</ul>
+</li>
+<li>index：是否创建索引，默认为true<ul>
+<li>true：es就会给这个字段创建倒排索引，就可以根据这个字段进行搜索或排序</li>
+</ul>
+</li>
+<li>analyzer：使用哪种分词器（ik_smart、ik_max_word），只有字段类型是text才需要指定分词器</li>
+<li>properties：该字段的子字段</li>
+</ol>
+<blockquote>
+<p>在es中，不需要管是否是数组，就算是数组，也只要指定元素的类型即可</p>
+</blockquote>
+<h2 id="索引库的CRUD"><a href="#索引库的CRUD" class="headerlink" title="索引库的CRUD"></a>索引库的CRUD</h2><p>es中提供的API都是Restful的接口，遵循Restful的基本规范：<br><img src="/assets/3280b872e43b4f0a81e21e2fe3e6e444.png" alt="3280b872e43b4f0a81e21e2fe3e6e444.png"></p>
+<h3 id="创建索引库"><a href="#创建索引库" class="headerlink" title="创建索引库"></a>创建索引库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">PUT <span class="operator">/</span>索引库名称</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;字段名&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;, <span class="operator">/</span><span class="operator">/</span> 可分词</span><br><span class="line">        &quot;analyzer&quot;: &quot;ik_smart&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;字段名2&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;, <span class="operator">/</span><span class="operator">/</span> 不可分词</span><br><span class="line">        &quot;index&quot;: &quot;false&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;字段名3&quot;:&#123;</span><br><span class="line">        &quot;properties&quot;: &#123;</span><br><span class="line">          &quot;子字段&quot;: &#123;</span><br><span class="line">            &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="operator">/</span><span class="operator">/</span> ...略</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【例】：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 创建索引库</span><br><span class="line">PUT <span class="operator">/</span>people </span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;info&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;analyzer&quot;: &quot;ik_smart&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;age&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;byte&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;email&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;,</span><br><span class="line">        &quot;index&quot;: &quot;false&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;name&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;object&quot;,</span><br><span class="line">        &quot;properties&quot;: &#123;</span><br><span class="line">          &quot;firstName&quot;:&#123;</span><br><span class="line">            &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">          &#125;,</span><br><span class="line">          &quot;lastName&quot;: &#123;</span><br><span class="line">            &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/f7dfaa5973ff49fcbc8a1a9611342af8.png" alt="f7dfaa5973ff49fcbc8a1a9611342af8.png"></p>
+<h3 id="修改索引库"><a href="#修改索引库" class="headerlink" title="修改索引库"></a>修改索引库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">PUT <span class="operator">/</span>索引库名<span class="operator">/</span>_mapping</span><br><span class="line">&#123;</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;新字段名&quot;:&#123;</span><br><span class="line">      &quot;type&quot;: &quot;integer&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【例】：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 修改索引库，新增一个sex字段</span><br><span class="line">PUT <span class="operator">/</span>people<span class="operator">/</span>_mapping </span><br><span class="line">&#123;</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;sex&quot;: &#123;</span><br><span class="line">      &quot;type&quot;: &quot;boolean&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【注】：es中是<code>不允许对已有索引库的字段进行修改</code>，但是<code>允许添加新的字段</code>。<br>【原因】：假设已经在es中创建大量的倒排索引，做了大量的分词，如果此时需要修改索引库，那么前期做的所有分词都作废还要重新建立倒排索引，对于整个数据库的影响很大。</p>
+</blockquote>
+<h3 id="查询索引库"><a href="#查询索引库" class="headerlink" title="查询索引库"></a>查询索引库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查询索引库</span><br><span class="line"><span class="keyword">GET</span> <span class="operator">/</span>索引库名</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除索引库"><a href="#删除索引库" class="headerlink" title="删除索引库"></a>删除索引库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 删除索引库</span><br><span class="line"><span class="keyword">DELETE</span> <span class="operator">/</span>索引库名</span><br></pre></td></tr></table></figure>
+
+<h1 id="文档操作"><a href="#文档操作" class="headerlink" title="文档操作"></a>文档操作</h1><h2 id="文档的CRUD"><a href="#文档的CRUD" class="headerlink" title="文档的CRUD"></a>文档的CRUD</h2><h3 id="新增文档"><a href="#新增文档" class="headerlink" title="新增文档"></a>新增文档</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">POST <span class="operator">/</span>索引库名<span class="operator">/</span>_doc<span class="operator">/</span>文档id</span><br><span class="line">&#123;</span><br><span class="line">    &quot;字段1&quot;: &quot;值1&quot;,</span><br><span class="line">    &quot;字段2&quot;: &quot;值2&quot;,</span><br><span class="line">    &quot;字段3&quot;: &#123;</span><br><span class="line">        &quot;子属性1&quot;: &quot;值3&quot;,</span><br><span class="line">        &quot;子属性2&quot;: &quot;值4&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【例】：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">POST <span class="operator">/</span>people<span class="operator">/</span>_doc<span class="operator">/</span><span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">    &quot;info&quot;: &quot;程序员&quot;,</span><br><span class="line">    &quot;email&quot;: &quot;xiaolin0333@qq.com&quot;,</span><br><span class="line">    &quot;name&quot;: &#123;</span><br><span class="line">        &quot;firstName&quot;: &quot;林&quot;,</span><br><span class="line">        &quot;lastName&quot;: &quot;三&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>新增文档的时候最好指定文档id，es会根据文档id创建索引，如果不指定id，es会随机生成id，这样将来操作文档就会很不方便</p>
+</blockquote>
+<h3 id="修改文档"><a href="#修改文档" class="headerlink" title="修改文档"></a>修改文档</h3><h4 id="1-全量修改"><a href="#1-全量修改" class="headerlink" title="1. 全量修改"></a>1. 全量修改</h4><p>删除旧文档，添加新文档</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">PUT <span class="operator">/</span>&#123;索引库名&#125;<span class="operator">/</span>_doc<span class="operator">/</span>文档id</span><br><span class="line">&#123;</span><br><span class="line">    &quot;字段1&quot;: &quot;值1&quot;,</span><br><span class="line">    &quot;字段2&quot;: &quot;值2&quot;,</span><br><span class="line">    <span class="operator">/</span><span class="operator">/</span> ... 文档的所有字段都要写</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：如果想要修改一个文档id不存在的文档，删除文档的时候，文档不存在，会直接新增一条文档<br>因此PUT请求具备了<code>新增</code>和<code>修改</code>两种功能</p>
+<ul>
+<li>新增：文档id不存在</li>
+<li>修改：文档id存在</li>
+</ul>
+</blockquote>
+<h4 id="2-增量修改"><a href="#2-增量修改" class="headerlink" title="2. 增量修改"></a>2. 增量修改</h4><p>修改部分字段值</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">POST <span class="operator">/</span>&#123;索引库名&#125;<span class="operator">/</span>_update<span class="operator">/</span>文档id</span><br><span class="line">&#123;</span><br><span class="line">    &quot;doc&quot;: &#123;</span><br><span class="line">         &quot;字段名&quot;: &quot;新的值&quot;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询文档"><a href="#查询文档" class="headerlink" title="查询文档"></a>查询文档</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查询文档</span><br><span class="line"><span class="keyword">GET</span> <span class="operator">/</span>索引库名<span class="operator">/</span>_doc<span class="operator">/</span>文档id</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/ace01edaf4b84bc0a8ad8f48d168782c.png" alt="ace01edaf4b84bc0a8ad8f48d168782c.png"></p>
+<h3 id="删除文档"><a href="#删除文档" class="headerlink" title="删除文档"></a>删除文档</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 删除文档</span><br><span class="line"><span class="keyword">DELETE</span> <span class="operator">/</span>索引库名<span class="operator">/</span>_doc<span class="operator">/</span>文档id</span><br></pre></td></tr></table></figure>
+
+<h2 id="批量处理"><a href="#批量处理" class="headerlink" title="批量处理"></a>批量处理</h2><p>es中允许通过一次请求中携带多次文档操作。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">POST _bulk</span><br><span class="line">&#123; &quot;index&quot; : &#123; &quot;_index&quot; : &quot;test&quot;, &quot;_id&quot; : &quot;1&quot; &#125; &#125; <span class="operator">/</span><span class="operator">/</span> 新增（索引库名、id）</span><br><span class="line">&#123; &quot;field1&quot; : &quot;value1&quot; &#125; <span class="operator">/</span><span class="operator">/</span> 新增的文档信息</span><br><span class="line"></span><br><span class="line">&#123; &quot;delete&quot; : &#123; &quot;_index&quot; : &quot;test&quot;, &quot;_id&quot; : &quot;2&quot; &#125; &#125; <span class="operator">/</span><span class="operator">/</span> 删除（索引库名、id）</span><br><span class="line"></span><br><span class="line">&#123; &quot;update&quot; : &#123;&quot;_id&quot; : &quot;1&quot;, &quot;_index&quot; : &quot;test&quot;&#125; &#125; <span class="operator">/</span><span class="operator">/</span> 更新（索引库名、id）</span><br><span class="line">&#123; &quot;doc&quot; : &#123;&quot;field2&quot; : &quot;value2&quot;&#125; &#125; <span class="operator">/</span><span class="operator">/</span> 更新的文档信息（增量修改）</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>写的时候不能换行，只能在一行写，否则会报错</p>
+</blockquote>
+<p>【例1】：批量新增</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">POST <span class="operator">/</span>_bulk </span><br><span class="line">  &#123;&quot;index&quot;: &#123;&quot;_index&quot;: &quot;people&quot;,&quot;_id&quot;: &quot;2&quot;&#125;&#125;</span><br><span class="line">  &#123;&quot;info&quot;: &quot;这是人&quot;, &quot;email&quot;: &quot;xiaolin0333@qq.com&quot;, &quot;name&quot;: &#123;&quot;firstName&quot;: &quot;林&quot;, &quot;lastName&quot;: &quot;三&quot;&#125;&#125;</span><br><span class="line">  &#123;&quot;index&quot;: &#123;&quot;_index&quot;: &quot;people&quot;,&quot;_id&quot;: &quot;3&quot;&#125;&#125;</span><br><span class="line">  &#123;&quot;info&quot;: &quot;这是狗&quot;, &quot;email&quot;: &quot;cmb@qq.com&quot;, &quot;name&quot;: &#123;&quot;firstName&quot;: &quot;柴&quot;, &quot;lastName&quot;: &quot;犬&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【例2】：批量删除</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">POST <span class="operator">/</span>_bulk </span><br><span class="line">  &#123;&quot;delete&quot;: &#123;&quot;_index&quot;: &quot;people&quot;,&quot;_id&quot;: &quot;2&quot;&#125;&#125;</span><br><span class="line">  &#123;&quot;delete&quot;: &#123;&quot;_index&quot;: &quot;people&quot;,&quot;_id&quot;: &quot;3&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="JavaRestClient"><a href="#JavaRestClient" class="headerlink" title="JavaRestClient"></a>JavaRestClient</h1><h2 id="客户端初始化"><a href="#客户端初始化" class="headerlink" title="客户端初始化"></a>客户端初始化</h2><ol>
+<li>引入es的RestHighLevelClient的依赖：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.elasticsearch.client<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>elasticsearch-rest-high-level-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>因为SpringBoot默认ES的版本是7.17.0，所以需要覆盖默认的ES版本：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>11<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>11<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">elasticsearch.version</span>&gt;</span>7.12.1<span class="tag">&lt;/<span class="name">elasticsearch.version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>初始化RestHighLevelClient（这里暂时先用单元测试为例）</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ElasticTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> RestHighLevelClient client;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testConnection</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;client = &quot;</span> + client);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@BeforeEach</span> <span class="comment">// 初始化方法：在单元测试执行前</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">setUp</span><span class="params">()</span> &#123;</span><br><span class="line">        client = <span class="keyword">new</span> <span class="title class_">RestHighLevelClient</span>(RestClient.builder(</span><br><span class="line">                HttpHost.create(<span class="string">&quot;http://192.168.140.101:9200&quot;</span>)</span><br><span class="line">        ));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@AfterEach</span> <span class="comment">// 销毁方法：在单元测试执行后</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">tearDown</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="keyword">if</span>(client != <span class="literal">null</span>) &#123;</span><br><span class="line">            client.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="商品表Mapping映射"><a href="#商品表Mapping映射" class="headerlink" title="商品表Mapping映射"></a>商品表Mapping映射</h2><p>【业务分析】：<br><img src="/assets/e9b41e2aadc4472abdeecb3f50a41b3a.png" alt="e9b41e2aadc4472abdeecb3f50a41b3a.png"><br><img src="/assets/ece92419c1134c71a9eaefe155ad8864.png" alt="ece92419c1134c71a9eaefe155ad8864.png"><br>【在控制台创建Mapping映射】：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 商品索引库</span><br><span class="line">PUT <span class="operator">/</span>hmall</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;id&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;name&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;analyzer&quot;: &quot;ik_smart&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;price&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;integer&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;image&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;,</span><br><span class="line">        &quot;index&quot;: <span class="literal">false</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;category&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;brand&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;sold&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;integer&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;commentCount&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;integer&quot;,</span><br><span class="line">        &quot;index&quot;: <span class="literal">false</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;isAD&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;boolean&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;updateTime&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;date&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="索引库操作-1"><a href="#索引库操作-1" class="headerlink" title="索引库操作"></a>索引库操作</h2><ol>
+<li>创建XxxIndexRequest。Xxx指：Create、Get、Delete</li>
+<li>准备请求参数（Create需要）</li>
+<li>发送请求。调用client.indices.xxx()方法，xxx指：create、get、exists、delete</li>
+</ol>
+<h3 id="创建索引库-1"><a href="#创建索引库-1" class="headerlink" title="创建索引库"></a>创建索引库</h3><p>创建索引库的JavaAPI和Restful接口API对比：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testCreateIndex</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 准备Request对象</span></span><br><span class="line">    <span class="type">CreateIndexRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CreateIndexRequest</span>(<span class="string">&quot;items&quot;</span>);</span><br><span class="line">    <span class="comment">// 2. 准备请求参数</span></span><br><span class="line">    request.source(MAPPING_TEMPLATE, XContentType.JSON); <span class="comment">// MAPPING_TEMPLATE就是前面在控制台写的那段</span></span><br><span class="line">    <span class="comment">// 3. 发送请求</span></span><br><span class="line">    client.indices().create(request, RequestOptions.DEFAULT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/65d6537c9bab4055847d8fae1a6b8d72.png" alt="65d6537c9bab4055847d8fae1a6b8d72.png"></p>
+<h3 id="查询索引库-1"><a href="#查询索引库-1" class="headerlink" title="查询索引库"></a>查询索引库</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testGetIndex</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 准备Request对象</span></span><br><span class="line">    <span class="type">GetIndexRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GetIndexRequest</span>(<span class="string">&quot;items&quot;</span>);</span><br><span class="line">    <span class="comment">// 2. 发送请求</span></span><br><span class="line">    <span class="type">GetIndexResponse</span> <span class="variable">response</span> <span class="operator">=</span> client.indices().get(request, RequestOptions.DEFAULT);<span class="comment">// 查询索引库（索引库不存在报错）</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">exists</span> <span class="operator">=</span> client.indices().exists(request, RequestOptions.DEFAULT);<span class="comment">// 判断索引库是否存在（索引库不存在返回false）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除索引库-1"><a href="#删除索引库-1" class="headerlink" title="删除索引库"></a>删除索引库</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testDeleteIndex</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">     <span class="comment">// 1. 准备Request对象</span></span><br><span class="line">     <span class="type">DeleteIndexRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DeleteIndexRequest</span>(<span class="string">&quot;items&quot;</span>);</span><br><span class="line">     <span class="comment">// 2. 发送请求</span></span><br><span class="line">     client.indices().delete(request, RequestOptions.DEFAULT);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="文档操作-1"><a href="#文档操作-1" class="headerlink" title="文档操作"></a>文档操作</h2><ol>
+<li>初始化RestHighLevelClient</li>
+<li>创建XxxRequest。Xxx指：Index、Get、Update、Delete</li>
+<li>准备参数（Index和Update需要）</li>
+<li>请求参数。调用xxx()方法，xxx是index、get、update、delete</li>
+<li>解析结果（Get需要）</li>
+</ol>
+<h3 id="新增文档-1"><a href="#新增文档-1" class="headerlink" title="新增文档"></a>新增文档</h3><p>新增文档的JavaAPI和Restful接口API对比：<br><img src="/assets/22d934d176f3427d9b51644eb52e8dbb.png" alt="22d934d176f3427d9b51644eb52e8dbb.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testIndexDoc</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 准备文档数据</span></span><br><span class="line">    <span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> itemService.getById(<span class="number">2018833</span>);</span><br><span class="line">    <span class="type">ItemDoc</span> <span class="variable">itemDoc</span> <span class="operator">=</span> BeanUtil.copyProperties(item, ItemDoc.class); <span class="comment">// 文档数据对象</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">jsonStr</span> <span class="operator">=</span> JSONUtil.toJsonStr(itemDoc); <span class="comment">// JSON</span></span><br><span class="line">    <span class="comment">// 1. 准备Request</span></span><br><span class="line">    <span class="type">IndexRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IndexRequest</span>(<span class="string">&quot;items&quot;</span>).id(itemDoc.getId());<span class="comment">// 索引库名、文档id</span></span><br><span class="line">    <span class="comment">// 2. 准备JSON文档</span></span><br><span class="line">    request.source(jsonStr, XContentType.JSON);</span><br><span class="line">    <span class="comment">// 3. 发送请求</span></span><br><span class="line">    client.index(request, RequestOptions.DEFAULT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改文档-1"><a href="#修改文档-1" class="headerlink" title="修改文档"></a>修改文档</h3><h4 id="全量修改"><a href="#全量修改" class="headerlink" title="全量修改"></a>全量修改</h4><p>全量修改相当于新增，就是新增的时候文档id已经存在</p>
+<h4 id="局部修改"><a href="#局部修改" class="headerlink" title="局部修改"></a>局部修改</h4><p><img src="/assets/f369c5e2c72644c18b1cdec0eac46372.png" alt="f369c5e2c72644c18b1cdec0eac46372.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testUpdateDoc</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 准备Request</span></span><br><span class="line">    <span class="type">UpdateRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UpdateRequest</span>(<span class="string">&quot;items&quot;</span>, <span class="string">&quot;2018833&quot;</span>); <span class="comment">// 索引库名、文档id</span></span><br><span class="line">    <span class="comment">// 2. 准备请求参数</span></span><br><span class="line">    request.doc(</span><br><span class="line">            <span class="string">&quot;price&quot;</span>, <span class="number">25600</span>,</span><br><span class="line">            <span class="string">&quot;stock&quot;</span>, <span class="number">9999</span></span><br><span class="line">    );</span><br><span class="line">    <span class="comment">// 3. 发送请求</span></span><br><span class="line">    client.update(request, RequestOptions.DEFAULT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询文档-1"><a href="#查询文档-1" class="headerlink" title="查询文档"></a>查询文档</h3><p>查询文档主要是拿到_source部分<br><img src="/assets/98d5e2804ab847c2b7656976a4c8f037.png" alt="98d5e2804ab847c2b7656976a4c8f037.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testGetDoc</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 准备Request</span></span><br><span class="line">    <span class="type">GetRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GetRequest</span>(<span class="string">&quot;items&quot;</span>, <span class="string">&quot;2018833&quot;</span>); <span class="comment">// 索引库名、文档id</span></span><br><span class="line">    <span class="comment">// 2. 发送请求</span></span><br><span class="line">    <span class="type">GetResponse</span> <span class="variable">response</span> <span class="operator">=</span> client.get(request, RequestOptions.DEFAULT);</span><br><span class="line">    <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> response.getSourceAsString();</span><br><span class="line">    <span class="type">ItemDoc</span> <span class="variable">doc</span> <span class="operator">=</span> JSONUtil.toBean(json, ItemDoc.class);</span><br><span class="line">    System.out.println(doc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除文档-1"><a href="#删除文档-1" class="headerlink" title="删除文档"></a>删除文档</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testDeleteDoc</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="comment">// 1. 准备Request</span></span><br><span class="line">    <span class="type">DeleteRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DeleteRequest</span>(<span class="string">&quot;items&quot;</span>, <span class="string">&quot;2018833&quot;</span>); <span class="comment">// 索引库名、文档id</span></span><br><span class="line">    <span class="comment">// 2. 发送请求</span></span><br><span class="line">    client.delete(request, RequestOptions.DEFAULT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h2><p>构建请求时会用到BulkRequest来封装普通的CRUD请求：<br><img src="/assets/018d138da6544a71aed9f9d5387c3fb6.png" alt="018d138da6544a71aed9f9d5387c3fb6.png"><br>【案例】：往索引库里添加所有上架的商品</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testBulkDoc</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">pageNo</span> <span class="operator">=</span> <span class="number">1</span>, pageSize = <span class="number">500</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">// 0. 准备文档数据</span></span><br><span class="line">        Page&lt;Item&gt; page = itemService.lambdaQuery()</span><br><span class="line">                .eq(Item::getStatus, <span class="number">1</span>) <span class="comment">// 上架商品</span></span><br><span class="line">                .page(Page.of(pageNo, pageSize));</span><br><span class="line">        List&lt;Item&gt; records = page.getRecords();</span><br><span class="line">        <span class="keyword">if</span>(records == <span class="literal">null</span> || records.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 1. 准备Request</span></span><br><span class="line">        <span class="type">BulkRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BulkRequest</span>();</span><br><span class="line">        <span class="comment">// 2. 准备数据-批量新增</span></span><br><span class="line">        <span class="keyword">for</span>(Item item : records) &#123;</span><br><span class="line">            <span class="type">ItemDoc</span> <span class="variable">itemDoc</span> <span class="operator">=</span> BeanUtil.copyProperties(item, ItemDoc.class);</span><br><span class="line">            request.add(<span class="keyword">new</span> <span class="title class_">IndexRequest</span>(<span class="string">&quot;items&quot;</span>).id(item.getId().toString()).source(JSONUtil.toJsonStr(itemDoc), XContentType.JSON));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 3. 发送请求</span></span><br><span class="line">        client.bulk(request, RequestOptions.DEFAULT);</span><br><span class="line">        pageNo++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/88db839a.html">http://example.com/post/88db839a.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a><a class="post-meta__tags" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a><a class="post-meta__tags" href="/tags/ElasticSearch/">ElasticSearch</a><a class="post-meta__tags" href="/tags/%E6%90%9C%E7%B4%A2/">搜索</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover5.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/ffdcb30c.html" title="ElasticSearch下"><img class="cover" src="/img/default_cover8.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch下</div></div><div class="info-2"><div class="info-item-1">DSL查询 叶子查询：在特定字段里查询特定值，属于简单查询，很少单独使用 复合查询：以逻辑方式组合多个叶子查询或更改叶子查询的行为方式 在查询后还可以对查询结果做处理： 排序：按照1个或多个字段做排序 分页：根据from或size做分页，类似MySQL 高亮：对搜索结果中的关键字添加特殊样式 聚合：对搜索结果做数据统计以形成报表      基本语法GET /&#123;索引库名&#125;/_search&#123;  &quot;query&quot;: &#123;    &quot;查询类型&quot;: &#123;      &quot;查询条件&quot;: &quot;条件值&quot;    &#125;  &#125;&#125;  【例】： GET /items/_search &#123;  &quot;query&quot;: &#123;    &quot;match_all&quot;: &#123;&#125;  &#125;&#125;   叶子查询1....</div></div></div></a><a class="pagination-related" href="/post/768410d8.html" title="Freemarker模板引擎技术"><img class="cover" src="/img/default_cover7.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">Freemarker模板引擎技术</div></div><div class="info-2"><div class="info-item-1">【问题】当渲染文章数据时，由于文章的数据很多，直接去查询文章内容表的话，效率比较低。【解决】使用freemarker将文章的内容通过模板技术生成静态的html文件存储到minio中，这样用户就只需要拿着minio的url去minio里获取静态页面即可。效率大大提高 模板引擎Freemarker是一种模板引擎：一种基于模板和要改变的数据，并用来生成输出文本（html网页、电子邮件、配置文件、源代码…）的通用工具。不是面向最终用户的，而是一个Java类库。 步骤 导入依赖  &lt;dependencies&gt;    &lt;!-- freemarker --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/a5fe9d0b.html" title="MinIO"><img class="cover" src="/img/default_cover12.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">MinIO</div></div><div class="info-2"><div class="info-item-1">简介 Golang语言实现 兼容亚马逊S3云存储服务接口，适合存储大量非结构化数据 官方文档：MinIO  Docker安装MinIO 创建并运行容器  docker run -d \--name minio \-p 9000:9000 \--restart=always \-e &quot;MINIO_ACCESS_KEY=minio&quot; \-e &quot;MINIO_SECRET_KEY=minio123&quot; \-v /home/data:/data \-v /home/config:/root/.minio \minio/minio server /data   用户名：minio 密码：minio123   在浏览器输入http://192.168.140.102:9000/后即可看到minio控制台  操作MinIO 引入minio依赖  &lt;dependency&gt;	&lt;groupId&gt;io.minio&lt;/groupId&gt;    &lt;artifactId&gt;minio&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/619a560a.html" title="RabbitMQ确保消息可靠性"><img class="cover" src="/img/default_cover13.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">RabbitMQ确保消息可靠性</div></div><div class="info-2"><div class="info-item-1">消息丢失的可能性支付服务先扣减余额和更新支付状态（这俩是同步调用），然后通过RabbitMq异步调用支付服务更新订单状态。但是有些情况下，可能订单已经支付 ，但是更新订单状态却失败了，这就出现了消息丢失。  发送者在发送的过程中出现了网络故障 RabbitMQ在发送消息的过程中出现了问题 消费者在更新订单状态的时候出现了问题  发送者的可靠性发送者确认机制需要与MQ进行通信和确认，会影响消息发送的效率且一般出现的概率极低，所以一般不用这个。  方法1. 发送者重连确保发送者与MQ之间连接的可靠性。有的时候由于网络波动，可能出现发送者连接MQ失败的情况，这个配置是关闭的，可以开启连接失败后的重连机制： spring:  rabbitmq:    connection-timeout: 1s # 设置MQ的连接超时时间    template:      retry:        enabled: true # 开启超时重试机制(默认是false)        initial-interval: 1000ms # 失败后的初始等待时间        multiplier: 1...</div></div></div></a><a class="pagination-related" href="/post/29134165.html" title="【项目】黑马头条 - 普通用户端"><img class="cover" src="/img/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">【项目】黑马头条 - 普通用户端</div></div><div class="info-2"><div class="info-item-1">目录结构 全局异常 登录手动加密（md5  + 随机字符串）【问题】md5是不可逆加密，md5相同的密码每次加密都一样，不安全。【解决】在md5的基础上手动加盐（salt）处理校验过程： 接口测试1. ApiFox中测试2. swagger 引入依赖  &lt;dependency&gt;    &lt;groupId&gt;io.springfox&lt;/groupId&gt;    &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;&lt;/dependency&gt;&lt;dependency&gt;    &lt;groupId&gt;io.springfox&lt;/groupId&gt;    &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;&lt;/dependency&gt;   在common模块下添加swagger配置类：  @Configuration@EnableSwagger2public class...</div></div></div></a><a class="pagination-related" href="/post/e8b36ae1.html" title="微服务架构"><img class="cover" src="/img/default_cover18.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">微服务架构</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85ElasticSearch"><span class="toc-number">1.</span> <span class="toc-text">安装ElasticSearch</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85ElasticSearch-1"><span class="toc-number">1.1.</span> <span class="toc-text">安装ElasticSearch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Kibana"><span class="toc-number">1.2.</span> <span class="toc-text">安装Kibana</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95"><span class="toc-number">2.</span> <span class="toc-text">倒排索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IK%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">IK分词器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85IK%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-number">3.1.</span> <span class="toc-text">安装IK分词器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95IK%E5%88%86%E8%AF%8D%E5%99%A8%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="toc-number">3.2.</span> <span class="toc-text">测试IK分词器是否安装成功</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ik-smart"><span class="toc-number">3.2.1.</span> <span class="toc-text">ik_smart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ik-max-word"><span class="toc-number">3.2.2.</span> <span class="toc-text">ik_max_word</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%8D%E5%85%B8"><span class="toc-number">3.3.</span> <span class="toc-text">自定义词典</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ElasticSearch%E4%B8%AD%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">4.</span> <span class="toc-text">ElasticSearch中基础概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-number">5.</span> <span class="toc-text">索引库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mapping%E6%98%A0%E5%B0%84%E5%B1%9E%E6%80%A7"><span class="toc-number">5.1.</span> <span class="toc-text">Mapping映射属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%BA%93%E7%9A%84CRUD"><span class="toc-number">5.2.</span> <span class="toc-text">索引库的CRUD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="toc-number">5.2.1.</span> <span class="toc-text">创建索引库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="toc-number">5.2.2.</span> <span class="toc-text">修改索引库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="toc-number">5.2.3.</span> <span class="toc-text">查询索引库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="toc-number">5.2.4.</span> <span class="toc-text">删除索引库</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C"><span class="toc-number">6.</span> <span class="toc-text">文档操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E7%9A%84CRUD"><span class="toc-number">6.1.</span> <span class="toc-text">文档的CRUD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E6%96%87%E6%A1%A3"><span class="toc-number">6.1.1.</span> <span class="toc-text">新增文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E6%A1%A3"><span class="toc-number">6.1.2.</span> <span class="toc-text">修改文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%85%A8%E9%87%8F%E4%BF%AE%E6%94%B9"><span class="toc-number">6.1.2.1.</span> <span class="toc-text">1. 全量修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%A2%9E%E9%87%8F%E4%BF%AE%E6%94%B9"><span class="toc-number">6.1.2.2.</span> <span class="toc-text">2. 增量修改</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%87%E6%A1%A3"><span class="toc-number">6.1.3.</span> <span class="toc-text">查询文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E6%A1%A3"><span class="toc-number">6.1.4.</span> <span class="toc-text">删除文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86"><span class="toc-number">6.2.</span> <span class="toc-text">批量处理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaRestClient"><span class="toc-number">7.</span> <span class="toc-text">JavaRestClient</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">7.1.</span> <span class="toc-text">客户端初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%86%E5%93%81%E8%A1%A8Mapping%E6%98%A0%E5%B0%84"><span class="toc-number">7.2.</span> <span class="toc-text">商品表Mapping映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%BA%93%E6%93%8D%E4%BD%9C-1"><span class="toc-number">7.3.</span> <span class="toc-text">索引库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BA%93-1"><span class="toc-number">7.3.1.</span> <span class="toc-text">创建索引库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%B4%A2%E5%BC%95%E5%BA%93-1"><span class="toc-number">7.3.2.</span> <span class="toc-text">查询索引库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%E5%BA%93-1"><span class="toc-number">7.3.3.</span> <span class="toc-text">删除索引库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C-1"><span class="toc-number">7.4.</span> <span class="toc-text">文档操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E6%96%87%E6%A1%A3-1"><span class="toc-number">7.4.1.</span> <span class="toc-text">新增文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E6%A1%A3-1"><span class="toc-number">7.4.2.</span> <span class="toc-text">修改文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E9%87%8F%E4%BF%AE%E6%94%B9"><span class="toc-number">7.4.2.1.</span> <span class="toc-text">全量修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E4%BF%AE%E6%94%B9"><span class="toc-number">7.4.2.2.</span> <span class="toc-text">局部修改</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%87%E6%A1%A3-1"><span class="toc-number">7.4.3.</span> <span class="toc-text">查询文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E6%A1%A3-1"><span class="toc-number">7.4.4.</span> <span class="toc-text">删除文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E5%A4%84%E7%90%86"><span class="toc-number">7.5.</span> <span class="toc-text">批处理</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数"><img src="/img/default_cover14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2379. 得到 K 个黑块的最少涂色次数"/></a><div class="content"><a class="title" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数">2379. 得到 K 个黑块的最少涂色次数</a><time datetime="2025-01-25T08:37:20.000Z" title="发表于 2025-01-25 16:37:20">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值"><img src="/img/default_cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2090. 半径为 k 的子数组平均值"/></a><div class="content"><a class="title" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值">2090. 半径为 k 的子数组平均值</a><time datetime="2025-01-25T08:37:11.000Z" title="发表于 2025-01-25 16:37:11">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"><img src="/img/default_cover15.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"/></a><div class="content"><a class="title" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串">1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</a><time datetime="2025-01-25T08:37:02.000Z" title="发表于 2025-01-25 16:37:02">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1456. 定长子串中元音的最大数目"/></a><div class="content"><a class="title" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目">1456. 定长子串中元音的最大数目</a><time datetime="2025-01-25T08:36:54.000Z" title="发表于 2025-01-25 16:36:54">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目"><img src="/img/default_cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1343. 大小为 K 且平均值大于等于阈值的子数组数目"/></a><div class="content"><a class="title" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目">1343. 大小为 K 且平均值大于等于阈值的子数组数目</a><time datetime="2025-01-25T08:36:45.000Z" title="发表于 2025-01-25 16:36:45">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

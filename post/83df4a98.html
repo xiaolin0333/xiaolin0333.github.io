@@ -1,0 +1,385 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Sentinel服务保护 + Seata分布式事务 | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="服务保护【原因】：  微服务相互调用，服务提供者出现故障。 服务调用这没有做好异常处理，导致自身故障。 调用链中所有服务级联失败，导致整个集群故障。  【解决方案】：请求限流、线程隔离、服务熔断【服务保护技术】： Sentinel服务保护官方文档：Sentinel 使用步骤1. 使用docker部署sentinel创建并运行sentinel容器： docker run -d \--net&#x3D;host">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sentinel服务保护 + Seata分布式事务">
+<meta property="og:url" content="http://example.com/post/83df4a98.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="服务保护【原因】：  微服务相互调用，服务提供者出现故障。 服务调用这没有做好异常处理，导致自身故障。 调用链中所有服务级联失败，导致整个集群故障。  【解决方案】：请求限流、线程隔离、服务熔断【服务保护技术】： Sentinel服务保护官方文档：Sentinel 使用步骤1. 使用docker部署sentinel创建并运行sentinel容器： docker run -d \--net&#x3D;host">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover15.jpg">
+<meta property="article:published_time" content="2025-01-25T07:35:52.000Z">
+<meta property="article:modified_time" content="2025-01-25T07:50:22.101Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="sentinel">
+<meta property="article:tag" content="服务保护">
+<meta property="article:tag" content="seata">
+<meta property="article:tag" content="分布式事务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover15.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Sentinel服务保护 + Seata分布式事务",
+  "url": "http://example.com/post/83df4a98.html",
+  "image": "http://example.com/img/default_cover15.jpg",
+  "datePublished": "2025-01-25T07:35:52.000Z",
+  "dateModified": "2025-01-25T07:50:22.101Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/83df4a98.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Sentinel服务保护 + Seata分布式事务',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-微服务" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Sentinel服务保护 + Seata分布式事务</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Sentinel服务保护 + Seata分布式事务</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-25T07:35:52.000Z" title="发表于 2025-01-25 15:35:52">2025-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-25T07:50:22.101Z" title="更新于 2025-01-25 15:50:22">2025-01-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/83df4a98.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h1 id="服务保护"><a href="#服务保护" class="headerlink" title="服务保护"></a>服务保护</h1><p><img src="/assets/2cc9cca2bb6c4b8fba768d0a1e1a3374.png" alt="2cc9cca2bb6c4b8fba768d0a1e1a3374.png"><br>【<code>原因</code>】：</p>
+<ol>
+<li>微服务相互调用，服务提供者出现故障。</li>
+<li>服务调用这没有做好异常处理，导致自身故障。</li>
+<li>调用链中所有服务级联失败，导致整个集群故障。</li>
+</ol>
+<p>【<code>解决方案</code>】：<br>请求限流、线程隔离、服务熔断<br>【<code>服务保护技术</code>】：<br><img src="/assets/54aa0a3b19124b8d8e17aa6a80f7381d.png" alt="54aa0a3b19124b8d8e17aa6a80f7381d.png"></p>
+<h1 id="Sentinel服务保护"><a href="#Sentinel服务保护" class="headerlink" title="Sentinel服务保护"></a>Sentinel服务保护</h1><p>官方文档：<a target="_blank" rel="noopener" href="https://sentinelguard.io/zh-cn/docs/quick-start.html">Sentinel</a></p>
+<h2 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h2><h3 id="1-使用docker部署sentinel"><a href="#1-使用docker部署sentinel" class="headerlink" title="1. 使用docker部署sentinel"></a>1. 使用docker部署sentinel</h3><p>创建并运行sentinel容器：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">--net=host \</span><br><span class="line">--name sentinel \</span><br><span class="line">--restart=always \</span><br><span class="line">-e AUTH_USERNAME=admin \</span><br><span class="line">-e AUTH_PASSWORD=admin \</span><br><span class="line">bladex/sentinel-dashboard:1.8.6</span><br></pre></td></tr></table></figure>
+
+<p>完成后在浏览器输入：<code>192.168.140.101:8858</code>，用户名admin，密码admin</p>
+<h3 id="2-在微服务中连接sentinel控制台"><a href="#2-在微服务中连接sentinel控制台" class="headerlink" title="2.在微服务中连接sentinel控制台"></a>2.在微服务中连接sentinel控制台</h3><p>引入sentinel依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--sentinel--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>配置控制台：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">sentinel:</span></span><br><span class="line">      <span class="attr">transport:</span></span><br><span class="line">        <span class="attr">dashboard:</span> <span class="number">192.168</span><span class="number">.140</span><span class="number">.101</span><span class="string">:8858</span> <span class="comment"># sentinel的控制台地址</span></span><br><span class="line">      <span class="attr">http-method-specify:</span> <span class="literal">true</span> <span class="comment"># 开启请求方式前缀</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Restful风格的API请求路径一般相同，会导致簇点资源名称重复。所以我们要修改配置，把<code>请求方式 + 请求路径</code>作为簇点资源名称</p>
+</blockquote>
+<h2 id="簇点链路"><a href="#簇点链路" class="headerlink" title="簇点链路"></a>簇点链路</h2><p>簇点链路就是单机调用链路，是一次请求进入服务后经过的每一个被Sentinel监控的资源链。默认Sentinel会监控SpringMVC的每一个Endpoint（Http接口）。限流、熔断等都是争对簇点链路中的资源设置的，资源名默认就是接口的请求路径。<br><img src="/assets/73c5da38241d45dc9ecb894066f1aafd.png" alt="73c5da38241d45dc9ecb894066f1aafd.png"></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="1-请求限流"><a href="#1-请求限流" class="headerlink" title="1. 请求限流"></a>1. 请求限流</h3><p>限制访问微服务的请求的并发量，避免服务因流量激增而出现故障。<br><img src="/assets/7257b09894a64584991f2caa12ce5723.png" alt="7257b09894a64584991f2caa12ce5723.png"><br><img src="/assets/8e0ebcb4bc544398a62f2bc43cb3671e.png" alt="8e0ebcb4bc544398a62f2bc43cb3671e.png"><br>这个接口每秒钟只能处理6个请求，使用ApiFox进行测试，会有部分请求失败【失败返回状态码429】。<br><img src="/assets/8d05ad4b973d4911a59e0db815072b13.png" alt="8d05ad4b973d4911a59e0db815072b13.png"></p>
+<h3 id="2-线程隔离"><a href="#2-线程隔离" class="headerlink" title="2. 线程隔离"></a>2. 线程隔离</h3><p>通过限定每个业务能使用的线程数量而将故障业务隔离，避免故障扩散。<br><img src="/assets/66f03b62c56a46b28426749b0bbfa7e5.png" alt="66f03b62c56a46b28426749b0bbfa7e5.png"><br>【<code>场景</code>】：假设有大量的查询购物车的请求，通过对查询购物车这个线程做线程隔离，可以保证购物车这个微服务的资源不会被耗尽，不会对修改购物车等其他业务造成影响。<br><img src="/assets/65421a69176f41f280895281be0cbaa0.png" alt="65421a69176f41f280895281be0cbaa0.png"><br><img src="/assets/dc7dfeb1f5f2434fbacab1b1188ac1e2.png" alt="dc7dfeb1f5f2434fbacab1b1188ac1e2.png"></p>
+<blockquote>
+<p>线程隔离和请求限流的区别：<br><strong>请求限流</strong>：控制接受请求的<code>速度</code>(每秒访问几次)<br><strong>线程隔离</strong>：控制最多能接收请求的<code>次数</code>(一次访问的线程数)<br>就算请求限流设置的再慢，如果线程卡住的话，不设置线程隔离，也会导致资源占用。</p>
+</blockquote>
+<h3 id="3-fallback"><a href="#3-fallback" class="headerlink" title="3. fallback"></a>3. fallback</h3><p><img src="/assets/919d0bc52c674d66b761d79030ed1ba0.png" alt="919d0bc52c674d66b761d79030ed1ba0.png"><br>一、 将FeignClient作为Sentinel的簇点资源：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">feign:</span></span><br><span class="line">  <span class="attr">sentinel:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment"># 开启流量控制</span></span><br></pre></td></tr></table></figure>
+
+<p>二、 为FeignClient添加Fallback：</p>
+<ul>
+<li>方法1：FallbackClass，无法对远程调用的异常做处理</li>
+<li>方法2：<code>FallbackFactory</code>，可以对远程调用的异常做处理</li>
+</ul>
+<ol>
+<li>自定义类，实现FallbackFactory，编写对某个FeignClient的fallback逻辑：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ItemClientFallbackFactory</span> <span class="keyword">implements</span> <span class="title class_">FallbackFactory</span>&lt;ItemClient&gt; &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ItemClient <span class="title function_">create</span><span class="params">(Throwable cause)</span> &#123;</span><br><span class="line">    	<span class="comment">// 编写失败的处理逻辑（失败后就会走里边的方法）</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ItemClient</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> List&lt;ItemDTO&gt; <span class="title function_">queryItemByIds</span><span class="params">(Collection&lt;Long&gt; ids)</span> &#123;</span><br><span class="line">                log.error(<span class="string">&quot;查询商品失败，&quot;</span>+ cause);</span><br><span class="line">                <span class="keyword">return</span> CollUtils.emptyList();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deductStock</span><span class="params">(List&lt;OrderDetailDTO&gt; items)</span> &#123;</span><br><span class="line">                log.error(<span class="string">&quot;扣减商品库存失败，&quot;</span>+ cause);</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(cause);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>将定义的FallbackFactory注册为一个Bean：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DefaultFeignConfig</span> &#123;</span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="keyword">public</span> ItemClientFallbackFactory <span class="title function_">itemClientFallbackFactory</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ItemClientFallbackFactory</span>();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在ItemClient接口中使用FallbackFactory：<code>@FeignClient(value = &quot;item-service&quot;, fallbackFactory = ItemClientFallbackFactory.class)</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@FeignClient(value = &quot;item-service&quot;, fallbackFactory = ItemClientFallbackFactory.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ItemClient</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/items&quot;)</span></span><br><span class="line">    List&lt;ItemDTO&gt; <span class="title function_">queryItemByIds</span><span class="params">(<span class="meta">@RequestParam(&quot;ids&quot;)</span> Collection&lt;Long&gt; ids)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PutMapping(&quot;/items/stock/deduct&quot;)</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">deductStock</span><span class="params">(<span class="meta">@RequestBody</span> List&lt;OrderDetailDTO&gt; items)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/dd48672f97c8470ba4eaccb7e55fa40f.png" alt="dd48672f97c8470ba4eaccb7e55fa40f.png"></p>
+<h3 id="4-服务熔断"><a href="#4-服务熔断" class="headerlink" title="4. 服务熔断"></a>4. 服务熔断</h3><p>由<strong>断路器</strong>统计请求的异常比例或慢调用比例，如果超出阈值则会熔断该业务，则拦截改接口的请求。熔断期间，所有请求<code>快速失败</code>，全部走fallback逻辑。当服务恢复时，断路器会放行访问该服务的请求。<br><img src="/assets/6fb72065d9ab449da726f4d8475717a0.png" alt="6fb72065d9ab449da726f4d8475717a0.png"></p>
+<h4 id="断路器工作原理："><a href="#断路器工作原理：" class="headerlink" title="断路器工作原理："></a>断路器工作原理：</h4><p><img src="/assets/f7b1a34e18ef4ed58cf252b6cc209674.png" alt="f7b1a34e18ef4ed58cf252b6cc209674.png"><br>默认情况：<code>Closed状态</code><br>如果失败的比例过高：就会进入<code>Open状态</code>【拦截一切请求，快速失败】<br>在<code>Open状态</code>下会尝试放行一次请求，进入<code>Half-Open状态</code>，如果仍然失败，再次返回Open状态；如果成功，回到<code>Closed状态</code>。</p>
+<h4 id="配置熔断策略"><a href="#配置熔断策略" class="headerlink" title="配置熔断策略"></a>配置熔断策略</h4><p><img src="/assets/c8573593d04c4081a9fd34a3ed557f64.png" alt="c8573593d04c4081a9fd34a3ed557f64.png"><br><img src="/assets/41c3633ff01d4c7686feca76ccec84cb.png" alt="41c3633ff01d4c7686feca76ccec84cb.png"></p>
+<h1 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h1><p>如果一个业务需要多个服务合作完成，而且每个服务都有事务，多个事务必须同时成功或同时失败，这样的事务就是<code>分布式事务</code>。其中每一个服务的事务就是一个<code>分支事务</code>。整个业务称为<code>全局事务</code>。<br>【<code>场景</code>】：用户下单后，订单服务首先创建订单，随后调用购物车服务清理购物车，最后调用库存服务扣减商品的库存。如果在调用库存服务的时候商品库存为0，此时扣减库存失败，订单服务和购物车服务应该同时失败。<br><img src="/assets/099e39d670064e3b8e9ba752153342da.png" alt="099e39d670064e3b8e9ba752153342da.png"><br>【<code>出现问题的原因</code>】：各个分支服务不知道对方的情况<br>【<code>解决思路</code>】：让各个分支事务感受到对方的存在，让所有的微服务向事务协调者报告当前的状态。<br><img src="/assets/b8c06f583e3f4ee9909a011fab1f7986.png" alt="b8c06f583e3f4ee9909a011fab1f7986.png"></p>
+<h1 id="Seata架构"><a href="#Seata架构" class="headerlink" title="Seata架构"></a>Seata架构</h1><ul>
+<li>事务协调者（TC）：维护<code>全局和分支事务</code>的状态，协调全局事务提交或回滚。</li>
+<li>事务管理器（TM）：定义<code>全局事务</code>的范围、开始全局事务、提交或回滚全局事务。</li>
+<li>资源管理器（RM）：管理<code>分支事务</code>，与TC交谈以注册分支事务和报告分支事务的状态。<br><img src="/assets/b497bbfe12194c6d8a2cb7cf88b41a47.png" alt="b497bbfe12194c6d8a2cb7cf88b41a47.png"></li>
+</ul>
+<h2 id="1-部署TC服务"><a href="#1-部署TC服务" class="headerlink" title="1. 部署TC服务"></a>1. 部署TC服务</h2><ol>
+<li>创建数据库，导入sql文件<br><img src="/assets/150a14f4bbfb468bbd8d53777f85df86.png" alt="150a14f4bbfb468bbd8d53777f85df86.png"></li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `seata`;</span><br><span class="line">USE `seata`;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `global_table`</span><br><span class="line">(</span><br><span class="line">    `xid`                       <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `transaction_id`            <span class="type">BIGINT</span>,</span><br><span class="line">    `status`                    TINYINT      <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `application_id`            <span class="type">VARCHAR</span>(<span class="number">32</span>),</span><br><span class="line">    `transaction_service_group` <span class="type">VARCHAR</span>(<span class="number">32</span>),</span><br><span class="line">    `transaction_name`          <span class="type">VARCHAR</span>(<span class="number">128</span>),</span><br><span class="line">    `timeout`                   <span class="type">INT</span>,</span><br><span class="line">    `begin_time`                <span class="type">BIGINT</span>,</span><br><span class="line">    `application_data`          <span class="type">VARCHAR</span>(<span class="number">2000</span>),</span><br><span class="line">    `gmt_create`                DATETIME,</span><br><span class="line">    `gmt_modified`              DATETIME,</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (`xid`),</span><br><span class="line">    KEY `idx_status_gmt_modified` (`status` , `gmt_modified`),</span><br><span class="line">    KEY `idx_transaction_id` (`transaction_id`)</span><br><span class="line">) ENGINE <span class="operator">=</span> InnoDB</span><br><span class="line">  <span class="keyword">DEFAULT</span> CHARSET <span class="operator">=</span> utf8mb4;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `branch_table`</span><br><span class="line">(</span><br><span class="line">    `branch_id`         <span class="type">BIGINT</span>       <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `xid`               <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `transaction_id`    <span class="type">BIGINT</span>,</span><br><span class="line">    `resource_group_id` <span class="type">VARCHAR</span>(<span class="number">32</span>),</span><br><span class="line">    `resource_id`       <span class="type">VARCHAR</span>(<span class="number">256</span>),</span><br><span class="line">    `branch_type`       <span class="type">VARCHAR</span>(<span class="number">8</span>),</span><br><span class="line">    `status`            TINYINT,</span><br><span class="line">    `client_id`         <span class="type">VARCHAR</span>(<span class="number">64</span>),</span><br><span class="line">    `application_data`  <span class="type">VARCHAR</span>(<span class="number">2000</span>),</span><br><span class="line">    `gmt_create`        DATETIME(<span class="number">6</span>),</span><br><span class="line">    `gmt_modified`      DATETIME(<span class="number">6</span>),</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (`branch_id`),</span><br><span class="line">    KEY `idx_xid` (`xid`)</span><br><span class="line">) ENGINE <span class="operator">=</span> InnoDB</span><br><span class="line">  <span class="keyword">DEFAULT</span> CHARSET <span class="operator">=</span> utf8mb4;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `lock_table`</span><br><span class="line">(</span><br><span class="line">    `row_key`        <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `xid`            <span class="type">VARCHAR</span>(<span class="number">128</span>),</span><br><span class="line">    `transaction_id` <span class="type">BIGINT</span>,</span><br><span class="line">    `branch_id`      <span class="type">BIGINT</span>       <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `resource_id`    <span class="type">VARCHAR</span>(<span class="number">256</span>),</span><br><span class="line">    `table_name`     <span class="type">VARCHAR</span>(<span class="number">32</span>),</span><br><span class="line">    `pk`             <span class="type">VARCHAR</span>(<span class="number">36</span>),</span><br><span class="line">    `status`         TINYINT      <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;0:locked ,1:rollbacking&#x27;</span>,</span><br><span class="line">    `gmt_create`     DATETIME,</span><br><span class="line">    `gmt_modified`   DATETIME,</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (`row_key`),</span><br><span class="line">    KEY `idx_status` (`status`),</span><br><span class="line">    KEY `idx_branch_id` (`branch_id`),</span><br><span class="line">    KEY `idx_xid_and_branch_id` (`xid` , `branch_id`)</span><br><span class="line">) ENGINE <span class="operator">=</span> InnoDB</span><br><span class="line">  <span class="keyword">DEFAULT</span> CHARSET <span class="operator">=</span> utf8mb4;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `distributed_lock`</span><br><span class="line">(</span><br><span class="line">    `lock_key`       <span class="type">CHAR</span>(<span class="number">20</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `lock_value`     <span class="type">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    `expire`         <span class="type">BIGINT</span>,</span><br><span class="line">    <span class="keyword">primary key</span> (`lock_key`)</span><br><span class="line">) ENGINE <span class="operator">=</span> InnoDB</span><br><span class="line">  <span class="keyword">DEFAULT</span> CHARSET <span class="operator">=</span> utf8mb4;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT INTO</span> `distributed_lock` (lock_key, lock_value, expire) <span class="keyword">VALUES</span> (<span class="string">&#x27;AsyncCommitting&#x27;</span>, <span class="string">&#x27; &#x27;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> `distributed_lock` (lock_key, lock_value, expire) <span class="keyword">VALUES</span> (<span class="string">&#x27;RetryCommitting&#x27;</span>, <span class="string">&#x27; &#x27;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> `distributed_lock` (lock_key, lock_value, expire) <span class="keyword">VALUES</span> (<span class="string">&#x27;RetryRollbacking&#x27;</span>, <span class="string">&#x27; &#x27;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> `distributed_lock` (lock_key, lock_value, expire) <span class="keyword">VALUES</span> (<span class="string">&#x27;TxTimeoutCheck&#x27;</span>, <span class="string">&#x27; &#x27;</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>准备配置文件<br><a target="_blank" rel="noopener" href="https://download.csdn.net/download/qq_57882997/90244761?spm=1001.2014.3001.5503">seata运行时所需的配置文件</a><br>上传前先看看application.yml，里边可能有些配置需要改一下<br>把上边的配置文件丢到root根目录下<br><img src="/assets/35c04cad63ca46c48c78793dc560ba46.png" alt="35c04cad63ca46c48c78793dc560ba46.png"></li>
+<li>docker部署<br>在&#x2F;root目录下执行以下命令，创建并允许seata容器</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run --name seata \</span><br><span class="line">-p 8099:8099 \</span><br><span class="line">-p 7099:7099 \</span><br><span class="line">-e SEATA_IP=192.168.140.101 \</span><br><span class="line">-v ./seata:/seata-server/resources \</span><br><span class="line">--privileged=true \</span><br><span class="line">--network hm-net \</span><br><span class="line">--restart=always \</span><br><span class="line">-d \</span><br><span class="line">seataio/seata-server:1.5.2</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>以上操作都完成后，在浏览器输入：<code>http://192.168.140.101:7099/</code>后即可登录seata控制台。（初始账号：admin、密码：admin）</li>
+</ol>
+<h2 id="2-微服务集成Seata"><a href="#2-微服务集成Seata" class="headerlink" title="2. 微服务集成Seata"></a>2. 微服务集成Seata</h2><ol>
+<li>引入Seata依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--seata--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-seata<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置TC服务地址，让微服务找到TC服务地址<br><img src="/assets/71f62f42519b4caba2fca5bcaa9c7a40.png" alt="71f62f42519b4caba2fca5bcaa9c7a40.png"></li>
+</ol>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">seata:</span></span><br><span class="line">  <span class="attr">registry:</span> <span class="comment"># TC服务注册中心的配置，微服务根据这些信息去注册中心获取tc服务地址</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">nacos</span> <span class="comment"># 注册中心类型 nacos</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.140</span><span class="number">.101</span><span class="string">:8848</span> <span class="comment"># nacos地址</span></span><br><span class="line">      <span class="attr">namespace:</span> <span class="string">&quot;&quot;</span> <span class="comment"># namespace，默认为空</span></span><br><span class="line">      <span class="attr">group:</span> <span class="string">DEFAULT_GROUP</span> <span class="comment"># 分组，默认是DEFAULT_GROUP</span></span><br><span class="line">      <span class="attr">application:</span> <span class="string">seata-server</span> <span class="comment"># seata服务名称</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">nacos</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">nacos</span></span><br><span class="line">  <span class="attr">tx-service-group:</span> <span class="string">hmall</span> <span class="comment"># 事务组名称</span></span><br><span class="line">  <span class="attr">service:</span></span><br><span class="line">    <span class="attr">vgroup-mapping:</span> <span class="comment"># 事务组与tc集群的映射关系</span></span><br><span class="line">      <span class="attr">hmall:</span> <span class="string">&quot;default&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>因为很多服务都需要实现分布式事务，所以可以把对于seata的配置抽取成一个共享配置写在nacos里。所以添加依赖的时候，检查一下是否有<code>bootstrap</code>和<code>nacos配置管理</code>的依赖。</p>
+</blockquote>
+<p>查看seata的日志文件，可以看到购物车服务、交易服务、商品服务已经全部和seata的TC服务建立连接。<br><img src="/assets/ade0cde731924dbeb93ce0272718895b.png" alt="ade0cde731924dbeb93ce0272718895b.png"></p>
+<h2 id="3-Seata解决分布式事务问题"><a href="#3-Seata解决分布式事务问题" class="headerlink" title="3. Seata解决分布式事务问题"></a>3. Seata解决分布式事务问题</h2><h3 id="XA模式—强一致"><a href="#XA模式—强一致" class="headerlink" title="XA模式—强一致"></a>XA模式—强一致</h3><p><img src="/assets/89a4a66e8aac422c9f909bf4d6437f0f.png" alt="89a4a66e8aac422c9f909bf4d6437f0f.png"></p>
+<ol>
+<li>一阶段工作：</li>
+</ol>
+<ul>
+<li>RM注册分支事务</li>
+<li>RM执行分支事务sql<code>但不提交</code></li>
+<li>RM报告执行状态到TC</li>
+</ul>
+<ol start="2">
+<li>二阶段工作：</li>
+</ol>
+<ul>
+<li>TC检测各分支事务执行状态：<ul>
+<li>如果都成功，通知所有RM<code>提交事务</code></li>
+<li>如果有失败，通知所有RM<code>回滚事务</code></li>
+</ul>
+</li>
+<li>RM接收到TC指令，提交或回滚事务</li>
+</ul>
+<blockquote>
+<p>通过“等待”的方式，确保了全局事务的ACID特性。但是一阶段需要锁定数据库的资源，到二阶段才释放，性能差。</p>
+</blockquote>
+<h4 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h4><ol>
+<li>修改（每个参与事务的微服务）application.yml文件，开启XA模式</li>
+</ol>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">seata:</span></span><br><span class="line">  <span class="attr">data-source-proxy-mode:</span> <span class="string">XA</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>给发起全局事务的入口添加<code>@GlobalTransactional</code>注解<br><img src="/assets/40c708a8b87143399bacde7aa1b077dd.png" alt="40c708a8b87143399bacde7aa1b077dd.png"></li>
+</ol>
+<h3 id="AT模式（主推）—最终一致"><a href="#AT模式（主推）—最终一致" class="headerlink" title="AT模式（主推）—最终一致"></a>AT模式（主推）—最终一致</h3><p>AT模式弥补了XA模式中资源锁定周期过长的缺陷。<br><img src="/assets/984ee6e1df964b379ff0c9524daa0d63.png" alt="984ee6e1df964b379ff0c9524daa0d63.png"></p>
+<ol>
+<li>一阶段RM的工作：</li>
+</ol>
+<ul>
+<li>注册分支事务</li>
+<li>记录<code>undo-log</code>（数据快照）</li>
+<li>执行业务sql<code>并提交</code></li>
+<li>报告事务状态</li>
+</ul>
+<ol start="2">
+<li>二阶段提交时RM的工作：</li>
+</ol>
+<ul>
+<li>删除undo-log即可</li>
+</ul>
+<ol start="3">
+<li>二阶段回滚时RM的工作：</li>
+</ol>
+<ul>
+<li>根据undo-log恢复数据到更新前</li>
+</ul>
+<blockquote>
+<p>AT模式相比于XA模式的优点在于：在一阶段不需要等待彼此执行，而是各自提交，这样资源就没有锁定，性能也会好。<br>但是如果二阶段需要进行回滚，在回滚之前，会出现数据短暂的不一致。<br>【<code>AT模式与XA模式的区别</code>】：</p>
+<ol>
+<li>XA模式一阶段不提交事务，锁定资源<br>  AT模式一阶段直接提交，不锁定资源</li>
+<li>XA模式依赖数据库机制实现回滚<br>  AT模式利用数据快照实现回滚</li>
+<li>XA模式强一致<br>  AT模型最终一致</li>
+</ol>
+</blockquote>
+<h4 id="实现步骤-1"><a href="#实现步骤-1" class="headerlink" title="实现步骤"></a>实现步骤</h4><ol>
+<li>创建数据表，导入用来记录数据快照的undo_log表<br>【<code>注</code>】：每个分支事务都需要有自己的undo_log表</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- for AT mode you must to init this sql for you business database. the seata server not need it.</span></span><br><span class="line"><span class="keyword">CREATE TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `undo_log`</span><br><span class="line">(</span><br><span class="line">    `branch_id`     <span class="type">BIGINT</span>       <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;branch transaction id&#x27;</span>,</span><br><span class="line">    `xid`           <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;global transaction id&#x27;</span>,</span><br><span class="line">    `context`       <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;undo_log context,such as serialization&#x27;</span>,</span><br><span class="line">    `rollback_info` LONGBLOB     <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;rollback info&#x27;</span>,</span><br><span class="line">    `log_status`    <span class="type">INT</span>(<span class="number">11</span>)      <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;0:normal status,1:defense status&#x27;</span>,</span><br><span class="line">    `log_created`   DATETIME(<span class="number">6</span>)  <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;create datetime&#x27;</span>,</span><br><span class="line">    `log_modified`  DATETIME(<span class="number">6</span>)  <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;modify datetime&#x27;</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span> KEY `ux_undo_log` (`xid`, `branch_id`)</span><br><span class="line">) ENGINE <span class="operator">=</span> InnoDB</span><br><span class="line">  AUTO_INCREMENT <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">  <span class="keyword">DEFAULT</span> CHARSET <span class="operator">=</span> utf8mb4 COMMENT <span class="operator">=</span><span class="string">&#x27;AT transaction mode undo table&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>修改application.yml文件，将事务模式修改为AT模式</li>
+</ol>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">seata:</span></span><br><span class="line">  <span class="attr">data-source-proxy-mode:</span> <span class="string">AT</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/b5011655c47246f49d5f0770c77002ba.png" alt="b5011655c47246f49d5f0770c77002ba.png"><br>数据快照（undo_log表）：<br><img src="/assets/09abfcb768a64fefa0d1397b8ce4e5f9.png" alt="09abfcb768a64fefa0d1397b8ce4e5f9.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/83df4a98.html">http://example.com/post/83df4a98.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a><a class="post-meta__tags" href="/tags/sentinel/">sentinel</a><a class="post-meta__tags" href="/tags/%E6%9C%8D%E5%8A%A1%E4%BF%9D%E6%8A%A4/">服务保护</a><a class="post-meta__tags" href="/tags/seata/">seata</a><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">分布式事务</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover15.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/88db839a.html" title="ElasticSearch上"><img class="cover" src="/img/default_cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch上</div></div><div class="info-2"><div class="info-item-1">安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --name es \  -e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot; \  -e &quot;discovery.type=single-node&quot; \  -v es-data:/usr/share/elasticsearch/data \  -v es-plugins:/usr/share/elasticsearch/plugins \  --privileged \  --network hm-net \  -p 9200:9200 \  -p 9300:9300 \  --restart=always \ ...</div></div></div></a><a class="pagination-related" href="/post/768410d8.html" title="Freemarker模板引擎技术"><img class="cover" src="/img/default_cover7.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">Freemarker模板引擎技术</div></div><div class="info-2"><div class="info-item-1">【问题】当渲染文章数据时，由于文章的数据很多，直接去查询文章内容表的话，效率比较低。【解决】使用freemarker将文章的内容通过模板技术生成静态的html文件存储到minio中，这样用户就只需要拿着minio的url去minio里获取静态页面即可。效率大大提高 模板引擎Freemarker是一种模板引擎：一种基于模板和要改变的数据，并用来生成输出文本（html网页、电子邮件、配置文件、源代码…）的通用工具。不是面向最终用户的，而是一个Java类库。 步骤 导入依赖  &lt;dependencies&gt;    &lt;!-- freemarker --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/a5fe9d0b.html" title="MinIO"><img class="cover" src="/img/default_cover12.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">MinIO</div></div><div class="info-2"><div class="info-item-1">简介 Golang语言实现 兼容亚马逊S3云存储服务接口，适合存储大量非结构化数据 官方文档：MinIO  Docker安装MinIO 创建并运行容器  docker run -d \--name minio \-p 9000:9000 \--restart=always \-e &quot;MINIO_ACCESS_KEY=minio&quot; \-e &quot;MINIO_SECRET_KEY=minio123&quot; \-v /home/data:/data \-v /home/config:/root/.minio \minio/minio server /data   用户名：minio 密码：minio123   在浏览器输入http://192.168.140.102:9000/后即可看到minio控制台  操作MinIO 引入minio依赖  &lt;dependency&gt;	&lt;groupId&gt;io.minio&lt;/groupId&gt;    &lt;artifactId&gt;minio&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/b543ced0.html" title="RabbitMQ"><img class="cover" src="/img/default_cover10.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">RabbitMQ</div></div><div class="info-2"><div class="info-item-1"> 虽然多线程也能做异步处理，但是多线程仅限于在同一个进程做异步处理，会占用服务器的资源。MQ是可以分布式的，可以分担服务器的压力。  同步调用和异步调用同步调用优势：时效性强，等待到结果后才返回问题：拓展性差、性能差、级联失败问题 异步调用 消息发送者：投递消息的人（调用者） 消息接收者：接收和处理消息的人（服务提供者） 消息代理：管理、暂存、转发消息（微信服务器）   扣减数据余额和更新支付状态必须采用同步调用。更新订单状态、短信通知用户、增加用户积分，这三个业务其实和支付服务的关系不大，有点业务耦合，可以用异步调用，支付服务先发一条消息给消息代理，交易服务、通知服务、积分服务去监听消息代理。如果服务故障了，没有收到消息，只要这个服务重新启动，消息代理还会投递消息给这个服务。  优势：解除耦合，拓展性好；无需等待；故障隔离；缓存消息，流量削峰填谷。问题：不能立刻得到调用结果，时效性差；不能确定下游业务执行是否成功；业务安全依赖Broker的可靠性。 MQ技术选型MQ：消息队列，存放消息的队列。也就是异步调用的Broker RabbitMQ安装 创建并运行容器  docker...</div></div></div></a><a class="pagination-related" href="/post/619a560a.html" title="RabbitMQ确保消息可靠性"><img class="cover" src="/img/default_cover13.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">RabbitMQ确保消息可靠性</div></div><div class="info-2"><div class="info-item-1">消息丢失的可能性支付服务先扣减余额和更新支付状态（这俩是同步调用），然后通过RabbitMq异步调用支付服务更新订单状态。但是有些情况下，可能订单已经支付 ，但是更新订单状态却失败了，这就出现了消息丢失。  发送者在发送的过程中出现了网络故障 RabbitMQ在发送消息的过程中出现了问题 消费者在更新订单状态的时候出现了问题  发送者的可靠性发送者确认机制需要与MQ进行通信和确认，会影响消息发送的效率且一般出现的概率极低，所以一般不用这个。  方法1. 发送者重连确保发送者与MQ之间连接的可靠性。有的时候由于网络波动，可能出现发送者连接MQ失败的情况，这个配置是关闭的，可以开启连接失败后的重连机制： spring:  rabbitmq:    connection-timeout: 1s # 设置MQ的连接超时时间    template:      retry:        enabled: true # 开启超时重试机制(默认是false)        initial-interval: 1000ms # 失败后的初始等待时间        multiplier: 1...</div></div></div></a><a class="pagination-related" href="/post/ffdcb30c.html" title="ElasticSearch下"><img class="cover" src="/img/default_cover8.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch下</div></div><div class="info-2"><div class="info-item-1">DSL查询 叶子查询：在特定字段里查询特定值，属于简单查询，很少单独使用 复合查询：以逻辑方式组合多个叶子查询或更改叶子查询的行为方式 在查询后还可以对查询结果做处理： 排序：按照1个或多个字段做排序 分页：根据from或size做分页，类似MySQL 高亮：对搜索结果中的关键字添加特殊样式 聚合：对搜索结果做数据统计以形成报表      基本语法GET /&#123;索引库名&#125;/_search&#123;  &quot;query&quot;: &#123;    &quot;查询类型&quot;: &#123;      &quot;查询条件&quot;: &quot;条件值&quot;    &#125;  &#125;&#125;  【例】： GET /items/_search &#123;  &quot;query&quot;: &#123;    &quot;match_all&quot;: &#123;&#125;  &#125;&#125;   叶子查询1....</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E4%BF%9D%E6%8A%A4"><span class="toc-number">1.</span> <span class="toc-text">服务保护</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Sentinel%E6%9C%8D%E5%8A%A1%E4%BF%9D%E6%8A%A4"><span class="toc-number">2.</span> <span class="toc-text">Sentinel服务保护</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.1.</span> <span class="toc-text">使用步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8docker%E9%83%A8%E7%BD%B2sentinel"><span class="toc-number">2.1.1.</span> <span class="toc-text">1. 使用docker部署sentinel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9C%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%AD%E8%BF%9E%E6%8E%A5sentinel%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="toc-number">2.1.2.</span> <span class="toc-text">2.在微服务中连接sentinel控制台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B0%87%E7%82%B9%E9%93%BE%E8%B7%AF"><span class="toc-number">2.2.</span> <span class="toc-text">簇点链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.3.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%B7%E6%B1%82%E9%99%90%E6%B5%81"><span class="toc-number">2.3.1.</span> <span class="toc-text">1. 请求限流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BA%BF%E7%A8%8B%E9%9A%94%E7%A6%BB"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. 线程隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-fallback"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. fallback</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%9C%8D%E5%8A%A1%E7%86%94%E6%96%AD"><span class="toc-number">2.3.4.</span> <span class="toc-text">4. 服务熔断</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%AD%E8%B7%AF%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="toc-number">2.3.4.1.</span> <span class="toc-text">断路器工作原理：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%86%94%E6%96%AD%E7%AD%96%E7%95%A5"><span class="toc-number">2.3.4.2.</span> <span class="toc-text">配置熔断策略</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">分布式事务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Seata%E6%9E%B6%E6%9E%84"><span class="toc-number">4.</span> <span class="toc-text">Seata架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%83%A8%E7%BD%B2TC%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.1.</span> <span class="toc-text">1. 部署TC服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9B%86%E6%88%90Seata"><span class="toc-number">4.2.</span> <span class="toc-text">2. 微服务集成Seata</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Seata%E8%A7%A3%E5%86%B3%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E9%97%AE%E9%A2%98"><span class="toc-number">4.3.</span> <span class="toc-text">3. Seata解决分布式事务问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XA%E6%A8%A1%E5%BC%8F%E2%80%94%E5%BC%BA%E4%B8%80%E8%87%B4"><span class="toc-number">4.3.1.</span> <span class="toc-text">XA模式—强一致</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="toc-number">4.3.1.1.</span> <span class="toc-text">实现步骤</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AT%E6%A8%A1%E5%BC%8F%EF%BC%88%E4%B8%BB%E6%8E%A8%EF%BC%89%E2%80%94%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4"><span class="toc-number">4.3.2.</span> <span class="toc-text">AT模式（主推）—最终一致</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">4.3.2.1.</span> <span class="toc-text">实现步骤</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数"><img src="/img/default_cover14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2379. 得到 K 个黑块的最少涂色次数"/></a><div class="content"><a class="title" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数">2379. 得到 K 个黑块的最少涂色次数</a><time datetime="2025-01-25T08:37:20.000Z" title="发表于 2025-01-25 16:37:20">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值"><img src="/img/default_cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2090. 半径为 k 的子数组平均值"/></a><div class="content"><a class="title" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值">2090. 半径为 k 的子数组平均值</a><time datetime="2025-01-25T08:37:11.000Z" title="发表于 2025-01-25 16:37:11">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"><img src="/img/default_cover15.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"/></a><div class="content"><a class="title" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串">1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</a><time datetime="2025-01-25T08:37:02.000Z" title="发表于 2025-01-25 16:37:02">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1456. 定长子串中元音的最大数目"/></a><div class="content"><a class="title" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目">1456. 定长子串中元音的最大数目</a><time datetime="2025-01-25T08:36:54.000Z" title="发表于 2025-01-25 16:36:54">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目"><img src="/img/default_cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1343. 大小为 K 且平均值大于等于阈值的子数组数目"/></a><div class="content"><a class="title" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目">1343. 大小为 K 且平均值大于等于阈值的子数组数目</a><time datetime="2025-01-25T08:36:45.000Z" title="发表于 2025-01-25 16:36:45">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

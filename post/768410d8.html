@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Freemarker模板引擎技术 | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="【问题】当渲染文章数据时，由于文章的数据很多，直接去查询文章内容表的话，效率比较低。【解决】使用freemarker将文章的内容通过模板技术生成静态的html文件存储到minio中，这样用户就只需要拿着minio的url去minio里获取静态页面即可。效率大大提高 模板引擎Freemarker是一种模板引擎：一种基于模板和要改变的数据，并用来生成输出文本（html网页、电子邮件、配置文件、源代码…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Freemarker模板引擎技术">
+<meta property="og:url" content="http://example.com/post/768410d8.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="【问题】当渲染文章数据时，由于文章的数据很多，直接去查询文章内容表的话，效率比较低。【解决】使用freemarker将文章的内容通过模板技术生成静态的html文件存储到minio中，这样用户就只需要拿着minio的url去minio里获取静态页面即可。效率大大提高 模板引擎Freemarker是一种模板引擎：一种基于模板和要改变的数据，并用来生成输出文本（html网页、电子邮件、配置文件、源代码…">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover7.jpg">
+<meta property="article:published_time" content="2025-01-25T07:37:05.000Z">
+<meta property="article:modified_time" content="2025-01-25T07:50:22.098Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="Freemarker">
+<meta property="article:tag" content="模板引擎">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover7.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Freemarker模板引擎技术",
+  "url": "http://example.com/post/768410d8.html",
+  "image": "http://example.com/img/default_cover7.jpg",
+  "datePublished": "2025-01-25T07:37:05.000Z",
+  "dateModified": "2025-01-25T07:50:22.098Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/768410d8.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Freemarker模板引擎技术',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-微服务" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Freemarker模板引擎技术</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Freemarker模板引擎技术</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-25T07:37:05.000Z" title="发表于 2025-01-25 15:37:05">2025-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-25T07:50:22.098Z" title="更新于 2025-01-25 15:50:22">2025-01-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/768410d8.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><p>【<code>问题</code>】当渲染文章数据时，由于文章的数据很多，直接去查询文章内容表的话，效率比较低。<br>【<code>解决</code>】使用freemarker将文章的内容通过模板技术生成静态的html文件存储到minio中，这样用户就只需要拿着minio的url去minio里获取静态页面即可。效率大大提高<br><img src="/assets/369f91bc04ab4b13a3024b7cda9063c5.png" alt="369f91bc04ab4b13a3024b7cda9063c5.png"></p>
+<h1 id="模板引擎"><a href="#模板引擎" class="headerlink" title="模板引擎"></a>模板引擎</h1><p>Freemarker是一种模板引擎：一种基于模板和要改变的数据，并用来生成输出文本（html网页、电子邮件、配置文件、源代码…）的通用工具。不是面向最终用户的，而是一个Java类库。<br><img src="/assets/bb81ce762b244cc693aeb5119f053c43.png" alt="bb81ce762b244cc693aeb5119f053c43.png"></p>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><ol>
+<li>导入依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- freemarker --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-freemarker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>添加application.yml配置</li>
+</ol>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8881</span> <span class="comment">#服务端口</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">freemarker-demo</span> <span class="comment">#指定服务名</span></span><br><span class="line">  <span class="attr">freemarker:</span></span><br><span class="line">    <span class="attr">cache:</span> <span class="literal">false</span>  <span class="comment">#关闭模板缓存，方便测试</span></span><br><span class="line">    <span class="attr">settings:</span></span><br><span class="line">      <span class="attr">template_update_delay:</span> <span class="number">0</span> <span class="comment">#检查模板更新延迟时间，设置为0表示立即检查，如果时间大于0会有缓存不方便进行模板测试</span></span><br><span class="line">    <span class="attr">suffix:</span> <span class="string">.ftl</span> <span class="comment">#指定Freemarker模板文件的后缀名（默认是.ftlh）</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>suffix的属性也可以是.html、.xml、.jsp等，但是一般是以ftl作为扩展名</p>
+</blockquote>
+<ol start="3">
+<li>在resources下创建templates，此目录为<code>freemarker的默认模板存放目录</code>。在templates下创建<code>模板文件basic.ftl</code>，模板中的<code>插值表达式</code>最终会被freemarker替换成具体的数据。<br>basic.ftl文件</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Hello World!<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">b</span>&gt;</span>普通文本 String 展示：<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">	Hello $&#123;name&#125; <span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">b</span>&gt;</span>对象Student中的数据展示：<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">	姓名：$&#123;stu.name&#125;<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">	年龄：$&#123;stu.age&#125;</span><br><span class="line">	<span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>往模板里填数据，返回模板文件</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span> <span class="comment">// 因为要返回视图，而不是json字符串，所以这里不可以用@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/basic&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">hello</span><span class="params">(Model model)</span> &#123;</span><br><span class="line">        <span class="comment">// name</span></span><br><span class="line">        model.addAttribute(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;xiaolin&quot;</span>);</span><br><span class="line">        <span class="comment">// stu</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">stu</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;03&quot;</span>, <span class="number">18</span>);</span><br><span class="line">        model.addAttribute(<span class="string">&quot;stu&quot;</span>, stu);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;basic&quot;</span>; <span class="comment">// 这里返回的数据必须和模板视图的名字一样，这样才能找到模板视图(别带后缀！！！)</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Freemarker指令语法"><a href="#Freemarker指令语法" class="headerlink" title="Freemarker指令语法"></a>Freemarker指令语法</h1><h2 id="基础语法种类"><a href="#基础语法种类" class="headerlink" title="基础语法种类"></a>基础语法种类</h2><h3 id="1-注释"><a href="#1-注释" class="headerlink" title="1. 注释&lt;#-- --&gt;"></a>1. 注释<code>&lt;#-- --&gt;</code></h3><p>介于其之间的内容会被Freemarker忽视</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#--我是一个freemarker注释--&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-插值表达式"><a href="#2-插值表达式" class="headerlink" title="2. 插值表达式${...}"></a>2. 插值表达式<code>$&#123;...&#125;</code></h3><p>Freemarker会用真实的值替代${…}</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">Hello $&#123;name&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-FTL指令"><a href="#3-FTL指令" class="headerlink" title="3. FTL指令&lt;#&gt; &lt;/#&gt;"></a>3. FTL指令<code>&lt;#&gt; &lt;/#&gt;</code></h3><p>名字前加<code>#</code>区分，Freemarker会解析标签中的表达式或逻辑。<br>例如：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#list stus as stu&gt;$&#123;stu.name&#125;&lt;/#list&gt; </span><br></pre></td></tr></table></figure>
+
+<h3 id="4-文本"><a href="#4-文本" class="headerlink" title="4. 文本"></a>4. 文本</h3><p>仅文本信息，不是freemarker的注释、插值、FTL指令的内容会被Freemarker忽略解析，直接输出内容。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#--freemarker中的普通文本--&gt;</span><br><span class="line">我是一个普通的文本</span><br></pre></td></tr></table></figure>
+
+<h2 id="集合指令（List、Map）"><a href="#集合指令（List、Map）" class="headerlink" title="集合指令（List、Map）"></a>集合指令（List、Map）</h2><h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>序号<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>年龄<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>钱包<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">    &lt;#--遍历数据 stu指的是集合里的每一个数据--&gt;</span><br><span class="line">    &lt;#list stus as stu&gt;</span><br><span class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">            &lt;#--获取当前集合的下标--&gt;</span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;stu_index + 1&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;stu.name&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;stu.age&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;stu.money&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">    &lt;/#list&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><h4 id="获取map中某个key对应的值"><a href="#获取map中某个key对应的值" class="headerlink" title="获取map中某个key对应的值"></a>获取map中某个key对应的值</h4><ol>
+<li>通过<code>map[&#39;keyname&#39;].property</code></li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">姓名：$&#123;stuMap[&#x27;stu1&#x27;].name&#125;<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">年龄：$&#123;stuMap[&#x27;stu1&#x27;].age&#125;<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>通过<code>map.keyname.property</code></li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">姓名：$&#123;stuMap.stu2.name&#125;<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">年龄：$&#123;stuMap.stu2.age&#125;<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="遍历map"><a href="#遍历map" class="headerlink" title="遍历map"></a>遍历map</h4><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>序号<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>姓名<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>年龄<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>钱包<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">    &lt;#--遍历数据 key指的是map中的每一个key--&gt;</span><br><span class="line">    &lt;#list stuMap?keys as key&gt;</span><br><span class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">            &lt;#--获取当前集合的下标--&gt;</span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;key_index + 1&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;stuMap[key].name&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;stuMap[key].age&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span>$&#123;stuMap[key].money&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">    &lt;/#list&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="if指令"><a href="#if指令" class="headerlink" title="if指令"></a>if指令</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#if 表达式&gt;</span><br><span class="line">&lt;#else&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>【例】：姓名为小红的数据字体显示为红色</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#if name = &#x27;小红&#x27;&gt;</span><br><span class="line">	<span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span> = <span class="string">&quot;color: red&quot;</span>&gt;</span>$&#123;name&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">	&lt;#else&gt;</span><br><span class="line">		<span class="tag">&lt;<span class="name">span</span>&gt;</span>$&#123;name&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在Freemarker中，<code>=</code> 与 <code>==</code> 是一样的</p>
+</blockquote>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><h3 id="数值运算符"><a href="#数值运算符" class="headerlink" title="数值运算符"></a>数值运算符</h3><ol>
+<li>加法：+</li>
+<li>减法：-</li>
+<li>乘法：*</li>
+<li>除法：&#x2F;</li>
+<li>求余：%</li>
+</ol>
+<h3 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h3><p><img src="/assets/846b7c2736084785a2100f9429e9c333.png" alt="846b7c2736084785a2100f9429e9c333.png"></p>
+<blockquote>
+<p>&#x3D; 和 !&#x3D; 可以用于字符串、数值、日期来比较是否相等<br>&#x3D; 和 !&#x3D; 两边必须是相同类型的值，否则会产生错误<br>字符串”x”和”x “和”X”比较是不相等的<br><code>gt</code>代替<code>&gt;</code>，因为Freemarker会把&gt;解析成FTL标签结束的字符串，可以用括号避免这种情况，如：<code>&lt;#if (x &gt; y)&gt;</code></p>
+</blockquote>
+<h3 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h3><ol>
+<li>逻辑与：&amp;&amp;</li>
+<li>逻辑或：||</li>
+<li>逻辑非：!</li>
+</ol>
+<h2 id="空值处理"><a href="#空值处理" class="headerlink" title="空值处理"></a>空值处理</h2><ol>
+<li>判断某个变量是否存在使用：”??”<br>用法：<code>变量??</code><ul>
+<li>变量存在，返回true</li>
+<li>不存在，返回false</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#if stus??&gt;</span><br><span class="line">	&lt;#list stus as stu&gt;</span><br><span class="line">		...</span><br><span class="line">	&lt;#list&gt;</span><br><span class="line">&lt;/#if&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>缺失的变量使用：<code>!</code><br>用法：<code>!默认值</code><ul>
+<li>使用<code>!</code>要指定一个默认值，当变量为空时显示默认值</li>
+<li>如果是嵌套对象，要使用<code>()</code>括起来</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#--如果name为空显示空字符串&#x27;&#x27;--&gt;</span><br><span class="line">$&#123;name!&#x27;&#x27;&#125;</span><br><span class="line">&lt;#--如果stu或name为空，默认显示空字符串&#x27;&#x27;--&gt;</span><br><span class="line">$&#123;(stu.name)!&#x27;&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内建函数"><a href="#内建函数" class="headerlink" title="内建函数"></a>内建函数</h2><p>语法格式：<code>变量 + ? + 函数名称</code></p>
+<ol>
+<li>集合大小</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">$&#123;集合名?size&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>日期格式化<br>显示日期+时间：<code>$&#123;today?datetime&#125;</code><br>自定义格式化：<code>$&#123;today?string(&quot;yyyy年MM月&quot;)&#125;</code><br>显示时分秒：<code>$&#123;today?time&#125;</code><br>显示年月日：<code>$&#123;today?date&#125;</code></li>
+<li>内建函数c<br>【场景】：point是数值类型，使用<code>$&#123;point&#125;</code>会显示这个数字的数值，每三位使用逗号分隔。如果不想显示为每隔三位分割的数字，可以使用c函数将数字型转成字符串输出。	<br><img src="/assets/62e4f1978b4447a3b40fd0c46c45e969.png" alt="62e4f1978b4447a3b40fd0c46c45e969.png"></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">model.addAttribute(<span class="string">&quot;poin&quot;</span>, <span class="number">123456780L</span>);</span><br></pre></td></tr></table></figure>
+
+<p>使用内建函数c：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">$&#123;point?c&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>将json字符串转为对象</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt;#--assign标签的作用：定义一个变量--&gt;</span><br><span class="line">&lt;#assign text=&quot;&#123;&#x27;bank&#x27;:&#x27;工商银行&#x27;,&#x27;account&#x27;:&#x27;10101920201920212&#x27;&#125;&quot; /&gt;</span><br><span class="line">&lt;#--把json转成变量--&gt;</span><br><span class="line">&lt;#assign data=text?eval /&gt;</span><br><span class="line">开户行：$&#123;data.bank&#125;</span><br><span class="line">账号：$&#123;data.account&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：eval的使用可能不安全，如果传入的字符串内容不可控（比如来自用户输入），可能会导致安全问题（例如代码注入）</p>
+</blockquote>
+<h1 id="输出静态化文件"><a href="#输出静态化文件" class="headerlink" title="输出静态化文件"></a>输出静态化文件</h1><p><img src="/assets/f2aa177960304cbeab1740b830d65999.png" alt="f2aa177960304cbeab1740b830d65999.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FreemarkerTest</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Configuration configuration;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> <span class="keyword">throws</span> IOException, TemplateException &#123;</span><br><span class="line">        <span class="type">Template</span> <span class="variable">template</span> <span class="operator">=</span> configuration.getTemplate(<span class="string">&quot;test.ftl&quot;</span>); <span class="comment">// 模板对象</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 第一个参数：模型数据 mp</span></span><br><span class="line"><span class="comment">         * 第二个参数：输出流</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Map&lt;String, Object&gt; mp = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        mp.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;xiaolin&quot;</span>);</span><br><span class="line">        template.process(mp, <span class="keyword">new</span> <span class="title class_">FileWriter</span>(<span class="string">&quot;d:/list.html&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/768410d8.html">http://example.com/post/768410d8.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a><a class="post-meta__tags" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a><a class="post-meta__tags" href="/tags/Freemarker/">Freemarker</a><a class="post-meta__tags" href="/tags/%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/">模板引擎</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover7.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/88db839a.html" title="ElasticSearch上"><img class="cover" src="/img/default_cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch上</div></div><div class="info-2"><div class="info-item-1">安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --name es \  -e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot; \  -e &quot;discovery.type=single-node&quot; \  -v es-data:/usr/share/elasticsearch/data \  -v es-plugins:/usr/share/elasticsearch/plugins \  --privileged \  --network hm-net \  -p 9200:9200 \  -p 9300:9300 \  --restart=always \ ...</div></div></div></a><a class="pagination-related" href="/post/a5fe9d0b.html" title="MinIO"><img class="cover" src="/img/default_cover12.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">MinIO</div></div><div class="info-2"><div class="info-item-1">简介 Golang语言实现 兼容亚马逊S3云存储服务接口，适合存储大量非结构化数据 官方文档：MinIO  Docker安装MinIO 创建并运行容器  docker run -d \--name minio \-p 9000:9000 \--restart=always \-e &quot;MINIO_ACCESS_KEY=minio&quot; \-e &quot;MINIO_SECRET_KEY=minio123&quot; \-v /home/data:/data \-v /home/config:/root/.minio \minio/minio server /data   用户名：minio 密码：minio123   在浏览器输入http://192.168.140.102:9000/后即可看到minio控制台  操作MinIO 引入minio依赖  &lt;dependency&gt;	&lt;groupId&gt;io.minio&lt;/groupId&gt;    &lt;artifactId&gt;minio&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/619a560a.html" title="RabbitMQ确保消息可靠性"><img class="cover" src="/img/default_cover13.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">RabbitMQ确保消息可靠性</div></div><div class="info-2"><div class="info-item-1">消息丢失的可能性支付服务先扣减余额和更新支付状态（这俩是同步调用），然后通过RabbitMq异步调用支付服务更新订单状态。但是有些情况下，可能订单已经支付 ，但是更新订单状态却失败了，这就出现了消息丢失。  发送者在发送的过程中出现了网络故障 RabbitMQ在发送消息的过程中出现了问题 消费者在更新订单状态的时候出现了问题  发送者的可靠性发送者确认机制需要与MQ进行通信和确认，会影响消息发送的效率且一般出现的概率极低，所以一般不用这个。  方法1. 发送者重连确保发送者与MQ之间连接的可靠性。有的时候由于网络波动，可能出现发送者连接MQ失败的情况，这个配置是关闭的，可以开启连接失败后的重连机制： spring:  rabbitmq:    connection-timeout: 1s # 设置MQ的连接超时时间    template:      retry:        enabled: true # 开启超时重试机制(默认是false)        initial-interval: 1000ms # 失败后的初始等待时间        multiplier: 1...</div></div></div></a><a class="pagination-related" href="/post/ffdcb30c.html" title="ElasticSearch下"><img class="cover" src="/img/default_cover8.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch下</div></div><div class="info-2"><div class="info-item-1">DSL查询 叶子查询：在特定字段里查询特定值，属于简单查询，很少单独使用 复合查询：以逻辑方式组合多个叶子查询或更改叶子查询的行为方式 在查询后还可以对查询结果做处理： 排序：按照1个或多个字段做排序 分页：根据from或size做分页，类似MySQL 高亮：对搜索结果中的关键字添加特殊样式 聚合：对搜索结果做数据统计以形成报表      基本语法GET /&#123;索引库名&#125;/_search&#123;  &quot;query&quot;: &#123;    &quot;查询类型&quot;: &#123;      &quot;查询条件&quot;: &quot;条件值&quot;    &#125;  &#125;&#125;  【例】： GET /items/_search &#123;  &quot;query&quot;: &#123;    &quot;match_all&quot;: &#123;&#125;  &#125;&#125;   叶子查询1....</div></div></div></a><a class="pagination-related" href="/post/29134165.html" title="【项目】黑马头条 - 普通用户端"><img class="cover" src="/img/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">【项目】黑马头条 - 普通用户端</div></div><div class="info-2"><div class="info-item-1">目录结构 全局异常 登录手动加密（md5  + 随机字符串）【问题】md5是不可逆加密，md5相同的密码每次加密都一样，不安全。【解决】在md5的基础上手动加盐（salt）处理校验过程： 接口测试1. ApiFox中测试2. swagger 引入依赖  &lt;dependency&gt;    &lt;groupId&gt;io.springfox&lt;/groupId&gt;    &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;&lt;/dependency&gt;&lt;dependency&gt;    &lt;groupId&gt;io.springfox&lt;/groupId&gt;    &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;&lt;/dependency&gt;   在common模块下添加swagger配置类：  @Configuration@EnableSwagger2public class...</div></div></div></a><a class="pagination-related" href="/post/e8b36ae1.html" title="微服务架构"><img class="cover" src="/img/default_cover18.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">微服务架构</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E"><span class="toc-number">1.</span> <span class="toc-text">模板引擎</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Freemarker%E6%8C%87%E4%BB%A4%E8%AF%AD%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">Freemarker指令语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E7%A7%8D%E7%B1%BB"><span class="toc-number">3.1.</span> <span class="toc-text">基础语法种类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B3%A8%E9%87%8A"><span class="toc-number">3.1.1.</span> <span class="toc-text">1. 注释&lt;#-- --&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8F%92%E5%80%BC%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">3.1.2.</span> <span class="toc-text">2. 插值表达式${...}</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-FTL%E6%8C%87%E4%BB%A4"><span class="toc-number">3.1.3.</span> <span class="toc-text">3. FTL指令&lt;#&gt; &lt;&#x2F;#&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%96%87%E6%9C%AC"><span class="toc-number">3.1.4.</span> <span class="toc-text">4. 文本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E6%8C%87%E4%BB%A4%EF%BC%88List%E3%80%81Map%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">集合指令（List、Map）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#List"><span class="toc-number">3.2.1.</span> <span class="toc-text">List</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Map"><span class="toc-number">3.2.2.</span> <span class="toc-text">Map</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96map%E4%B8%AD%E6%9F%90%E4%B8%AAkey%E5%AF%B9%E5%BA%94%E7%9A%84%E5%80%BC"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">获取map中某个key对应的值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%8D%E5%8E%86map"><span class="toc-number">3.2.2.2.</span> <span class="toc-text">遍历map</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E6%8C%87%E4%BB%A4"><span class="toc-number">3.3.</span> <span class="toc-text">if指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.4.</span> <span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.4.1.</span> <span class="toc-text">数值运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.4.2.</span> <span class="toc-text">比较运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.4.3.</span> <span class="toc-text">逻辑运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E5%80%BC%E5%A4%84%E7%90%86"><span class="toc-number">3.5.</span> <span class="toc-text">空值处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%BB%BA%E5%87%BD%E6%95%B0"><span class="toc-number">3.6.</span> <span class="toc-text">内建函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E9%9D%99%E6%80%81%E5%8C%96%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">输出静态化文件</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数"><img src="/img/default_cover14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2379. 得到 K 个黑块的最少涂色次数"/></a><div class="content"><a class="title" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数">2379. 得到 K 个黑块的最少涂色次数</a><time datetime="2025-01-25T08:37:20.000Z" title="发表于 2025-01-25 16:37:20">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值"><img src="/img/default_cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2090. 半径为 k 的子数组平均值"/></a><div class="content"><a class="title" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值">2090. 半径为 k 的子数组平均值</a><time datetime="2025-01-25T08:37:11.000Z" title="发表于 2025-01-25 16:37:11">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"><img src="/img/default_cover15.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"/></a><div class="content"><a class="title" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串">1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</a><time datetime="2025-01-25T08:37:02.000Z" title="发表于 2025-01-25 16:37:02">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1456. 定长子串中元音的最大数目"/></a><div class="content"><a class="title" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目">1456. 定长子串中元音的最大数目</a><time datetime="2025-01-25T08:36:54.000Z" title="发表于 2025-01-25 16:36:54">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目"><img src="/img/default_cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1343. 大小为 K 且平均值大于等于阈值的子数组数目"/></a><div class="content"><a class="title" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目">1343. 大小为 K 且平均值大于等于阈值的子数组数目</a><time datetime="2025-01-25T08:36:45.000Z" title="发表于 2025-01-25 16:36:45">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

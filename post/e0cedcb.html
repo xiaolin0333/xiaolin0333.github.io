@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>网关 + Nacos配置管理 | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="网关网关：就是网络的关口，负责请求的路由、转发、身份校验。 网关路由 新建网关模块gateway 引入相关依赖  &lt;!--网关--&gt;&lt;dependency&gt;    &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-cloud-starter-gateway">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网关 + Nacos配置管理">
+<meta property="og:url" content="http://example.com/post/e0cedcb.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="网关网关：就是网络的关口，负责请求的路由、转发、身份校验。 网关路由 新建网关模块gateway 引入相关依赖  &lt;!--网关--&gt;&lt;dependency&gt;    &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-cloud-starter-gateway">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover11.jpg">
+<meta property="article:published_time" content="2025-01-25T07:35:58.000Z">
+<meta property="article:modified_time" content="2025-01-25T07:50:22.107Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="nacos">
+<meta property="article:tag" content="网关">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover11.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "网关 + Nacos配置管理",
+  "url": "http://example.com/post/e0cedcb.html",
+  "image": "http://example.com/img/default_cover11.jpg",
+  "datePublished": "2025-01-25T07:35:58.000Z",
+  "dateModified": "2025-01-25T07:50:22.107Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/e0cedcb.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '网关 + Nacos配置管理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-微服务" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">网关 + Nacos配置管理</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">网关 + Nacos配置管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-25T07:35:58.000Z" title="发表于 2025-01-25 15:35:58">2025-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-25T07:50:22.107Z" title="更新于 2025-01-25 15:50:22">2025-01-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/e0cedcb.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h1 id="网关"><a href="#网关" class="headerlink" title="网关"></a>网关</h1><p>网关：就是网络的关口，负责请求的路由、转发、身份校验。<br><img src="/assets/09f95626ddea400b8bacdab65fafb1d6.png" alt="09f95626ddea400b8bacdab65fafb1d6.png"></p>
+<h2 id="网关路由"><a href="#网关路由" class="headerlink" title="网关路由"></a>网关路由</h2><ol>
+<li>新建网关模块gateway</li>
+<li>引入相关依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--网关--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-gateway<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--nacos discovery--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--负载均衡--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-loadbalancer<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>写启动类</li>
+<li>配置路由规则</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span> <span class="comment"># 前端请求的端口（网关的端口）</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">gateway</span> <span class="comment"># 服务名称</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.140</span><span class="number">.101</span><span class="string">:8848</span> <span class="comment"># nacos地址</span></span><br><span class="line">    <span class="comment"># 路由配置</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">item-service</span> <span class="comment"># 路由规则id，自定义，唯一</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://item-service</span> <span class="comment"># 路由目标微服务，lb代表负载均衡协议</span></span><br><span class="line">          <span class="attr">predicates:</span> <span class="comment"># 路由断言，判断请求是否符合要求，符合则路由到目标</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/items/**,</span> <span class="string">/search/**</span> <span class="comment"># 以请求路径做判断，以/items或/search开头则符合</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">user-service</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://user-service</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/addresses/**,</span> <span class="string">/users/**</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">trade-service</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://trade-service</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/orders/**</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">pay-service</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://pay-service</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/pay-orders/**</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">cart-service</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://cart-service</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/carts/**</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="路由属性"><a href="#路由属性" class="headerlink" title="路由属性"></a>路由属性</h2><p>网关路由对应的Java类型是RouteDefinition，常见的属性有：</p>
+<ul>
+<li>id：路由唯一标识</li>
+<li>uri：路由目标地址</li>
+<li>predicates：路由断言，判断请求是否符合当前路由</li>
+<li>filters：路由过滤器，对请求或响应做特殊处理</li>
+</ul>
+<h3 id="predicates路由断言"><a href="#predicates路由断言" class="headerlink" title="predicates路由断言"></a>predicates路由断言</h3><p>文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-cloud-gateway/docs/3.1.8/reference/html/#gateway-request-predicates-factories">predicates路由断言</a><br><img src="/assets/a06fc78dc06f4ad893c48b690b57ee9b.png" alt="a06fc78dc06f4ad893c48b690b57ee9b.png"></p>
+<h3 id="filters路由过滤器"><a href="#filters路由过滤器" class="headerlink" title="filters路由过滤器"></a>filters路由过滤器</h3><p>文档：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-cloud-gateway/docs/3.1.8/reference/html/#gatewayfilter-factories">filters路由过滤器</a><br><img src="/assets/818227d547a6437d99c043f307fe15b8.png" alt="818227d547a6437d99c043f307fe15b8.png"></p>
+<h2 id="自定义过滤器"><a href="#自定义过滤器" class="headerlink" title="自定义过滤器"></a>自定义过滤器</h2><p>网关过滤器有两种：</p>
+<ol>
+<li>GatewayFilter：路由过滤器，作用于任意指定的路由，默认不生效，要陪知道路由后生效。</li>
+<li>GlobalFilter（常用）：全局过滤器，作用范围是所有路由；声明后自动生效。<br><img src="/assets/de4bb87f30e944a78554a8dba6730a8b.png" alt="de4bb87f30e944a78554a8dba6730a8b.png"></li>
+</ol>
+<h3 id="自定义GlobalFilter"><a href="#自定义GlobalFilter" class="headerlink" title="自定义GlobalFilter"></a>自定义GlobalFilter</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthGlobalFilter</span> <span class="keyword">implements</span> <span class="title class_">GlobalFilter</span>, Ordered &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Mono&lt;Void&gt; <span class="title function_">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取请求</span></span><br><span class="line">        <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> exchange.getRequest().getHeaders();</span><br><span class="line">        <span class="comment">// 过滤器业务处理（登录校验逻辑...）</span></span><br><span class="line">        <span class="keyword">if</span>(...) &#123;</span><br><span class="line">        	<span class="comment">// 拦截</span></span><br><span class="line">        	<span class="type">ServerHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> exchange.getResponse();</span><br><span class="line">        	response.setStatusCode(HttpStatus.UNAUTHORIZED);</span><br><span class="line">            <span class="keyword">return</span> response.setComplete();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> chain.filter(exchange); <span class="comment">// 放行</span></span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 控制过滤器执行顺序</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getOrder</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 值越小，优先级越高</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>自定义的过滤器需要在NettyRoutingFilter【将请求转发到微服务】这个过滤器之前执行，所以需要再继承一个Ordered接口，来保证我们自定义的过滤器的优先级比NettyRoutingFilter高</p>
+</blockquote>
+<h2 id="网关登录校验"><a href="#网关登录校验" class="headerlink" title="网关登录校验"></a>网关登录校验</h2><p><img src="/assets/1a7472fcc3034feeb999d6699a88b4af.png" alt="1a7472fcc3034feeb999d6699a88b4af.png"></p>
+<h3 id="网关传递用户"><a href="#网关传递用户" class="headerlink" title="网关传递用户"></a>网关传递用户</h3><p><img src="/assets/0fcac58bbf304ed0afa42dfc94e8320d.png" alt="0fcac58bbf304ed0afa42dfc94e8320d.png"></p>
+<ol>
+<li>在网关的登录校验过滤器中，从前端发送的请求头里拿到用户信息，并把用户信息放到请求头里，再发给微服务。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">ServerWebExchange</span> <span class="variable">swe</span> <span class="operator">=</span> exchange.mutate()</span><br><span class="line">		                .request(builder -&gt; builder.header(<span class="string">&quot;user-info&quot;</span>, userInfo))</span><br><span class="line">		                .build(); <span class="comment">// 传递的时候，需要传递这个返回的新的exchange</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在微服务中定义拦截器，保存网关发过来的用户信息到ThreadLocal里。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 定义拦截器</span></span><br><span class="line"><span class="comment">// 因为校验请求头这些操作已经在网关做过了，所以拦截器里边只需要把用户信息保存到ThreadLocal里即可</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 获取用户信息</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">userInfo</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;user-info&quot;</span>);</span><br><span class="line">        <span class="comment">// 判断是否获取了用户信息</span></span><br><span class="line">        <span class="keyword">if</span>(StrUtil.isNotBlank(userInfo)) &#123;</span><br><span class="line">            <span class="comment">// 存入上下文</span></span><br><span class="line">            UserContext.setUser(Long.valueOf(userInfo));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 放行</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCompletion</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 清理用户</span></span><br><span class="line">        UserContext.removeUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 注册拦截器</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * DispatcherServlet.class：springmvc的核心api</span></span><br><span class="line"><span class="comment"> * 防止网关【没有SpringMvc】也引用这个类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@ConditionalOnClass(DispatcherServlet.class)</span> <span class="comment">// 条件注解</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MvcConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        registry.addInterceptor(<span class="keyword">new</span> <span class="title class_">LoginInterceptor</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>由于很多微服务，都需要获取用户信息，不可能在这么多微服务里都一个拦截器，太麻烦啦。所以就把拦截器的代码写在common公共模块。<br>【<code>问题</code>】：配置类想要生效，需要被Spring扫描包扫描到，但是现在mvc配置类是在common公共模块下，但是是其他微服务使用这个拦截器，无法扫描到这个配置类。<br>【<code>解决</code>】：利用SpringBoot自动装配的原理，将定义的配置类放在了META-INF下的spring.factories文件下，这样就能实现自动装</p>
+</blockquote>
+<h3 id="OpenFeign传递用户信息"><a href="#OpenFeign传递用户信息" class="headerlink" title="OpenFeign传递用户信息"></a>OpenFeign传递用户信息</h3><p><img src="/assets/6116a9309a3e42ea8b5ede7ca200c0b9.png" alt="6116a9309a3e42ea8b5ede7ca200c0b9.png"><br>【<code>分析</code>】：购物车服务中的请求，不是直接从网关发过来的，而是网关先发给交易服务，再由交易服务通过OpenFeign向购物车服务中发送请求【微服务之间的调用】。<br>【<code>解决</code>】：OpenFeign提供了一个拦截器接口，所有由OpenFeign发起的请求都会先调用拦截器处理请求。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DefaultFeignConfig</span> &#123;</span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="keyword">public</span> RequestInterceptor <span class="title function_">userInfoRequestInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RequestInterceptor</span>() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">apply</span><span class="params">(RequestTemplate template)</span> &#123;</span><br><span class="line">				<span class="comment">// 交易服务可以拿到用户信息，它向购物车发请求时，UserContext里会保存用户信息</span></span><br><span class="line">				<span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserContext.getUser();</span><br><span class="line">				<span class="keyword">if</span> (userId != <span class="literal">null</span>) &#123;</span><br><span class="line">					<span class="comment">// 把用户信息放到请求头中</span></span><br><span class="line">					template.header(<span class="string">&quot;user-info&quot;</span>, userId.toString()); </span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：DefaultFeignConfig配置类想要生效，必须在<code>发起请求所在的服务</code>（交易服务）的启动类上添加：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@EnableFeignClients(basePackages = &quot;com.hmall.api.client&quot;, defaultConfiguration = DefaultFeignConfig.class)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<hr>
+<h1 id="Nacos配置管理"><a href="#Nacos配置管理" class="headerlink" title="Nacos配置管理"></a>Nacos配置管理</h1><p>【<code>存在问题</code>】：</p>
+<ol>
+<li>微服务重复配置过多，维护成本高。</li>
+<li>业务配置经常变动，每次修改都要重启服务</li>
+<li>网关路由配置写死，如果变更都要重启网关<br><img src="/assets/3fe9b4ff6f6b407084bb0d74d8ee4ee5.png" alt="3fe9b4ff6f6b407084bb0d74d8ee4ee5.png"></li>
+</ol>
+<h2 id="配置共享"><a href="#配置共享" class="headerlink" title="配置共享"></a>配置共享</h2><h3 id="1-添加共享配置"><a href="#1-添加共享配置" class="headerlink" title="1. 添加共享配置"></a>1. 添加共享配置</h3><p><img src="/assets/94b4df1cef85413fbe42a5be8e80a932.png" alt="94b4df1cef85413fbe42a5be8e80a932.png"></p>
+<h3 id="2-拉取共享配置"><a href="#2-拉取共享配置" class="headerlink" title="2. 拉取共享配置"></a>2. 拉取共享配置</h3><p>基于NacosConfig拉取共享配置代替微服务的本地配置<br><img src="/assets/946301ba738e46fc9ad04a7fee35a511.png" alt="946301ba738e46fc9ad04a7fee35a511.png"></p>
+<ol>
+<li>引入依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--nacos配置管理--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--读取bootstrap文件--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-bootstrap<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>2.新建bootstrap.yaml文件</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">cart-service</span> <span class="comment"># 微服务的名称</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.140</span><span class="number">.101</span><span class="string">:8848</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span></span><br><span class="line">        <span class="attr">shared-configs:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">data-id:</span> <span class="string">shared-jdbc.yaml</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">data-id:</span> <span class="string">shared-log.yaml</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">data-id:</span> <span class="string">shared-swagger.yaml</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/4a766faffbb94956a64d70f84bc562db.png" alt="4a766faffbb94956a64d70f84bc562db.png"></p>
+<blockquote>
+<p>先加载bootstrap配置文件，拉取nacos配置，再进行合并。</p>
+</blockquote>
+<h2 id="配置热更新"><a href="#配置热更新" class="headerlink" title="配置热更新"></a>配置热更新</h2><p>当修改配置文件中的配置时，微服务<strong>无需重启</strong>即可使配置生效。<br>【<code>条件</code>】：</p>
+<ol>
+<li>nacos中要有一个与微服务名有关的配置文件。<br><img src="/assets/617202b295ac4f2ab1684dcb20ee19c1.png" alt="617202b295ac4f2ab1684dcb20ee19c1.png"></li>
+<li>微服务中要以特定方式读取需要热更新的配置属性。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;hm.cart&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CartProperties</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer maxItems;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对应nacos中的配置：<br><img src="/assets/3bdd6371c4894edc9886796dd8e3016f.png" alt="3bdd6371c4894edc9886796dd8e3016f.png"></p>
+</blockquote>
+<h2 id="动态路由"><a href="#动态路由" class="headerlink" title="动态路由"></a>动态路由</h2><p>要实现动态路由首先要将路由配置保存到nacos中，当nacos中路由配置变更时，推送最新配置到网关，更新网关中的路由信息。</p>
+<ol>
+<li>拉取配置并添加监听器</li>
+<li>在<code>路由表里的内容变更</code>和<code>项目启动</code>时，更新路由表</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@RequiredArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DynamicRouteLoader</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> NacosConfigManager nacosConfigManager;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RouteDefinitionWriter writer;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">dataId</span> <span class="operator">=</span> <span class="string">&quot;gateway-routes.json&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">group</span> <span class="operator">=</span> <span class="string">&quot;DEFAULT_GROUP&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;String&gt; routeIds = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;(); <span class="comment">// 保存旧的路由表</span></span><br><span class="line">    <span class="meta">@PostConstruct</span> <span class="comment">// 在项目一启动的时候执行</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> <span class="keyword">throws</span> NacosException &#123;</span><br><span class="line">        <span class="comment">// 1. 项目启动，先拉取配置，并添加配置监听器</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">configInfo</span> <span class="operator">=</span> nacosConfigManager.getConfigService()</span><br><span class="line">                .getConfigAndSignListener(dataId, group, <span class="number">5000</span>, <span class="keyword">new</span> <span class="title class_">Listener</span>() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> Executor <span class="title function_">getExecutor</span><span class="params">()</span> &#123; <span class="comment">// 定义线程池</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">receiveConfigInfo</span><span class="params">(String configInfo)</span> &#123; <span class="comment">// 配置变更时做的事</span></span><br><span class="line">                        <span class="comment">// 2. 监听到配置变更时，需要去更新路由表</span></span><br><span class="line">                        updateConfigInfo(configInfo);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">        <span class="comment">// 3. 第一次读取到配置，也需要更新路由表</span></span><br><span class="line">        updateConfigInfo(configInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新路由表【利用RouteDefinitionWriter来更新路由表】</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateConfigInfo</span><span class="params">(String configInfo)</span> &#123; <span class="comment">// configInfo就是配置文件的内容</span></span><br><span class="line">        <span class="comment">// 1. 解析配置文件，转为RouteDefinition</span></span><br><span class="line">        List&lt;RouteDefinition&gt; routes = JSONUtil.toList(configInfo, RouteDefinition.class);</span><br><span class="line">        <span class="comment">// 2. 更新路由表</span></span><br><span class="line">        <span class="comment">// 【删】删除旧的路由表</span></span><br><span class="line">        <span class="keyword">for</span> (String routeId : routeIds) &#123;</span><br><span class="line">            writer.delete(Mono.just(routeId)).subscribe();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 清空旧的路由表</span></span><br><span class="line">        routeIds.clear();</span><br><span class="line">        <span class="keyword">for</span> (RouteDefinition route : routes) &#123;</span><br><span class="line">            <span class="comment">// 【增】新增新的路由表</span></span><br><span class="line">            writer.save(Mono.just(route)).subscribe();</span><br><span class="line">            <span class="comment">// 记录路由id，便于下次更新时删除</span></span><br><span class="line">            routeIds.add(route.getId());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在nacos中添加动态路由<br><img src="/assets/f8daa3c9a9f644c9a93bcca2e3a3a4c1.png" alt="f8daa3c9a9f644c9a93bcca2e3a3a4c1.png"></li>
+</ol>
+<blockquote>
+<p>【注】：为了方便解析从nacos读取到的路由配置，推荐使用json格式的路由配置。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/e0cedcb.html">http://example.com/post/e0cedcb.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a><a class="post-meta__tags" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a><a class="post-meta__tags" href="/tags/nacos/">nacos</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%85%B3/">网关</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover11.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/29134165.html" title="【项目】黑马头条 - 普通用户端"><img class="cover" src="/img/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">【项目】黑马头条 - 普通用户端</div></div><div class="info-2"><div class="info-item-1">目录结构 全局异常 登录手动加密（md5  + 随机字符串）【问题】md5是不可逆加密，md5相同的密码每次加密都一样，不安全。【解决】在md5的基础上手动加盐（salt）处理校验过程： 接口测试1. ApiFox中测试2. swagger 引入依赖  &lt;dependency&gt;    &lt;groupId&gt;io.springfox&lt;/groupId&gt;    &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;&lt;/dependency&gt;&lt;dependency&gt;    &lt;groupId&gt;io.springfox&lt;/groupId&gt;    &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;&lt;/dependency&gt;   在common模块下添加swagger配置类：  @Configuration@EnableSwagger2public class...</div></div></div></a><a class="pagination-related" href="/post/88db839a.html" title="ElasticSearch上"><img class="cover" src="/img/default_cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch上</div></div><div class="info-2"><div class="info-item-1">安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --name es \  -e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot; \  -e &quot;discovery.type=single-node&quot; \  -v es-data:/usr/share/elasticsearch/data \  -v es-plugins:/usr/share/elasticsearch/plugins \  --privileged \  --network hm-net \  -p 9200:9200 \  -p 9300:9300 \  --restart=always \ ...</div></div></div></a><a class="pagination-related" href="/post/768410d8.html" title="Freemarker模板引擎技术"><img class="cover" src="/img/default_cover7.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">Freemarker模板引擎技术</div></div><div class="info-2"><div class="info-item-1">【问题】当渲染文章数据时，由于文章的数据很多，直接去查询文章内容表的话，效率比较低。【解决】使用freemarker将文章的内容通过模板技术生成静态的html文件存储到minio中，这样用户就只需要拿着minio的url去minio里获取静态页面即可。效率大大提高 模板引擎Freemarker是一种模板引擎：一种基于模板和要改变的数据，并用来生成输出文本（html网页、电子邮件、配置文件、源代码…）的通用工具。不是面向最终用户的，而是一个Java类库。 步骤 导入依赖  &lt;dependencies&gt;    &lt;!-- freemarker --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/a5fe9d0b.html" title="MinIO"><img class="cover" src="/img/default_cover12.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">MinIO</div></div><div class="info-2"><div class="info-item-1">简介 Golang语言实现 兼容亚马逊S3云存储服务接口，适合存储大量非结构化数据 官方文档：MinIO  Docker安装MinIO 创建并运行容器  docker run -d \--name minio \-p 9000:9000 \--restart=always \-e &quot;MINIO_ACCESS_KEY=minio&quot; \-e &quot;MINIO_SECRET_KEY=minio123&quot; \-v /home/data:/data \-v /home/config:/root/.minio \minio/minio server /data   用户名：minio 密码：minio123   在浏览器输入http://192.168.140.102:9000/后即可看到minio控制台  操作MinIO 引入minio依赖  &lt;dependency&gt;	&lt;groupId&gt;io.minio&lt;/groupId&gt;    &lt;artifactId&gt;minio&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/619a560a.html" title="RabbitMQ确保消息可靠性"><img class="cover" src="/img/default_cover13.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">RabbitMQ确保消息可靠性</div></div><div class="info-2"><div class="info-item-1">消息丢失的可能性支付服务先扣减余额和更新支付状态（这俩是同步调用），然后通过RabbitMq异步调用支付服务更新订单状态。但是有些情况下，可能订单已经支付 ，但是更新订单状态却失败了，这就出现了消息丢失。  发送者在发送的过程中出现了网络故障 RabbitMQ在发送消息的过程中出现了问题 消费者在更新订单状态的时候出现了问题  发送者的可靠性发送者确认机制需要与MQ进行通信和确认，会影响消息发送的效率且一般出现的概率极低，所以一般不用这个。  方法1. 发送者重连确保发送者与MQ之间连接的可靠性。有的时候由于网络波动，可能出现发送者连接MQ失败的情况，这个配置是关闭的，可以开启连接失败后的重连机制： spring:  rabbitmq:    connection-timeout: 1s # 设置MQ的连接超时时间    template:      retry:        enabled: true # 开启超时重试机制(默认是false)        initial-interval: 1000ms # 失败后的初始等待时间        multiplier: 1...</div></div></div></a><a class="pagination-related" href="/post/ffdcb30c.html" title="ElasticSearch下"><img class="cover" src="/img/default_cover8.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch下</div></div><div class="info-2"><div class="info-item-1">DSL查询 叶子查询：在特定字段里查询特定值，属于简单查询，很少单独使用 复合查询：以逻辑方式组合多个叶子查询或更改叶子查询的行为方式 在查询后还可以对查询结果做处理： 排序：按照1个或多个字段做排序 分页：根据from或size做分页，类似MySQL 高亮：对搜索结果中的关键字添加特殊样式 聚合：对搜索结果做数据统计以形成报表      基本语法GET /&#123;索引库名&#125;/_search&#123;  &quot;query&quot;: &#123;    &quot;查询类型&quot;: &#123;      &quot;查询条件&quot;: &quot;条件值&quot;    &#125;  &#125;&#125;  【例】： GET /items/_search &#123;  &quot;query&quot;: &#123;    &quot;match_all&quot;: &#123;&#125;  &#125;&#125;   叶子查询1....</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E5%85%B3"><span class="toc-number">1.</span> <span class="toc-text">网关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E8%B7%AF%E7%94%B1"><span class="toc-number">1.1.</span> <span class="toc-text">网关路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.</span> <span class="toc-text">路由属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#predicates%E8%B7%AF%E7%94%B1%E6%96%AD%E8%A8%80"><span class="toc-number">1.2.1.</span> <span class="toc-text">predicates路由断言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#filters%E8%B7%AF%E7%94%B1%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">filters路由过滤器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">自定义过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89GlobalFilter"><span class="toc-number">1.3.1.</span> <span class="toc-text">自定义GlobalFilter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E7%99%BB%E5%BD%95%E6%A0%A1%E9%AA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">网关登录校验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E4%BC%A0%E9%80%92%E7%94%A8%E6%88%B7"><span class="toc-number">1.4.1.</span> <span class="toc-text">网关传递用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenFeign%E4%BC%A0%E9%80%92%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="toc-number">1.4.2.</span> <span class="toc-text">OpenFeign传递用户信息</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nacos%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">Nacos配置管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%85%B1%E4%BA%AB"><span class="toc-number">2.1.</span> <span class="toc-text">配置共享</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B7%BB%E5%8A%A0%E5%85%B1%E4%BA%AB%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.1.</span> <span class="toc-text">1. 添加共享配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8B%89%E5%8F%96%E5%85%B1%E4%BA%AB%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.2.</span> <span class="toc-text">2. 拉取共享配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%83%AD%E6%9B%B4%E6%96%B0"><span class="toc-number">2.2.</span> <span class="toc-text">配置热更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="toc-number">2.3.</span> <span class="toc-text">动态路由</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数"><img src="/img/default_cover14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2379. 得到 K 个黑块的最少涂色次数"/></a><div class="content"><a class="title" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数">2379. 得到 K 个黑块的最少涂色次数</a><time datetime="2025-01-25T08:37:20.000Z" title="发表于 2025-01-25 16:37:20">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值"><img src="/img/default_cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2090. 半径为 k 的子数组平均值"/></a><div class="content"><a class="title" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值">2090. 半径为 k 的子数组平均值</a><time datetime="2025-01-25T08:37:11.000Z" title="发表于 2025-01-25 16:37:11">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"><img src="/img/default_cover15.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"/></a><div class="content"><a class="title" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串">1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</a><time datetime="2025-01-25T08:37:02.000Z" title="发表于 2025-01-25 16:37:02">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1456. 定长子串中元音的最大数目"/></a><div class="content"><a class="title" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目">1456. 定长子串中元音的最大数目</a><time datetime="2025-01-25T08:36:54.000Z" title="发表于 2025-01-25 16:36:54">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目"><img src="/img/default_cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1343. 大小为 K 且平均值大于等于阈值的子数组数目"/></a><div class="content"><a class="title" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目">1343. 大小为 K 且平均值大于等于阈值的子数组数目</a><time datetime="2025-01-25T08:36:45.000Z" title="发表于 2025-01-25 16:36:45">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

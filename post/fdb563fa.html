@@ -1,0 +1,408 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>vue2-vue基础入门（二） | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="侦听器什么是watch侦听器允许开发者监视数据的变化，从而针对数据的变化做特定的操作。  数据值发生变化，就会自动触发侦听器。  所有侦听器都被定义到watch节点下。 侦听器本质是个函数，要监视哪个数据的变化，就把数据名作为方法名即可。  侦听器的参数是新值在前，旧值在后。 典型应用场景：判断用户名是否被占用。  侦听器的格式方法格式的侦听器（先考虑） 缺点1：无法在刚进入页面的时候立即触发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue2-vue基础入门（二）">
+<meta property="og:url" content="http://example.com/post/fdb563fa.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="侦听器什么是watch侦听器允许开发者监视数据的变化，从而针对数据的变化做特定的操作。  数据值发生变化，就会自动触发侦听器。  所有侦听器都被定义到watch节点下。 侦听器本质是个函数，要监视哪个数据的变化，就把数据名作为方法名即可。  侦听器的参数是新值在前，旧值在后。 典型应用场景：判断用户名是否被占用。  侦听器的格式方法格式的侦听器（先考虑） 缺点1：无法在刚进入页面的时候立即触发。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover16.jpg">
+<meta property="article:published_time" content="2025-01-25T07:59:33.000Z">
+<meta property="article:modified_time" content="2025-01-25T08:06:43.094Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="vue2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover16.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "vue2-vue基础入门（二）",
+  "url": "http://example.com/post/fdb563fa.html",
+  "image": "http://example.com/img/default_cover16.jpg",
+  "datePublished": "2025-01-25T07:59:33.000Z",
+  "dateModified": "2025-01-25T08:06:43.094Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/fdb563fa.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'vue2-vue基础入门（二）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-vue2" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">vue2-vue基础入门（二）</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">vue2-vue基础入门（二）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-25T07:59:33.000Z" title="发表于 2025-01-25 15:59:33">2025-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-25T08:06:43.094Z" title="更新于 2025-01-25 16:06:43">2025-01-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/vue2/">vue2</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/fdb563fa.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h1 id="侦听器"><a href="#侦听器" class="headerlink" title="侦听器"></a>侦听器</h1><h2 id="什么是watch侦听器"><a href="#什么是watch侦听器" class="headerlink" title="什么是watch侦听器"></a>什么是watch侦听器</h2><p>允许开发者监视数据的变化，从而针对数据的变化做特定的操作。</p>
+<ul>
+<li>数据值发生变化，就会自动触发侦听器。 </li>
+<li>所有侦听器都被定义到watch节点下。</li>
+<li>侦听器本质是个函数，要监视哪个数据的变化，就把数据名作为方法名即可。 </li>
+<li>侦听器的参数是新值在前，旧值在后。</li>
+<li>典型应用场景：判断用户名是否被占用。</li>
+</ul>
+<h2 id="侦听器的格式"><a href="#侦听器的格式" class="headerlink" title="侦听器的格式"></a>侦听器的格式</h2><h3 id="方法格式的侦听器（先考虑）"><a href="#方法格式的侦听器（先考虑）" class="headerlink" title="方法格式的侦听器（先考虑）"></a>方法格式的侦听器（先考虑）</h3><ul>
+<li>缺点1：无法在刚进入页面的时候立即触发。</li>
+<li>缺点2：如果真听的是一个对象，如果对象中的属性发生了变化，不会触发侦听器。<ul>
+<li>如果要侦听的是对象子属性的变化，可以使用该方法，但是注意：必须包裹一层单引号。</li>
+</ul>
+</li>
+</ul>
+<h3 id="对象格式的侦听器"><a href="#对象格式的侦听器" class="headerlink" title="对象格式的侦听器"></a>对象格式的侦听器</h3><ul>
+<li>好处1：可以通过<strong>immediate</strong>选项，让侦听器自动触发。<ul>
+<li>immediate作用：控制侦听器是否自动触发一次。</li>
+<li>默认值是false，true表示一进入页面就会触发一次侦听器。</li>
+</ul>
+</li>
+<li>好处2：可以通过<strong>deep</strong>选项，让侦听器深度侦听对象中每个属性的变化。<ul>
+<li>deep作用：只要对象中任何一个属性变化了，都会触发“对象的侦听器”。</li>
+<li>默认值是false。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方法格式的侦听器</span></span><br><span class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">    <span class="attr">el</span>:<span class="string">&#x27;#app&#x27;</span>,</span><br><span class="line">    <span class="attr">data</span>:&#123;<span class="attr">username</span>:<span class="string">&#x27;&#x27;</span>&#125;,</span><br><span class="line">    <span class="attr">watch</span>:&#123;</span><br><span class="line">        <span class="comment">//newVal:变化后的新值，oldVal:变化前的旧值</span></span><br><span class="line">        <span class="comment">//监听username值的变化</span></span><br><span class="line">        <span class="title function_">username</span>(<span class="params">newVal,oldVal</span>) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(newVal,oldVal);        </span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//对象格式的侦听器</span></span><br><span class="line"><span class="comment">//（immediate）</span></span><br><span class="line"><span class="attr">watch</span>: &#123;</span><br><span class="line">    <span class="attr">username</span>:&#123;</span><br><span class="line">        <span class="comment">//侦听器的处理函数(只要监视到username值的变化，就会触发该函数)</span></span><br><span class="line">        <span class="title function_">handler</span>(<span class="params">newVal,oldVal</span>) &#123;</span><br><span class="line">        	<span class="variable language_">console</span>.<span class="title function_">log</span>(newVal,oldVal);        	                    </span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">//immediate选项的默认值是false，true表示一进入页面就会触发一次侦听器。</span></span><br><span class="line">        <span class="comment">//作用：控制侦听器是否自动触发一次。</span></span><br><span class="line">        <span class="attr">immediate</span>:<span class="literal">true</span>    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//（deep）</span></span><br><span class="line">&lt;input type=<span class="string">&quot;text&quot;</span> v-model=<span class="string">&quot;info.username&quot;</span>/&gt;</span><br><span class="line"><span class="attr">data</span>:&#123;</span><br><span class="line">    <span class="attr">info</span>:&#123;</span><br><span class="line">        <span class="attr">username</span>:<span class="string">&#x27;admin&#x27;</span>    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line"><span class="attr">watch</span>:&#123;</span><br><span class="line">    <span class="attr">info</span>:&#123;</span><br><span class="line">        <span class="title function_">handler</span>(<span class="params">newVal</span>) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(newVal.<span class="property">username</span>);        </span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">//开启深度监听，只要对象中任何一个属性变化了，都会触发“对象的侦听器”</span></span><br><span class="line">        <span class="attr">deep</span>:<span class="literal">true</span>,    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//如果只监听username，也可以用如下代码</span></span><br><span class="line"><span class="attr">watch</span>:&#123;</span><br><span class="line">    <span class="string">&#x27;info.username&#x27;</span> (newVal) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(newVal); <span class="comment">//得到的就是info对象里的username值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//或：</span></span><br><span class="line"><span class="attr">watch</span>:&#123;</span><br><span class="line">    <span class="string">&#x27;info.username&#x27;</span>:&#123;</span><br><span class="line">        <span class="title function_">handler</span>(<span class="params">newVal</span>) &#123;</span><br><span class="line">           <span class="variable language_">console</span>.<span class="title function_">log</span>(newVal);     </span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="计算属性"><a href="#计算属性" class="headerlink" title="计算属性"></a>计算属性</h1><p>计算属性指<strong>通过一系列运算</strong>后，最终得到一个<strong>属性值</strong>，这个<strong>动态计算出来的属性值</strong>可以被模板结构或methods方法使用。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li>定义的时候，要被定义成“方法”</li>
+<li>使用的时候，当普通属性使用即可。</li>
+<li>被定义到computed节点下。</li>
+</ul>
+<h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><ul>
+<li>实现了代码的复用。</li>
+<li>当计算属性所依赖的数据源发生变化，计算属性会自动重新求值。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;p&gt;&#123;&#123;rgb&#125;&#125;&lt;/p&gt;</span><br><span class="line"><span class="attr">computed</span>:&#123;</span><br><span class="line">    <span class="title function_">rgb</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">`rgb&#123;$(this.r),$(this.g),$(this.b)&#125;`</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="axios"><a href="#axios" class="headerlink" title="axios"></a>axios</h1><p>axios是一个专注于数据请求的库。</p>
+<h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><p>调用axios方法得到的返回值result是个Promise对象【axios在请求到数据之后，在真正的数据之外套了一层壳】。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	config:&#123;&#125;,</span><br><span class="line">	data:&#123;真实的数据&#125;,</span><br><span class="line">	header:&#123;&#125;,</span><br><span class="line">	request:&#123;&#125;,</span><br><span class="line">	status:xxx,</span><br><span class="line">	statusText:&#x27;&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用格式"><a href="#常用格式" class="headerlink" title="常用格式"></a>常用格式</h2><ul>
+<li>调用axios之后，使用 async&#x2F;await 进行简化。<ul>
+<li>如果调用某个方法的返回值是Promise实例，则前面可以添加await</li>
+<li>await只能用在被 async “修饰”的方法中</li>
+</ul>
+</li>
+<li>使用解构赋值，从axios封装的大对象中，把data属性解构出来。</li>
+<li>把解构出来的data属性，使用 冒号 进行重命名，一般都重命名为 { data: res }</li>
+</ul>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//语法如下：</span></span><br><span class="line"><span class="title function_">axios</span>(&#123;</span><br><span class="line">    <span class="attr">method</span>:<span class="string">&#x27;请求的类型&#x27;</span>,</span><br><span class="line">    <span class="attr">url</span>:<span class="string">&#x27;请求的URL地址&#x27;</span>,</span><br><span class="line">    <span class="attr">params</span>:&#123;<span class="variable constant_">URL</span>中的查询参数&#125;, <span class="comment">//GET传参</span></span><br><span class="line">    <span class="attr">data</span>:&#123;请求体参数&#125; <span class="comment">//POST传参</span></span><br><span class="line">&#125;).<span class="title function_">then</span>(result) =&gt; &#123;</span><br><span class="line">    <span class="comment">// .then用来指定成功之后的回调函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例：</span></span><br><span class="line"><span class="comment">//发起GET请求</span></span><br><span class="line"><span class="title function_">axios</span>(&#123;</span><br><span class="line">    <span class="attr">methos</span>:<span class="string">&#x27;GET&#x27;</span>,</span><br><span class="line">    <span class="attr">url</span>:<span class="string">&#x27;http://www.liulongbin.top:3306/api/getbooks&#x27;</span>,</span><br><span class="line">    <span class="attr">params</span>:&#123;<span class="attr">id</span>:<span class="number">1</span>&#125;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">result</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result.<span class="property">data</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//发起POST请求</span></span><br><span class="line"><span class="title function_">axios</span>(&#123;</span><br><span class="line">    <span class="attr">methosd</span>:<span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">url</span>:<span class="string">&#x27;http://www.liulongbin.top:3306/api/getbooks&#x27;</span>,</span><br><span class="line">    <span class="attr">data</span>:&#123;</span><br><span class="line">        <span class="attr">name</span>:<span class="string">&#x27;zs&#x27;</span>,</span><br><span class="line">        <span class="attr">age</span>:<span class="number">20</span>    </span><br><span class="line">    &#125; </span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">result</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(result.<span class="property">data</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//优化：!!!!!</span></span><br><span class="line"><span class="comment">//规则：如果调用某个方法的返回值是Promise实例，则前面可以添加await</span></span><br><span class="line"><span class="comment">//await只能用在被 async “修饰”的方法中</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">//解构赋值的时候，使用 : 进行重命名</span></span><br><span class="line">    <span class="keyword">const</span> &#123; <span class="attr">data</span>:res &#125; = <span class="keyword">await</span> <span class="title function_">axios</span>(&#123;  <span class="comment">//解构赋值</span></span><br><span class="line">        <span class="attr">methosd</span>:<span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">        <span class="attr">url</span>:<span class="string">&#x27;http://www.liulongbin.top:3306/api/getbooks&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>:&#123;</span><br><span class="line">           <span class="attr">name</span>:<span class="string">&#x27;zs&#x27;</span>,</span><br><span class="line">           <span class="attr">age</span>:<span class="number">20</span>    </span><br><span class="line">       &#125; </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">data</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="axios直接发起GET和POST请求"><a href="#axios直接发起GET和POST请求" class="headerlink" title="axios直接发起GET和POST请求"></a>axios直接发起GET和POST请求</h2><p>请求数据发GET，传输数据发POST</p>
+<h3 id="Get请求"><a href="#Get请求" class="headerlink" title="Get请求"></a>Get请求</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">axios.<span class="title function_">get</span>(<span class="string">&#x27;url地址&#x27;</span> [,&#123;</span><br><span class="line">    <span class="attr">params</span>:&#123;<span class="variable constant_">GET</span>参数&#125;</span><br><span class="line">&#125;] )</span><br><span class="line"><span class="comment">//例：</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; <span class="attr">data</span>:res &#125; = <span class="keyword">await</span> axios.<span class="title function_">get</span>(<span class="string">&#x27;http://www.liulongbin.top:3306/api/getbooks&#x27;</span>,&#123;</span><br><span class="line">        <span class="attr">params</span>:&#123;</span><br><span class="line">            <span class="attr">id</span>:<span class="number">1</span>        </span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(res);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Post请求"><a href="#Post请求" class="headerlink" title="Post请求"></a>Post请求</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">axios.<span class="title function_">post</span>(<span class="string">&#x27;url地址&#x27;</span> [,&#123; <span class="variable constant_">POST</span>请求体数据 &#125;] )</span><br><span class="line"><span class="comment">//例：</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; <span class="attr">data</span>:res &#125; = <span class="keyword">await</span> axios.<span class="title function_">post</span>(<span class="string">&#x27;&#x27;</span><span class="attr">http</span>:<span class="comment">//www.liulongbin.top:3306/api/getbooks&#x27;&#x27;,&#123;</span></span><br><span class="line">        <span class="attr">name</span>:<span class="string">&#x27;zs&#x27;</span>,</span><br><span class="line">        <span class="attr">gender</span>:<span class="string">&#x27;女&#x27;</span>,</span><br><span class="line">    &#125;,<span class="attr">headers</span>:&#123;<span class="string">&#x27;Authorization&#x27;</span>:<span class="string">&#x27;本机token&#x27;</span>&#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(res);</span><br></pre></td></tr></table></figure>
+
+<h1 id="vue-cli"><a href="#vue-cli" class="headerlink" title="vue-cli"></a>vue-cli</h1><h2 id="单页面应用程序（SPA）"><a href="#单页面应用程序（SPA）" class="headerlink" title="单页面应用程序（SPA）"></a>单页面应用程序（SPA）</h2><p>指<strong>一个web网站中只有唯一的一个HTML页面</strong>，所有的功能与交互都在这唯一的一个页面内完成。</p>
+<h2 id="什么是vue-cli"><a href="#什么是vue-cli" class="headerlink" title="什么是vue-cli"></a>什么是vue-cli</h2><p>vue-cli是Vue.js开发的标准工具，它简化了程序员基于webpack创建工程化的Vue项目的过程。因此，程序员可以专注在撰写应用上，而不必纠结webpack配置的问题。<br>网址：<a target="_blank" rel="noopener" href="https://cli.vuejs.org/zh/guide/">介绍 | Vue CLI (vuejs.org)</a></p>
+<h2 id="安装和使用"><a href="#安装和使用" class="headerlink" title="安装和使用"></a>安装和使用</h2><ul>
+<li>vue-cli是npm上的全局包，在终端上输入 npm install -g @vue&#x2F;cli 就可以安装成功了。<ul>
+<li>使用 vue–V 指令可以判断是否安装成功</li>
+</ul>
+</li>
+<li>vue-cli的使用：<ul>
+<li>在终端下运行如下命令，创建指定名称的项目： vue create 项目名<br><img src="/assets/e14baa3852e342578e631a74d8453c6b.png" alt="e14baa3852e342578e631a74d8453c6b.png"><br><img src="/assets/7175be17ef9b470fae6adf67ef2ca418.png" alt="7175be17ef9b470fae6adf67ef2ca418.png"><br><img src="/assets/587c36e7a7a94f7fafd78ee209517a5c.png" alt="587c36e7a7a94f7fafd78ee209517a5c.png"><br><img src="/assets/ac3239327e20486c9ac0729d48d6346c.png" alt="ac3239327e20486c9ac0729d48d6346c.png"><br><img src="/assets/fd489e1b7129498c9fc14cc22533b39f.png" alt="fd489e1b7129498c9fc14cc22533b39f.png"><br><img src="/assets/2592a4676d9c437c8cbaa806d92de3b0.png" alt="2592a4676d9c437c8cbaa806d92de3b0.png"></li>
+</ul>
+</li>
+</ul>
+<h3 id="vue项目中src目录的构成"><a href="#vue项目中src目录的构成" class="headerlink" title="vue项目中src目录的构成"></a>vue项目中src目录的构成</h3><p><img src="/assets/4bdf91a9d1cd41eba7d3ed858a68fd65.png" alt="4bdf91a9d1cd41eba7d3ed858a68fd65.png"></p>
+<ul>
+<li>assets文件夹： 存放项目中用到的静态资源文件。（css样式表、图片资源）</li>
+<li>components文件夹：程序员封装的、可复用的组件，都要放在components目录下。</li>
+<li>main.js：是项目的入口文件，整个项目的运行，要先执行main.js。</li>
+<li>APP.vue：是项目的根组件。</li>
+</ul>
+<h2 id="vue项目的运行流程"><a href="#vue项目的运行流程" class="headerlink" title="vue项目的运行流程"></a>vue项目的运行流程</h2><p>在工程化的项目中，vue通过 main.js 把 App.vue 渲染到 index.html 的指定区域中。<br><img src="/assets/aaded890e40f4fe9b688c0a250beac3b.png" alt="aaded890e40f4fe9b688c0a250beac3b.png"></p>
+<ul>
+<li><strong>App.vue</strong> 用来编写待渲染的<strong>模板结构</strong> （render函数中，渲染的是哪个.vue组件，这个组件就叫做根组件）</li>
+<li><strong>index.html</strong>中需要预留一个<strong>el区域</strong></li>
+<li><strong>main.js</strong>把App.vue渲染到index.html所预留的区域中</li>
+</ul>
+<h1 id="vue组件"><a href="#vue组件" class="headerlink" title="vue组件"></a>vue组件</h1><h2 id="什么是组件化开发"><a href="#什么是组件化开发" class="headerlink" title="什么是组件化开发"></a>什么是组件化开发</h2><p>根据封装的思想，把页面上可复用的UI结构封装为组件。</p>
+<h2 id="vue项目中的组件化开发"><a href="#vue项目中的组件化开发" class="headerlink" title="vue项目中的组件化开发"></a>vue项目中的组件化开发</h2><ol>
+<li>vue是个支持组件化开发的前端框架</li>
+<li>vue规定：组建的后缀名是.vue</li>
+</ol>
+<h3 id="组件的三个组成部分"><a href="#组件的三个组成部分" class="headerlink" title="组件的三个组成部分"></a>组件的三个组成部分</h3><h4 id="template：组件的模板结构（要复用的UI结构）"><a href="#template：组件的模板结构（要复用的UI结构）" class="headerlink" title="template：组件的模板结构（要复用的UI结构）"></a>template：组件的模板结构（要复用的UI结构）</h4><ol start="3">
+<li>组件的模板元素中，只能有一个根节点！</li>
+<li>一般根节点的类名就是xxx-container（xxx为组件名）</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pink&quot;</span>&gt;</span>&#123;&#123;username&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;changeName&quot;</span>&gt;</span>修改用户名<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="script：-组件的JavaScript行为"><a href="#script：-组件的JavaScript行为" class="headerlink" title="script： 组件的JavaScript行为"></a>script： 组件的JavaScript行为</h4><ol start="5">
+<li>使用export default默认导出</li>
+<li>组件中的data必须是个函数   data() {  return { 定义数据 }   }</li>
+<li>在组件中，this表示当前组件的实例对象</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="comment">//默认导出！固定写法！</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="comment">//注意！！ .vue中的data，不能像之前一样，不能指向对象。</span></span><br><span class="line">    <span class="comment">//组件中的data数据源必须是个函数</span></span><br><span class="line">    <span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="comment">//这个return 出去的&#123; &#125;可以定义数据。</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">             <span class="attr">username</span>:<span class="string">&#x27;lsh&#x27;</span>       </span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">methods</span>:&#123;</span><br><span class="line">        <span class="title function_">changeName</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">username</span>=<span class="string">&quot;33&quot;</span>      </span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//当前组件中的计算属性、侦听器、过滤器</span></span><br><span class="line">    <span class="attr">computed</span>:&#123;&#125;,</span><br><span class="line">    <span class="attr">watch</span>:&#123;&#125;,</span><br><span class="line">    <span class="attr">filters</span>:&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="style：组件的样式"><a href="#style：组件的样式" class="headerlink" title="style：组件的样式"></a>style：组件的样式</h4><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//style中启动less语法</span></span><br><span class="line">&lt;style lang=<span class="string">&quot;less&quot;</span>&gt;</span><br><span class="line">.<span class="property">pink</span> &#123;</span><br><span class="line">    <span class="attr">color</span>:pink;</span><br><span class="line">    h3 &#123;</span><br><span class="line">        <span class="attr">color</span>:red;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="组件之间的父子关系"><a href="#组件之间的父子关系" class="headerlink" title="组件之间的父子关系"></a>组件之间的父子关系</h2><p><img src="/assets/23de26cfde744602ad2c63820c0777c2.png" alt="23de26cfde744602ad2c63820c0777c2.png"></p>
+<h3 id="使用组件的三个步骤"><a href="#使用组件的三个步骤" class="headerlink" title="使用组件的三个步骤"></a>使用组件的三个步骤</h3><ol>
+<li>使用import语法导入需要的组件。（在script里面导入）</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Left</span> <span class="keyword">from</span> <span class="string">&#x27;@/components/Left.vue&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用components结点注册组件</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="attr">components</span>:&#123;</span><br><span class="line">        <span class="title class_">Left</span>    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>以标签形式使用刚才注册的组件</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Left</span>&gt;</span><span class="tag">&lt;/<span class="name">Left</span>&gt;</span></span></span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过components注册的是<strong>私有子组件</strong><br>    缺点：如果某个组件使用频率高，会很麻烦</p>
+</blockquote>
+<blockquote>
+<p>注册全局组件：在vue项目的main.js入口文件中，通过Vue.components()方法，可以注册全局组件。<br>import Count from ‘@&#x2F;components&#x2F;Count.vue’<br>Vue.component(‘Count’,Count);</p>
+</blockquote>
+<h2 id="组件的props"><a href="#组件的props" class="headerlink" title="组件的props"></a>组件的props</h2><p>props是组件的自定义属性，在封装通用组件的时候，合理地使用props可以极大地提高组件的复用性。</p>
+<h3 id="v-bind（父传子，加了准没错！）"><a href="#v-bind（父传子，加了准没错！）" class="headerlink" title="v-bind（父传子，加了准没错！）"></a>v-bind（父传子，加了准没错！）</h3><ul>
+<li>当传递的是个数字，而不是data里的数据时：<ul>
+<li>不使用v-bind传递的是字符串。</li>
+<li>使用v-bind传递的是数字。</li>
+</ul>
+</li>
+<li>当传递的是个data里面的数据时：<ul>
+<li>不使用v-bind传递的是该数据的变量名。</li>
+<li>使用v-bind传递的是该数据的属性值。</li>
+</ul>
+</li>
+</ul>
+<h3 id="props中的数据"><a href="#props中的数据" class="headerlink" title="props中的数据"></a>props中的数据</h3><ul>
+<li>props中的数据，可以直接在模板结构中被使用</li>
+<li>props中的数据是只读的，程序员不能修改props的值，否则终端会报错。<ul>
+<li>想要修改props的值，可以把props的值转存到data中，因为data中的数据都是可读可写的。</li>
+</ul>
+</li>
+</ul>
+<h3 id="default设置默认值"><a href="#default设置默认值" class="headerlink" title="default设置默认值"></a>default设置默认值</h3><ul>
+<li>把props改成<strong>对象形式</strong>，里面通过default指定默认值。</li>
+<li>外界如果没有传递属性，则默认值生效</li>
+<li>如果要给对象设置默认值：<br><img src="/assets/86269b196606447a9dc81b98e62d7831.png" alt="86269b196606447a9dc81b98e62d7831.png"></li>
+</ul>
+<h3 id="type定义属性的值"><a href="#type定义属性的值" class="headerlink" title="type定义属性的值"></a>type定义属性的值</h3><ul>
+<li>在声明自定义属性时，可以通过type来定义属性的值类型</li>
+<li>如果传递过来的值不符合此类型，则会在终端报错</li>
+<li>Number、Boolean、String、Array、Object…</li>
+<li>可以通过数组形式，为当前属性定义多个可能的类型。type: [Number, String]</li>
+</ul>
+<h3 id="require必填项"><a href="#require必填项" class="headerlink" title="require必填项"></a>require必填项</h3><ul>
+<li>某个属性如果设置required的值为true，则必须要传递改属性。</li>
+<li>required只关心是否传值，不关心传递类型是否符合。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="comment">//组件的自定义属性</span></span><br><span class="line">    <span class="attr">props</span>:[<span class="string">&#x27;自定义属性A&#x27;</span>,<span class="string">&#x27;自定义属性B&#x27;</span>,<span class="string">&#x27;其他自定义属性...&#x27;</span>],</span><br><span class="line">    <span class="comment">//或</span></span><br><span class="line">    <span class="attr">props</span>:&#123;</span><br><span class="line">        <span class="comment">//外界使用该组件，没有传这些属性，则默认值生效</span></span><br><span class="line">        自定义属性<span class="attr">A</span>:&#123;</span><br><span class="line">        	<span class="attr">default</span>:默认值<span class="number">1</span>,</span><br><span class="line">         	<span class="attr">type</span>:<span class="title class_">Number</span>, <span class="comment">//规定传值类型</span></span><br><span class="line">           <span class="attr">required</span>:<span class="literal">true</span> <span class="comment">//必填项校验</span></span><br><span class="line">         &#125;,</span><br><span class="line">        自定义属性<span class="attr">B</span>:&#123;<span class="attr">defalt</span>:默认值<span class="number">2</span>&#125;,   </span><br><span class="line">        自定义属性<span class="attr">C</span>:&#123;<span class="attr">defalt</span>:默认值<span class="number">3</span>&#125;,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//组件的私有数据</span></span><br><span class="line">    <span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123; &#125;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//例：</span></span><br><span class="line"><span class="comment">//Count.vue文件</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>Count的值：&#123;&#123;count&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="attr">props</span>:[<span class="string">&#x27;init&#x27;</span>],<span class="comment">//这样如果别的组件想要给Count传值的话，可以通过init来传</span></span><br><span class="line">    <span class="comment">//或</span></span><br><span class="line">    <span class="attr">props</span>:&#123;</span><br><span class="line">        <span class="attr">init</span>:&#123;</span><br><span class="line">            <span class="comment">//用default属性定义属性的默认值</span></span><br><span class="line">            <span class="attr">default</span>:<span class="number">0</span>,</span><br><span class="line">            <span class="attr">type</span>:<span class="title class_">Number</span>,</span><br><span class="line">            <span class="attr">required</span>:<span class="literal">true</span>        </span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">data</span>(<span class="params"></span>)&#123;</span><br><span class="line">       <span class="keyword">return</span> &#123;</span><br><span class="line">           <span class="attr">count</span>:<span class="variable language_">this</span>.<span class="property">init</span>       </span><br><span class="line">       &#125;    	            </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//App.vue文件</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">    <span class="comment">//不使用v-bind 传递的是字符串</span></span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Count</span> <span class="attr">init</span>=<span class="string">&quot;6&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">Count</span>&gt;</span></span></span><br><span class="line">    <span class="comment">//使用v-bind 传递的是数字</span></span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Count</span> <span class="attr">:init</span>=<span class="string">&quot;6&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">Count</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="组件之间的样式冲突"><a href="#组件之间的样式冲突" class="headerlink" title="组件之间的样式冲突"></a>组件之间的样式冲突</h2><p>默认情况下，写在.vue里的组件中的样式会全局生效，因此很容易造成多个组件之间的样式冲突问题。</p>
+<h3 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h3><ul>
+<li>单页面应用程序中，所有组件的DOM结构，都是基于唯一的index.html页面进行呈现的。</li>
+<li>每个组件的样式，都会影响整个index.html页面的DOM元素。</li>
+</ul>
+<h3 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h3><ul>
+<li>给当前组件的style添加 scoped 属性。</li>
+<li>当使用给第三方组件库的时候，如果有修改组件默认样式的需求，需要用到**&#x2F;deep&#x2F;**</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;style lang=<span class="string">&quot;less&quot;</span> scoped&gt;&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【补】：浏览器无法正常解析.vue结尾的文件<br>“vue-template-compiler”: “^2.6.11”：vue模板编译器（帮助程序员将.vue结尾的文件编译成js，再交给浏览器去解析）</p>
+</blockquote>
+<blockquote>
+<p>【关于自定义属性的传值问题】：一般来说，传值不要传对象，传的是对象里的每个属性。这样可复用性强。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/fdb563fa.html">http://example.com/post/fdb563fa.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%89%8D%E7%AB%AF/">前端</a><a class="post-meta__tags" href="/tags/vue2/">vue2</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover16.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/cda38f22.html" title="vue2-vue基础入门（一）"><img class="cover" src="/img/default_cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">vue2-vue基础入门（一）</div></div><div class="info-2"><div class="info-item-1">vue简介vue1.构建用户界面...</div></div></div></a><a class="pagination-related" href="/post/c29e9402.html" title="安装和配置Vant组件库"><img class="cover" src="/img/default_cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">安装和配置Vant组件库</div></div><div class="info-2"><div class="info-item-1">安装和配置Vant组件库vant官网：vant2  执行：npm i vant@latest-v2    安装组件库 在开发阶段，直接导入所有组件，不用考虑体积问题（怎么快怎么来）  import Vue from &#x27;vue&#x27;import Vant from &#x27;vant&#x27; //导入所有组件import &#x27;vant/lib/index.css&#x27; //导入所有组件对应的样式Vue.use(Vant);   在发布阶段，再进行项目体积的优化。  注 某个属性的值如果是true，可以简写  &lt;van-nav-bar title=&quot;黑马头条&quot; :fixed=&quot;true&quot; /&gt;//以上代码可以简写成：&lt;van-nav-bar title=&quot;黑马头条&quot; fixed...</div></div></div></a><a class="pagination-related" href="/post/36579f38.html" title="数组中的方法"><img class="cover" src="/img/default_cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">数组中的方法</div></div><div class="info-2"><div class="info-item-1">forEach循环 一旦开始，无法在中间被停止 效率低  const arr = [&#x27;工藤新一&#x27;,&#x27;服部平次&#x27;,&#x27;怪盗基德&#x27;];arr.forEach((item,index)=&gt;&#123;  //循环3次，return也不会起效果    if(item==&#x27;工藤新一&#x27;) &#123;        console.log(index);        &#125;&#125;)  some循环 从数组里找元素，用some循环比较合适 找到对应的项后，通过return true来终止some循环  const arr = [&#x27;工藤新一&#x27;,&#x27;服部平次&#x27;,&#x27;怪盗基德&#x27;];arr.some((item,index)=&gt;&#123;   //循环2次    if(item==&#x27;工藤新一&#x27;)&#123;        console.log(index);        return true;   //固定写法  ...</div></div></div></a><a class="pagination-related" href="/post/567bfae1.html" title="生命周期&amp;数据共享"><img class="cover" src="/img/default_cover8.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">生命周期&amp;数据共享</div></div><div class="info-2"><div class="info-item-1">组件的生命周期生命周期&amp;生命周期函数 生命周期：指一个组件从创建 -&gt; 运行 -&gt;...</div></div></div></a><a class="pagination-related" href="/post/daf3c6fd.html" title="ECMAScript6新特性"><img class="cover" src="/img/default_cover17.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ECMAScript6新特性</div></div><div class="info-2"><div class="info-item-1">let变量声明以及声明特性let a;let a,b,c;let a=100;  特性：  let变量不能重复声明，但是var却可以。 块级作用域：变量只在代码块里有效，在代码块外无效。[全局、函数、eval] 不存在变量提升。（如果有变量提升，可以在变量未声明之前去使用这个变量） 不影响作用域链。  &#123;    let name = &quot;xiaolin0333&quot;;    function fn() &#123;        console.log(name);//会向上一级作用域里去找name变量        &#125;    fn();&#125;  const声明常量及其特点const NAME = &quot;xiaolin0333&quot;;  特性：  一定要赋初始值。 一般常量使用大写（潜规则） 常量值不能修改。 块级作用域 对于数组和对象的元素修改，不算对常量的修改，不会报错  const DATA =...</div></div></div></a><a class="pagination-related" href="/post/704e3643.html" title="动态组件&amp;插槽&amp;自定义指令&amp;ESLint&amp;axios补充"><img class="cover" src="/img/default_cover13.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">动态组件&amp;插槽&amp;自定义指令&amp;ESLint&amp;axios补充</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BE%A6%E5%90%AC%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">侦听器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFwatch%E4%BE%A6%E5%90%AC%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">什么是watch侦听器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%A6%E5%90%AC%E5%99%A8%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">侦听器的格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E6%A0%BC%E5%BC%8F%E7%9A%84%E4%BE%A6%E5%90%AC%E5%99%A8%EF%BC%88%E5%85%88%E8%80%83%E8%99%91%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">方法格式的侦听器（先考虑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%A0%BC%E5%BC%8F%E7%9A%84%E4%BE%A6%E5%90%AC%E5%99%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">对象格式的侦听器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">计算属性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%BD%E5%A4%84"><span class="toc-number">2.2.</span> <span class="toc-text">好处</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#axios"><span class="toc-number">3.</span> <span class="toc-text">axios</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">基础语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">常用格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">3.2.1.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">3.2.2.</span> <span class="toc-text">例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96"><span class="toc-number">3.2.3.</span> <span class="toc-text">优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#axios%E7%9B%B4%E6%8E%A5%E5%8F%91%E8%B5%B7GET%E5%92%8CPOST%E8%AF%B7%E6%B1%82"><span class="toc-number">3.3.</span> <span class="toc-text">axios直接发起GET和POST请求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Get%E8%AF%B7%E6%B1%82"><span class="toc-number">3.3.1.</span> <span class="toc-text">Get请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Post%E8%AF%B7%E6%B1%82"><span class="toc-number">3.3.2.</span> <span class="toc-text">Post请求</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#vue-cli"><span class="toc-number">4.</span> <span class="toc-text">vue-cli</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E9%A1%B5%E9%9D%A2%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%EF%BC%88SPA%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">单页面应用程序（SPA）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFvue-cli"><span class="toc-number">4.2.</span> <span class="toc-text">什么是vue-cli</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="toc-number">4.3.</span> <span class="toc-text">安装和使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vue%E9%A1%B9%E7%9B%AE%E4%B8%ADsrc%E7%9B%AE%E5%BD%95%E7%9A%84%E6%9E%84%E6%88%90"><span class="toc-number">4.3.1.</span> <span class="toc-text">vue项目中src目录的构成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vue%E9%A1%B9%E7%9B%AE%E7%9A%84%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">4.4.</span> <span class="toc-text">vue项目的运行流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#vue%E7%BB%84%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">vue组件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91"><span class="toc-number">5.1.</span> <span class="toc-text">什么是组件化开发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91"><span class="toc-number">5.2.</span> <span class="toc-text">vue项目中的组件化开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E7%9A%84%E4%B8%89%E4%B8%AA%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="toc-number">5.2.1.</span> <span class="toc-text">组件的三个组成部分</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#template%EF%BC%9A%E7%BB%84%E4%BB%B6%E7%9A%84%E6%A8%A1%E6%9D%BF%E7%BB%93%E6%9E%84%EF%BC%88%E8%A6%81%E5%A4%8D%E7%94%A8%E7%9A%84UI%E7%BB%93%E6%9E%84%EF%BC%89"><span class="toc-number">5.2.1.1.</span> <span class="toc-text">template：组件的模板结构（要复用的UI结构）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#script%EF%BC%9A-%E7%BB%84%E4%BB%B6%E7%9A%84JavaScript%E8%A1%8C%E4%B8%BA"><span class="toc-number">5.2.1.2.</span> <span class="toc-text">script： 组件的JavaScript行为</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#style%EF%BC%9A%E7%BB%84%E4%BB%B6%E7%9A%84%E6%A0%B7%E5%BC%8F"><span class="toc-number">5.2.1.3.</span> <span class="toc-text">style：组件的样式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E7%9A%84%E7%88%B6%E5%AD%90%E5%85%B3%E7%B3%BB"><span class="toc-number">5.3.</span> <span class="toc-text">组件之间的父子关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%BB%84%E4%BB%B6%E7%9A%84%E4%B8%89%E4%B8%AA%E6%AD%A5%E9%AA%A4"><span class="toc-number">5.3.1.</span> <span class="toc-text">使用组件的三个步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E7%9A%84props"><span class="toc-number">5.4.</span> <span class="toc-text">组件的props</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#v-bind%EF%BC%88%E7%88%B6%E4%BC%A0%E5%AD%90%EF%BC%8C%E5%8A%A0%E4%BA%86%E5%87%86%E6%B2%A1%E9%94%99%EF%BC%81%EF%BC%89"><span class="toc-number">5.4.1.</span> <span class="toc-text">v-bind（父传子，加了准没错！）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#props%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">5.4.2.</span> <span class="toc-text">props中的数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#default%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="toc-number">5.4.3.</span> <span class="toc-text">default设置默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#type%E5%AE%9A%E4%B9%89%E5%B1%9E%E6%80%A7%E7%9A%84%E5%80%BC"><span class="toc-number">5.4.4.</span> <span class="toc-text">type定义属性的值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#require%E5%BF%85%E5%A1%AB%E9%A1%B9"><span class="toc-number">5.4.5.</span> <span class="toc-text">require必填项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E7%9A%84%E6%A0%B7%E5%BC%8F%E5%86%B2%E7%AA%81"><span class="toc-number">5.5.</span> <span class="toc-text">组件之间的样式冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0%EF%BC%9A"><span class="toc-number">5.5.1.</span> <span class="toc-text">原因：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%EF%BC%9A"><span class="toc-number">5.5.2.</span> <span class="toc-text">解决：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数"><img src="/img/default_cover14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2379. 得到 K 个黑块的最少涂色次数"/></a><div class="content"><a class="title" href="/post/43089fc2.html" title="2379. 得到 K 个黑块的最少涂色次数">2379. 得到 K 个黑块的最少涂色次数</a><time datetime="2025-01-25T08:37:20.000Z" title="发表于 2025-01-25 16:37:20">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值"><img src="/img/default_cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2090. 半径为 k 的子数组平均值"/></a><div class="content"><a class="title" href="/post/8b141577.html" title="2090. 半径为 k 的子数组平均值">2090. 半径为 k 的子数组平均值</a><time datetime="2025-01-25T08:37:11.000Z" title="发表于 2025-01-25 16:37:11">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"><img src="/img/default_cover15.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串"/></a><div class="content"><a class="title" href="/post/b541a47.html" title="1461. 检查一个字符串是否包含所有长度为 K 的二进制子串">1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</a><time datetime="2025-01-25T08:37:02.000Z" title="发表于 2025-01-25 16:37:02">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1456. 定长子串中元音的最大数目"/></a><div class="content"><a class="title" href="/post/6afae9e.html" title="1456. 定长子串中元音的最大数目">1456. 定长子串中元音的最大数目</a><time datetime="2025-01-25T08:36:54.000Z" title="发表于 2025-01-25 16:36:54">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目"><img src="/img/default_cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1343. 大小为 K 且平均值大于等于阈值的子数组数目"/></a><div class="content"><a class="title" href="/post/e9cb7dc4.html" title="1343. 大小为 K 且平均值大于等于阈值的子数组数目">1343. 大小为 K 且平均值大于等于阈值的子数组数目</a><time datetime="2025-01-25T08:36:45.000Z" title="发表于 2025-01-25 16:36:45">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
