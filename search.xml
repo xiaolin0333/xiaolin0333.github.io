@@ -1020,9 +1020,9 @@
             
             <tag> javase </tag>
             
-            <tag> 集合 </tag>
-            
             <tag> stream </tag>
+            
+            <tag> 集合 </tag>
             
         </tags>
       
