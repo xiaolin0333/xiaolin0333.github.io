@@ -4,425 +4,6 @@
   
     
     <entry>
-      <title>2379. 得到 K 个黑块的最少涂色次数</title>
-      <link href="/post/43089fc2.html"/>
-      <url>/post/43089fc2.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/25a2e86292cd4c6fa7ce290bd2052c3b.png" alt="25a2e86292cd4c6fa7ce290bd2052c3b.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/minimum-recolors-to-get-k-consecutive-black-blocks/description/">2379. 得到 K 个黑块的最少涂色次数</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minimumRecolors</span><span class="params">(string blocks, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> res = blocks.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> curWcount = <span class="number">0</span>; <span class="comment">// 记录窗口内W字符的个数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; blocks.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(blocks[r] == <span class="string">&#x27;W&#x27;</span>) &#123; <span class="comment">// 滑窗内有字符W</span></span><br><span class="line">                curWcount++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">                res = <span class="built_in">min</span>(res, curWcount);</span><br><span class="line">                <span class="comment">// 缩小窗口</span></span><br><span class="line">                <span class="keyword">if</span>(blocks[l++] == <span class="string">&#x27;W&#x27;</span>) &#123;</span><br><span class="line">                    curWcount--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>题目想要求把白色块变成黑色块使得有k个连续的黑色块的最小次数，也就是求滑窗内白色块出现的最小次数。只要统计长度为k的滑窗内最少的白色字符数即可。</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> 滑动窗口 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 滑动窗口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>2090. 半径为 k 的子数组平均值</title>
-      <link href="/post/8b141577.html"/>
-      <url>/post/8b141577.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/12af681c4bc24b7b8e5d1c3c4b39190d.png" alt="12af681c4bc24b7b8e5d1c3c4b39190d.png"><br>【题目】：<a href="https://leetcode.cn/problems/k-radius-subarray-averages/">2090. 半径为 k 的子数组平均值</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">getAverages</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">res</span><span class="params">(nums.size(), <span class="number">-1</span>)</span></span>;</span><br><span class="line">        <span class="type">long</span> curSum = <span class="number">0</span>; <span class="comment">// 记录当前滑窗内的数值和</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; nums.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            curSum += nums[r];</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k * <span class="number">2</span> + <span class="number">1</span>) &#123; <span class="comment">// 窗口长度满足条件</span></span><br><span class="line">                res[r - k] = curSum / (k * <span class="number">2</span> + <span class="number">1</span>); <span class="comment">// 当长度满足时，此时对应的半径中心坐标是：r - k</span></span><br><span class="line">                curSum -= nums[l++]; <span class="comment">// 缩小窗口</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>半径为 k 的子数组：说明滑窗的长度（r - l + 1）必须要达到2 * k + 1。但是当r下标到达半径中心的时候，还不知道此时数组内元素和，所以可以等到滑窗长度达到条件时，再去反推半径中心。</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> 滑动窗口 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 滑动窗口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</title>
-      <link href="/post/b541a47.html"/>
-      <url>/post/b541a47.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/ebb6bd124ee440cab48c47a7395956d3.png" alt="ebb6bd124ee440cab48c47a7395956d3.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/check-if-a-string-contains-all-binary-codes-of-size-k/description/">1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</a></p><p> 直接存储滑动窗口内的字符串，这样虽然方便，但是时间复杂度和k相关，如果k &#x3D; n，此时会达到O(n^2)的复杂度。</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">hasAllCodes</span><span class="params">(string s, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        unordered_set&lt;string&gt; ss;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; s.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">                ss.<span class="built_in">insert</span>(s.<span class="built_in">substr</span>(l, k));</span><br><span class="line">                l++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ss.<span class="built_in">size</span>() == <span class="number">1</span>&lt;&lt;k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n*k)</li><li>空间复杂度: O(1&lt;&lt;k)</li></ul><blockquote><p>1&lt;&lt;k：相当于pow(2, k)<br>substr(截取的字符串起始位置, 截取字符串的长度)</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> 滑动窗口 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 滑动窗口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>1456. 定长子串中元音的最大数目</title>
-      <link href="/post/6afae9e.html"/>
-      <url>/post/6afae9e.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/8ef7122a0698439c80ae7f976c73683b.png" alt="8ef7122a0698439c80ae7f976c73683b.png"><br>【链接】：<a href="https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/">1456. 定长子串中元音的最大数目</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxVowels</span><span class="params">(string s, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>; <span class="comment">// 记录整个过程中的最大值</span></span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>; <span class="comment">// 记录当前滑动窗口内元音字母的数字</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; s.<span class="built_in">size</span>(); ++r) &#123; <span class="comment">// 右侧元素进入窗口</span></span><br><span class="line">        <span class="comment">// 上来先判断是否是元音字母</span></span><br><span class="line">            <span class="keyword">if</span>(s[r] == <span class="string">&#x27;a&#x27;</span> || s[r] == <span class="string">&#x27;e&#x27;</span> || s[r] == <span class="string">&#x27;i&#x27;</span> || s[r] == <span class="string">&#x27;o&#x27;</span> || s[r] == <span class="string">&#x27;u&#x27;</span>) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(count, res); </span><br><span class="line">            <span class="comment">// 看看是否超过了窗口的长度</span></span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">            <span class="comment">// 左边要离开滑动窗口，看看s[l]是否是元音字母</span></span><br><span class="line">                <span class="keyword">if</span>(s[l] == <span class="string">&#x27;a&#x27;</span> || s[l] == <span class="string">&#x27;e&#x27;</span> || s[l] == <span class="string">&#x27;i&#x27;</span> || s[l] == <span class="string">&#x27;o&#x27;</span> || s[l] == <span class="string">&#x27;u&#x27;</span>) &#123;</span><br><span class="line">                    count--;</span><br><span class="line">                &#125;</span><br><span class="line">                l++; <span class="comment">// 左侧元素离开窗口</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度：O(n)</li><li>空间复杂度：O(1)</li></ul><blockquote><p>这是一个<code>定长滑动窗口</code>的题，一般会有l、r两个指针，这一过程主要有三个问题：</p><ol><li>右侧元素进入窗口：只要r &lt; s.size()，每次都会进入窗口</li><li>左侧元素离开窗口：当前窗口长度 &#x3D; k</li><li>更新res的最大值</li></ol></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> 滑动窗口 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 滑动窗口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>1343. 大小为 K 且平均值大于等于阈值的子数组数目</title>
-      <link href="/post/e9cb7dc4.html"/>
-      <url>/post/e9cb7dc4.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/9a7f8baf21f243779595bc6a89f043be.png" alt="9a7f8baf21f243779595bc6a89f043be.png"><br>【题目】：<a href="https://leetcode.cn/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/description/">1343. 大小为 K 且平均值大于等于阈值的子数组数目</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numOfSubarrays</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; arr, <span class="type">int</span> k, <span class="type">int</span> threshold)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>; <span class="comment">// 计算满足条件的数</span></span><br><span class="line">        <span class="type">int</span> curSum = <span class="number">0</span>; <span class="comment">// 计算当前滑窗内的总数</span></span><br><span class="line">        <span class="type">int</span> targetSum = k * threshold; <span class="comment">// 当前滑窗内的总数满足条件的最小值</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; arr.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            curSum += arr[r];</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123; <span class="comment">// 条件1. 长度为k</span></span><br><span class="line">                <span class="keyword">if</span>(curSum &gt;= targetSum) &#123; <span class="comment">// 条件2. 平均值大于等于threshold</span></span><br><span class="line">                    ++count;<span class="comment">// 满足条件1和2</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 缩小窗口</span></span><br><span class="line">                curSum -= arr[l];</span><br><span class="line">                l++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>这题有两个条件，长度为k、平均值大于等于threshold。所以需要依次满足这两个条件后，才能更新count值。</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> 滑动窗口 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 滑动窗口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>1052. 爱生气的书店老板</title>
-      <link href="/post/cc4621fb.html"/>
-      <url>/post/cc4621fb.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/bf841e57b01a4e23bf1a35d4d00f5e23.png" alt="bf841e57b01a4e23bf1a35d4d00f5e23.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/grumpy-bookstore-owner/description/">1052. 爱生气的书店老板</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxSatisfied</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; customers, vector&lt;<span class="type">int</span>&gt;&amp; grumpy, <span class="type">int</span> minutes)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxAddCount = <span class="number">0</span>; <span class="comment">// 在minutes长度内，还能增加的最大顾客满意人数</span></span><br><span class="line">        <span class="type">int</span> curAddCount = <span class="number">0</span>; <span class="comment">// 当前窗口内还能增加的顾客满意数</span></span><br><span class="line">        <span class="type">int</span> curCount = <span class="number">0</span>; <span class="comment">// 原本有的顾客满意数</span></span><br><span class="line">        <span class="type">int</span> n = customers.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; n; ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(grumpy[r] == <span class="number">1</span>) &#123; <span class="comment">// 把老板从生气变成不生气</span></span><br><span class="line">                curAddCount += customers[r]; </span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                curCount += customers[r]; <span class="comment">// 原有的顾客满意数</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == minutes) &#123;</span><br><span class="line">                maxAddCount = <span class="built_in">max</span>(maxAddCount, curAddCount);</span><br><span class="line">                <span class="keyword">if</span>(grumpy[l] == <span class="number">1</span>) &#123;</span><br><span class="line">                    curAddCount -= customers[l];</span><br><span class="line">                &#125;</span><br><span class="line">                l++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxAddCount + curCount; <span class="comment">// 当天内最大顾客满意数 = 可以增加的最大顾客满意数 + 原本有的顾客满意数</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>当天内最大顾客满意数 &#x3D; 可以增加的最大顾客满意数 + 原本有的顾客满意数<br>原本有的顾客满意数是动不了的，所以只需要求可以增加的最大顾客满意数。<br>书店老板可以让自己连续minutes分钟不生气，说明滑动窗口的长度为minutes<br>所以本题只需要求在minutes的滑动窗口内，可以增加的最大顾客满意数，即在滑动窗口内，可以从grumpy[i]为1变为0后增加的最大顾客满意数。</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> 滑动窗口 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 滑动窗口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>643. 子数组最大平均数 I</title>
-      <link href="/post/9730100f.html"/>
-      <url>/post/9730100f.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/092c3f51831e422ead89e06101ad7c9f.png" alt="092c3f51831e422ead89e06101ad7c9f.png"><br>【链接】：<a href="https://blog.csdn.net/qq_57882997/article/details/145240772?spm=1001.2014.3001.5501">643. 子数组最大平均数 I</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">findMaxAverage</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxSum = INT_MIN, curSum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; nums.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            curSum += nums[r]; <span class="comment">// 更新curSum</span></span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">                maxSum = <span class="built_in">max</span>(maxSum, curSum); <span class="comment">// 更新maxSum(因为题目要求长度为k，所以需要在这里更新maxSum)</span></span><br><span class="line">                curSum -= nums[l]; <span class="comment">// 扣除左侧元素（保持一致）</span></span><br><span class="line">                ++l; <span class="comment">// 左侧元素离开</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxSum / (<span class="type">double</span>)k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度：O(n)</li><li>空间复杂度：O(1)</li></ul><blockquote><p>题目关键字：连续子数组，说明可以采用滑动窗口。<br>maxSum的初始值：因为数组内有负数，maxSum的初始值不应该设置成0，应该设置为int的最小值。<br>更新的位置：因为题目说明长度必须要为k，所以更新的位置应该在if里边，长度为k时才进行更新。</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> 滑动窗口 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 滑动窗口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>15. 三数之和</title>
-      <link href="/post/e192590d.html"/>
-      <url>/post/e192590d.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/7c3fb12fc1d241d4af62180ff5fc4b04.png" alt="7c3fb12fc1d241d4af62180ff5fc4b04.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/3sum/description/?envType=study-plan-v2&envId=top-100-liked">15. 三数之和</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">threeSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;<span class="comment">// 因为是升序排列，如果当前数&gt;0，三数值和一定&gt;0，后边的数字都可以做剪枝</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(i != <span class="number">0</span> &amp;&amp; nums[i] == nums[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>; <span class="comment">// 去除重复的三元组</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">int</span> target = -nums[i];</span><br><span class="line">            <span class="comment">// -4,-1,-1,0,1,2</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> l = i + <span class="number">1</span>, r = nums.<span class="built_in">size</span>() - <span class="number">1</span>; l &lt; r;) &#123;</span><br><span class="line">                <span class="type">int</span> cur = nums[l] + nums[r];</span><br><span class="line">                <span class="keyword">if</span>(target == cur) &#123;</span><br><span class="line">                    res.<span class="built_in">push_back</span>(&#123;nums[i], nums[l], nums[r]&#125;);</span><br><span class="line">                    <span class="keyword">while</span>(l &lt; r &amp;&amp; nums[l] == nums[l + <span class="number">1</span>]) ++l;</span><br><span class="line">                    <span class="keyword">while</span>(l &lt; r &amp;&amp; nums[r] == nums[r - <span class="number">1</span>]) --r;</span><br><span class="line">                    ++l;</span><br><span class="line">                    --r;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(target &gt; cur) &#123;</span><br><span class="line">                    ++l;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    --r;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n^2)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>这题要求不能重复的三元组，只要三元组的三个数是按照顺序进行排列的，这样就可以不用借助set来去充了。<br>所以可以先把数组进行排序，用i指针从头到尾遍历数组，遍历的时候可以利用三元组和为0的特性进行剪枝。如果i遍历的元素已经是&gt;0，但是数组又是升序排列，后边不可能有和&lt;0的数字，所以当i遍历到元素&gt;0时，直接break。<br>遍历的时候要注意，可能会有相同的数字连续出现多次。<br>情况1. nums[i] &#x3D;&#x3D; nums[i - 1]，这种情况可以直接continue。<br>情况2. 当已经找到一个三元组后，可能nums[l] &#x3D;&#x3D; nums[l + 1]，此时都应该使用while循环（可能有多个）排除在外。但是要注意，退出循环的时候，如果是nums[l] !&#x3D; nums[l + 1]，但是此时nums[l] &#x3D;&#x3D; nums[l - 1]，这样就会出现死循环。所以一定要在推出while循环后再做一次++l的操作。</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt;tags:</span><br><span class="line"> - 算法</span><br><span class="line"> - LeetCode热题100</span><br><span class="line"> - 双指针</span><br><span class="line">&gt;categories: LeetCode热题100</span><br><span class="line">&gt;type: LeetCode热题100</span><br><span class="line">&gt;top_img: false</span><br></pre></td></tr></table></figure></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode热题100 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> LeetCode热题100 </tag>
-            
-            <tag> 双指针 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>49. 字母异位词分组</title>
-      <link href="/post/b390ba48.html"/>
-      <url>/post/b390ba48.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/550eba79e4d6445a801eec931869ca85.png" alt="550eba79e4d6445a801eec931869ca85.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&envId=top-100-liked">49. 字母异位词分组</a></p><p>方法1：直接对字符串进行排序后使用map存储相同的字母异位词，再把map的value依次存放到结果中。</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">groupAnagrams</span>(vector&lt;string&gt;&amp; strs) &#123;</span><br><span class="line">        vector&lt;vector&lt;string&gt;&gt; res;</span><br><span class="line">        unordered_map&lt;string, vector&lt;string&gt;&gt; mp;</span><br><span class="line">        <span class="keyword">for</span>(string str : strs) &#123;</span><br><span class="line">            string temp = str;</span><br><span class="line">            <span class="built_in">sort</span>(str.<span class="built_in">begin</span>(), str.<span class="built_in">end</span>());</span><br><span class="line">            mp[str].<span class="built_in">push_back</span>(temp);</span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> [key, value] : mp) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(value);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n<em>k</em>logk)</li><li>空间复杂度: O(n)</li></ul><blockquote><p>字母异位词对应的排序后的字符串是一样的，所以把每个字符串排序后插入以排序后字符串作为key，以原字符串作为value的map中。这个方法虽然简洁，但是取决于每个字符串的长度，排序的时间复杂度是k * logk</p></blockquote><p>方法2：自定义哈希函数</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">groupAnagrams</span>(vector&lt;string&gt;&amp; strs) &#123;</span><br><span class="line">        vector&lt;vector&lt;string&gt;&gt; res;</span><br><span class="line">        unordered_map&lt;string, vector&lt;string&gt;&gt; mp;</span><br><span class="line">        <span class="keyword">for</span>(string str : strs) &#123;</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">count</span><span class="params">(<span class="number">26</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">char</span> c : str) &#123;</span><br><span class="line">                count[c - <span class="string">&#x27;a&#x27;</span>]++;</span><br><span class="line">            &#125;</span><br><span class="line">            string key = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; ++i) &#123;</span><br><span class="line">                key += count[i] + i + <span class="string">&#x27;a&#x27;</span>;<span class="comment">// 使用：每个字符出现的次数 + 字符 作为key</span></span><br><span class="line">            &#125;</span><br><span class="line">            mp[key].<span class="built_in">push_back</span>(str);</span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> [key, value] : mp) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(value);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n*max(k, 26))</li><li>空间复杂度: O(n)</li></ul><blockquote><p>使用每个字符出现的次数 + 字符 作为key。</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode热题100 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> LeetCode热题100 </tag>
-            
-            <tag> 哈希表 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>283. 移动零</title>
-      <link href="/post/c150202b.html"/>
-      <url>/post/c150202b.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/86dccd30c4424cccaf651f7c42d6becc.png" alt="86dccd30c4424cccaf651f7c42d6becc.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/move-zeroes/description/?envType=study-plan-v2&envId=top-100-liked">283. 移动零</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">moveZeroes</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; nums.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[r] != <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="built_in">swap</span>(nums[l++], nums[r]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>先把非0的元素移到前边，后边剩下的就是0了。<br>l：非0元素的末尾<br>r：0元素的开头</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode热题100 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> LeetCode热题100 </tag>
-            
-            <tag> 双指针 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>11. 盛最多水的容器</title>
-      <link href="/post/d910afda.html"/>
-      <url>/post/d910afda.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/30ceac9344b04484b321e1b32b48184f.png" alt="30ceac9344b04484b321e1b32b48184f.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/container-with-most-water/description/?envType=study-plan-v2&envId=top-100-liked">11. 盛最多水的容器</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxArea</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = height.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> res = (n - <span class="number">1</span>) * <span class="built_in">min</span>(height[<span class="number">0</span>], height[n - <span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = n - <span class="number">1</span>; r &gt; l;) &#123;</span><br><span class="line">            <span class="keyword">if</span>(height[l] &lt; height[r]) &#123; <span class="comment">// 移动更短的木棍</span></span><br><span class="line">                l++;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                --r;</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(res, (r - l) * <span class="built_in">min</span>(height[l], height[r])); <span class="comment">// 每次记录当前遍历过的最大值</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>短板原理：可以容纳的水 &#x3D; min(height[l], height[r]) * (r - l)<br>因为可以容纳的水取决于高和宽，初始时，先让宽最大，即l &#x3D; 0，r &#x3D; n - 1，每次只要移动更短的木棍，虽然宽在缩小，但是有可能找到比当前更大的高。Z</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode热题100 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> LeetCode热题100 </tag>
-            
-            <tag> 双指针 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>128. 最长连续序列</title>
-      <link href="/post/b4efa8b3.html"/>
-      <url>/post/b4efa8b3.html</url>
-      
-        <content type="html"><![CDATA[<p><img src="/assets/8bbb8394bc2c4ddfb91488e74e651c98.png" alt="8bbb8394bc2c4ddfb91488e74e651c98.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/longest-consecutive-sequence/description/?envType=study-plan-v2&envId=top-100-liked">128. 最长连续序列</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">longestConsecutive</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">unordered_set&lt;<span class="type">int</span>&gt; <span class="title">ss</span><span class="params">(nums.begin(), nums.end())</span></span>;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> s : ss) &#123;</span><br><span class="line">            <span class="keyword">if</span>(ss.<span class="built_in">find</span>(s - <span class="number">1</span>) != ss.<span class="built_in">end</span>()) &#123;</span><br><span class="line">                <span class="keyword">continue</span>; <span class="comment">// 说明s一定不是开头</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// s是开头</span></span><br><span class="line">            <span class="type">int</span> y = s + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span>(ss.<span class="built_in">find</span>(y) != ss.<span class="built_in">end</span>()) &#123;</span><br><span class="line">                y++;</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(y - s, res);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(n)</li></ul><blockquote><p>可以把这题理解成，有好多条不同长度的线段，要找到最长那条线，只需要找到所有线的线段头，从头开始计算。<br>例如：**[100,4,101,200,1,3,2]**<br>本题一共有三条线段，分别是：<code>100,101</code> 和 <code>200</code> 和 <code>1,2,3,4</code>，先把这些数存在set中，遍历set。<br>如果遍历到2，先判断2前面是否还有数字，由于2前边还有，说明2不是开头，直接跳过后续操作。<br>如果遍历到1，1前边已经没有数字了，说明1就是开头，从头开始计算，看看这个线段长度是多长。<br>这里虽然是两个循环，但是内循环只有遍历到线段头的时候才会执行，所以时间复杂度为O(n)</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode热题100 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> LeetCode热题100 </tag>
-            
-            <tag> 哈希表 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>C++算法</title>
-      <link href="/post/6e93dd78.html"/>
-      <url>/post/6e93dd78.html</url>
-      
-        <content type="html"><![CDATA[<h1 id="algorithm库函数"><a href="#algorithm库函数" class="headerlink" title="algorithm库函数"></a>algorithm库函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br></pre></td></tr></table></figure><p><strong>排序</strong>：sort(beigin,end)   范围：[begin , end)</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例1.</span></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line"><span class="comment">//一顿操作后...</span></span><br><span class="line"><span class="built_in">sort</span>(vec.<span class="built_in">begin</span>(),vec.<span class="built_in">end</span>());</span><br><span class="line"><span class="comment">//例2.</span></span><br><span class="line"><span class="type">int</span> num[<span class="number">20</span>];</span><br><span class="line"><span class="built_in">sort</span>(num,num<span class="number">+20</span>);</span><br></pre></td></tr></table></figure><p><strong>设置排序的规则</strong>：sort(begin,end,comp)</p><ul><li>comp相当于函数的函数名</li><li>bool comp(lhs,rhs)<ul><li>lhs、rhs是待排序元素</li><li>不发生交换：返回真</li><li>发生交换：返回假</li></ul></li></ul><blockquote><p>如果排序不是稳定的，但是题目要求定，可以加入int seq;用来记录录入的顺序，实现稳定排序</p></blockquote><h1 id="String"><a href="#String" class="headerlink" title="String"></a>String</h1><ol><li>关于字符数据的两种输入：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> buf[<span class="number">100</span>];</span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,buf);<span class="comment">//只能读取一个单词（遇到空格停止）</span></span><br><span class="line"><span class="comment">//2</span></span><br><span class="line"><span class="built_in">fgets</span>(buf,<span class="number">100</span>,stdin);<span class="comment">//只能读取一整行（包括换行符）</span></span><br><span class="line"><span class="comment">//去掉末尾换行符：</span></span><br><span class="line">string str = buf;</span><br><span class="line">str.<span class="built_in">pop_back</span>();</span><br></pre></td></tr></table></figure><ol start="2"><li>C风格的字符串：字符数组（以’\0’结尾）<br>C++风格的字符串：string</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br></pre></td></tr></table></figure><ol start="3"><li>C风格&#x3D;&#x3D;&gt;C++风格： <code>str = char_str</code><br>C++风格&#x3D;&#x3D;&gt;C风格：<code>char_str = str.c_str()</code></li><li>输入输出都要先转化（都转成C风格的字符串）<ul><li>输入：<code>scanf(&quot;%s&quot;,char_str);</code></li><li>输出：<code>printf(&quot;%s&quot;,str.c_str());</code></li></ul></li></ol><blockquote><p>如果想用string[i] &#x3D; ‘h’来插入元素，必须先初始化大小：string s1(10,’c’); 否则会报异常</p></blockquote><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">string s1;           <span class="comment">//默认初始化，s1是一个空串</span></span><br><span class="line"><span class="function">string <span class="title">s2</span><span class="params">(s1)</span></span>;       <span class="comment">//s2是s1的副本(string类的拷贝构造)</span></span><br><span class="line">string s2 = s1;      <span class="comment">//等价于s2(s1)，s2是s1的副本(string类的拷贝赋值)</span></span><br><span class="line"><span class="function">string <span class="title">s3</span><span class="params">(<span class="string">&quot;value&quot;</span>)</span></span>;  <span class="comment">//s3是字面值&quot;value&quot;的副本，除了字面值最后的那个空字符外</span></span><br><span class="line">string s3 = <span class="string">&quot;value&quot;</span>; <span class="comment">//等价于s3(&quot;value&quot;)，s3是字面值&quot;value&quot;的副本</span></span><br><span class="line"><span class="function">string <span class="title">s4</span><span class="params">(n,<span class="string">&#x27;c&#x27;</span>)</span></span>;    <span class="comment">//把s4初始化为由连续n个字符c组成的串 </span></span><br></pre></td></tr></table></figure><h2 id="常见操作"><a href="#常见操作" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>判断相等：<code>str == &quot;hello&quot;</code></li><li>比较字典序：<code>str&gt;&quot;abandon&quot;</code></li><li>访问字符串长度：<code>str.size()</code> 或 <code>str.length()</code></li><li>访问字符串的每个元素：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1.下标访问</span></span><br><span class="line"><span class="comment">// 2.迭代器访问</span></span><br><span class="line"><span class="keyword">for</span>(string::iterator it = str.<span class="built_in">begin</span>();it!=str.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>,*it);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="5"><li>连接操作：<code>+</code>（只对c++风格有效）</li><li>删除操作：<ul><li><code>str.erase(4)</code> 删除下标为4的元素</li><li><code>str.erase(str.size()-1)</code>删除最后一个元素</li></ul></li><li>清空操作：<code>str.clear()</code></li><li>字符串匹配：<code>find()</code>方法<ul><li>找到返回：匹配内容起点的下标</li><li>未找到返回：str::npos</li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">string str = <span class="string">&quot;how are you&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>(str.<span class="built_in">find</span>(<span class="string">&quot;are&quot;</span>)!=string::npos) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;找到了&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="9"><li>字符串string截取：<code>str.substr(起始下标，截取长度)</code></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">string str = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">str.<span class="built_in">substr</span>(<span class="number">1</span>,<span class="number">2</span>); <span class="comment">// 得到el</span></span><br></pre></td></tr></table></figure><ol start="10"><li>数字转成字符串：<code>to_string(123);</code>&#x2F;&#x2F;“123”  &#x3D;&#x3D;&gt;返回string类型<ul><li>应用场景：如果想知道一个数字num的位数有几位，可以<code>to_string(num).size()</code></li></ul></li><li>字符串转成数字：<code>stoi(&quot;919&quot;);</code> &#x2F;&#x2F;919</li><li>字符串末尾加一个字符c：<code>str.push_back(c);</code></li><li>从字符串末尾弹出一个字符：<code>str.pop_back();</code></li><li>计算字符串某个字符数：<code>count(str.begin(),str.end(),&#39; &#39;);</code></li></ol><h1 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h1><p>数组的限制：</p><ul><li>在定义的时候，就要指定大小（常量）</li><li>函数内部定义的数组不能太长（如果需要很长的，只能定义成全局变量）</li></ul><p>解决：引入向量（动态数组）</p><ul><li>顺序存储&#x2F;线性表</li></ul><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vec;</span><br></pre></td></tr></table></figure><blockquote><p>如果想用vec[i] &#x3D; 5来插入元素，必须事先初始化大小：<code>vector&lt;int&gt; vec(10);</code> 否则会报异常</p></blockquote><hr><h2 id="初始化-1"><a href="#初始化-1" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vec1&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">vec2</span><span class="params">(<span class="number">100</span>)</span></span>; </span><br><span class="line"><span class="comment">// 给这100个地方都附上-1，即：&#123;-1,-1,-1,.....,-1&#125;</span></span><br><span class="line"><span class="built_in">fill</span>(vec<span class="number">2.</span><span class="built_in">begin</span>(),vec<span class="number">2.</span><span class="built_in">end</span>(),<span class="number">-1</span>);</span><br></pre></td></tr></table></figure><h2 id="常见操作-1"><a href="#常见操作-1" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>获取长度：<code>vec.size()</code> 或 <code>vec.length()</code></li><li>尾部扩容：<code>vec.push_back(1)</code></li><li>弹出最后一个元素：<code>vec.pop_back()</code></li><li>访问：<ul><li><code>vec[i]</code></li><li>迭代器访问：<ul><li><code>vec.begin()</code>：指向第一个元素</li><li><code>vec.end()</code>：指向最后一个元素的后一个元素</li></ul></li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(vector&lt;<span class="type">int</span>&gt;::it = vec.<span class="built_in">begin</span>();it&lt;vec.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,*it);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="5"><li>修改：<code>vec[i] = 3</code></li><li>随机位置的插入：<ul><li>假设有数组：1,2,3,4。在2号元素后面插入元素5，插入后&#x3D;&#x3D;&#x3D;&gt;1,2,5,3,4</li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator it = vec.begin<span class="number">+2</span>;<span class="comment">//找到3号元素的迭代器</span></span><br><span class="line">vec.<span class="built_in">insert</span>(it,<span class="number">5</span>);<span class="comment">//在3号元素的前面插入5</span></span><br></pre></td></tr></table></figure><ol start="7"><li>随机位置的删除：<ul><li>假设有数组：1,2,3,4。删除2号元素，删除后&#x3D;&#x3D;&#x3D;&gt;1,3,4</li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator it = vec.begin<span class="number">+1</span>;<span class="comment">//找到2号元素的迭代器</span></span><br><span class="line">vec.<span class="built_in">erase</span>(it);<span class="comment">//删除2号元素</span></span><br></pre></td></tr></table></figure><h1 id="map"><a href="#map" class="headerlink" title="map"></a>map</h1><p>map的底层是二叉搜索树：构建O(nlogn)、查找O(logn)<br><code>map&lt;string,int&gt; myMap;</code></p><h2 id="常见操作-2"><a href="#常见操作-2" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>判空：<code>myMap.empty()</code></li><li>获取键值对的个数：<code>myMap.size()</code></li><li>插入一对键值对：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">myMap[<span class="string">&quot;xiaolin&quot;</span>] = <span class="number">3</span>;</span><br><span class="line">myMap.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;string,<span class="type">int</span>&gt;(<span class="string">&quot;03&quot;</span>,<span class="number">3</span>));</span><br><span class="line">myMap.<span class="built_in">insert</span>(&#123;<span class="string">&quot;33&quot;</span>, <span class="number">3</span>&#125;);</span><br></pre></td></tr></table></figure><ol start="4"><li>删除一对键值对：<code>myMap.erase(&quot;xiaolin&quot;);</code></li><li>键值对的个数：<code>myMap.size();</code></li><li>迭代器：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">map&lt;string,<span class="type">int</span>&gt;::iterator beginIt = myMap.<span class="built_in">begin</span>(); <span class="comment">// 指向第一个元素</span></span><br><span class="line">map&lt;string,<span class="type">int</span>&gt;::iterator endIt = myMap.<span class="built_in">end</span>();   <span class="comment">//指向最后一个元素的后一个元素（尾后）</span></span><br></pre></td></tr></table></figure><ol start="7"><li>遍历：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(map&lt;string,<span class="type">int</span>&gt;::iterator it = myMap.<span class="built_in">begin</span>();it!=myMap.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;key=%c,value=%d&quot;</span>,it-&gt;first,it-&gt;second);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">map&lt;string,<span class="type">int</span>&gt; myMap;</span><br><span class="line"><span class="comment">// 法1</span></span><br><span class="line"><span class="keyword">for</span>(map&lt;string,<span class="type">int</span>&gt;::iterator it = myMap.<span class="built_in">begin</span>();it!=myMap.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;key=%c,value=%d&quot;</span>,it-&gt;first,it-&gt;second);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 法2</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">const</span> <span class="keyword">auto</span>&amp;[key,value] : myMap) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;key=%c,value=%d&quot;</span>,key,value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="8"><li>某个键是否存在：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(myMap.<span class="built_in">find</span>(<span class="string">&quot;xiaolin&quot;</span>) == myMap.<span class="built_in">end</span>()) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;未找到&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="set"><a href="#set" class="headerlink" title="set"></a>set</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;set&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">set&lt;<span class="type">int</span>&gt; s;</span><br></pre></td></tr></table></figure><h2 id="常见操作-3"><a href="#常见操作-3" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>插入：<code>s.insert(333);</code> 往集合中添加元素，它的参数也是只有一个，就是你想要添加的元素，无返回值。</li><li>删除：<code>s.erase(333);</code> 用来删除指定的元素，参数只有一个，并且是你想要删除的元素，无返回值</li><li>查找在集合中出现的元素个数：<code>s.count(333); </code> 因为集合的互异性，它的返回值要么是1要么是0，一般也可以用它来判断某个元素是否在该集合中。</li><li>查找某元素是否在集合中：<code>find()</code></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(s.<span class="built_in">find</span>(<span class="string">&quot;33&quot;</span>)!=s.<span class="built_in">end</span>()) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;在集合中&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;不在集合中&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="5"><li>得出集合中的元素个数：<code>s.size()</code></li><li>判断该集合是否为空：<code>s.empty()</code></li><li>清空集合中的元素：<code>a.clear()</code></li><li>遍历：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//法一：</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i:s) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//法二：</span></span><br><span class="line"><span class="keyword">for</span>(set&lt;<span class="type">int</span>&gt;::iterator it = s.<span class="built_in">begin</span>();it&lt;s.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,*it);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="stack"><a href="#stack" class="headerlink" title="stack"></a>stack</h1><p>栈：先进后出（场景：“优先级差别”等待）</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">stack&lt;<span class="type">int</span>&gt; myStack;</span><br></pre></td></tr></table></figure><ol><li>大小：<code>size()</code></li><li>压栈：<code>push()</code></li><li>取栈顶元素：top()&#96;</li><li>弹栈：<code>pop()</code></li><li>判断栈是否为空：<code>empty()</code></li></ol><h1 id="queue"><a href="#queue" class="headerlink" title="queue"></a>queue</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">queue&lt;<span class="type">int</span>&gt; myQueue;</span><br></pre></td></tr></table></figure><ol><li>入队：push</li><li>出队：pop</li><li>判断为空：empty</li><li>队首元素：front</li></ol>]]></content>
-      
-      
-      <categories>
-          
-          <category> Mybatis </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> C++容器 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>mysql语法中not in会把null值过滤掉</title>
-      <link href="/post/cfa2118.html"/>
-      <url>/post/cfa2118.html</url>
-      
-        <content type="html"><![CDATA[<p>null在SQL中表示“未知”或“不存在”，所以not in会认为null是一个具体的值，需要被排除。</p><hr><p>在这个查询中，所有的column列为null值得都会被排除。</p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> temp</span><br><span class="line"><span class="keyword">where</span> <span class="keyword">column</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;value1&#x27;</span>, <span class="string">&#x27;value2&#x27;</span> <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure><hr><p>如果不希望not in过滤null值，可以使用 <strong>not in 结合 or</strong> </p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> temp</span><br><span class="line"><span class="keyword">where</span> <span class="keyword">column</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;value1&#x27;</span>, <span class="string">&#x27;value2&#x27;</span>) </span><br><span class="line">      <span class="keyword">or</span> <span class="keyword">column</span> <span class="keyword">is</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> mysql </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> mysql </tag>
-            
-            <tag> null值 </tag>
-            
-            <tag> 数据库 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>基本的ResultMap</title>
-      <link href="/post/d634e4f9.html"/>
-      <url>/post/d634e4f9.html</url>
-      
-        <content type="html"><![CDATA[<p>在 MyBatis 中，resultMap用来将数据库查询结果映射到 Java 对象。定义了如何将 SQL 查询结果的列与 Java 对象的属性进行映射。它支持复杂的映射关系，如一对多、多对一等。</p><hr><h1 id="基本的ResultMap"><a href="#基本的ResultMap" class="headerlink" title="基本的ResultMap"></a>基本的ResultMap</h1><p>假设有一个User类：</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_name&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure><p>id表示主键映射，通常对应数据库表中的主键字段。【<strong>要放在第一行</strong>】</p><p>result表示普通字段映射，property是Java类的属性，column是数据库表中的列名</p><p>上边的resultMap对应的select语句就可以这么写：</p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> id &quot;user_id&quot;, username &quot;user_name&quot;</span><br><span class="line"><span class="keyword">from</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure><h2 id="开启autoMapping映射"><a href="#开启autoMapping映射" class="headerlink" title="开启autoMapping映射"></a>开启autoMapping映射</h2><p>autoMapping映射是一种自动映射机制，用于自动将 SQL 查询结果的列与 Java 对象的属性进行匹配。它简化了映射的配置，不需要显式地为每个属性定义映射关系。</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span> <span class="attr">autoMapping</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure><p>上边的resultMap对应的select语句就可以这么写：</p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> id, username</span><br><span class="line"><span class="keyword">from</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure><blockquote><p>在启用了 <code>autoMapping</code> 后，<code>user_id</code> 会自动映射到 <code>userId</code>。</p></blockquote><h1 id="复杂的ResultMap"><a href="#复杂的ResultMap" class="headerlink" title="复杂的ResultMap"></a>复杂的ResultMap</h1><h2 id="一对多映射-collection"><a href="#一对多映射-collection" class="headerlink" title="一对多映射[collection]"></a>一对多映射[collection]</h2><p>场景：有一个user对象，和一个Order对象，一个用户可以有多个订单。</p><p>一个User类如下：</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String User;</span><br><span class="line">    List&lt;Order&gt; orders;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> Date orderDate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在这个例子中，<code>User</code> 类有一个 <code>orders</code> 属性（一个 <code>List&lt;Order&gt;</code>）。<code>collection</code> 元素用于指定一对多的映射关系，<code>ofType</code> 属性指定集合中元素的类型。</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span> <span class="attr">autoMapping</span> = <span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;orders&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Order&quot;</span> <span class="attr">autoMapping</span> = <span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;order_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure><p>使用Mybatis-Plus的分页插件进行分页查询时，如果结果需要使用<code>&lt;collection&gt;</code>进行映射，只能使用<strong>嵌套查询</strong>，而不能使用嵌套结果映射。</p><h2 id="多对一映射-association"><a href="#多对一映射-association" class="headerlink" title="多对一映射[association]"></a>多对一映射[association]</h2><p>场景：有一个 <code>Order</code> 对象，它关联到一个 <code>User</code> 对象。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String User;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> Date orderDate;</span><br><span class="line">    <span class="keyword">private</span> User user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在这个例子中，<code>Order</code> 对象的 <code>user</code> 属性是通过 <code>association</code> 映射的，它表示多对一关系。</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;orderResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Order&quot;</span> <span class="attr">autoMapping</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;orderId&quot;</span> <span class="attr">column</span>=<span class="string">&quot;order_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;user&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;User&quot;</span> <span class="attr">autoMapping</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure><h1 id="ResultMap中的属性"><a href="#ResultMap中的属性" class="headerlink" title="ResultMap中的属性"></a>ResultMap中的属性</h1><ul><li><strong>property</strong>：映射的 Java 类的属性名称。</li><li><strong>column</strong>：数据库表中的列名。</li><li><strong>javaType</strong>：用于指定映射的 Java 类型。</li><li><strong>typeHandler</strong>：用于指定类型处理器，处理数据库列和 Java 属性之间的转换。</li><li><strong>ofType</strong>：用于集合映射时，指定集合中元素的类型。</li><li><strong>association</strong>：用于表示一对多或多对一关系映射。</li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> Mybatis </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 数据库 </tag>
-            
-            <tag> ResultMap </tag>
-            
-            <tag> Mybatis </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>生命周期&amp;数据共享</title>
       <link href="/post/567bfae1.html"/>
       <url>/post/567bfae1.html</url>
@@ -1234,6 +815,425 @@
             <tag> 类 </tag>
             
             <tag> 对象 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>2379. 得到 K 个黑块的最少涂色次数</title>
+      <link href="/post/43089fc2.html"/>
+      <url>/post/43089fc2.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/25a2e86292cd4c6fa7ce290bd2052c3b.png" alt="25a2e86292cd4c6fa7ce290bd2052c3b.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/minimum-recolors-to-get-k-consecutive-black-blocks/description/">2379. 得到 K 个黑块的最少涂色次数</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minimumRecolors</span><span class="params">(string blocks, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> res = blocks.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> curWcount = <span class="number">0</span>; <span class="comment">// 记录窗口内W字符的个数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; blocks.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(blocks[r] == <span class="string">&#x27;W&#x27;</span>) &#123; <span class="comment">// 滑窗内有字符W</span></span><br><span class="line">                curWcount++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">                res = <span class="built_in">min</span>(res, curWcount);</span><br><span class="line">                <span class="comment">// 缩小窗口</span></span><br><span class="line">                <span class="keyword">if</span>(blocks[l++] == <span class="string">&#x27;W&#x27;</span>) &#123;</span><br><span class="line">                    curWcount--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>题目想要求把白色块变成黑色块使得有k个连续的黑色块的最小次数，也就是求滑窗内白色块出现的最小次数。只要统计长度为k的滑窗内最少的白色字符数即可。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 滑动窗口 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 滑动窗口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>2090. 半径为 k 的子数组平均值</title>
+      <link href="/post/8b141577.html"/>
+      <url>/post/8b141577.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/12af681c4bc24b7b8e5d1c3c4b39190d.png" alt="12af681c4bc24b7b8e5d1c3c4b39190d.png"><br>【题目】：<a href="https://leetcode.cn/problems/k-radius-subarray-averages/">2090. 半径为 k 的子数组平均值</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">getAverages</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">res</span><span class="params">(nums.size(), <span class="number">-1</span>)</span></span>;</span><br><span class="line">        <span class="type">long</span> curSum = <span class="number">0</span>; <span class="comment">// 记录当前滑窗内的数值和</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; nums.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            curSum += nums[r];</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k * <span class="number">2</span> + <span class="number">1</span>) &#123; <span class="comment">// 窗口长度满足条件</span></span><br><span class="line">                res[r - k] = curSum / (k * <span class="number">2</span> + <span class="number">1</span>); <span class="comment">// 当长度满足时，此时对应的半径中心坐标是：r - k</span></span><br><span class="line">                curSum -= nums[l++]; <span class="comment">// 缩小窗口</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>半径为 k 的子数组：说明滑窗的长度（r - l + 1）必须要达到2 * k + 1。但是当r下标到达半径中心的时候，还不知道此时数组内元素和，所以可以等到滑窗长度达到条件时，再去反推半径中心。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 滑动窗口 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 滑动窗口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</title>
+      <link href="/post/b541a47.html"/>
+      <url>/post/b541a47.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/ebb6bd124ee440cab48c47a7395956d3.png" alt="ebb6bd124ee440cab48c47a7395956d3.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/check-if-a-string-contains-all-binary-codes-of-size-k/description/">1461. 检查一个字符串是否包含所有长度为 K 的二进制子串</a></p><p> 直接存储滑动窗口内的字符串，这样虽然方便，但是时间复杂度和k相关，如果k &#x3D; n，此时会达到O(n^2)的复杂度。</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">hasAllCodes</span><span class="params">(string s, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        unordered_set&lt;string&gt; ss;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; s.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">                ss.<span class="built_in">insert</span>(s.<span class="built_in">substr</span>(l, k));</span><br><span class="line">                l++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ss.<span class="built_in">size</span>() == <span class="number">1</span>&lt;&lt;k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n*k)</li><li>空间复杂度: O(1&lt;&lt;k)</li></ul><blockquote><p>1&lt;&lt;k：相当于pow(2, k)<br>substr(截取的字符串起始位置, 截取字符串的长度)</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 滑动窗口 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 滑动窗口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>1456. 定长子串中元音的最大数目</title>
+      <link href="/post/6afae9e.html"/>
+      <url>/post/6afae9e.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/8ef7122a0698439c80ae7f976c73683b.png" alt="8ef7122a0698439c80ae7f976c73683b.png"><br>【链接】：<a href="https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/">1456. 定长子串中元音的最大数目</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxVowels</span><span class="params">(string s, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>; <span class="comment">// 记录整个过程中的最大值</span></span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>; <span class="comment">// 记录当前滑动窗口内元音字母的数字</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; s.<span class="built_in">size</span>(); ++r) &#123; <span class="comment">// 右侧元素进入窗口</span></span><br><span class="line">        <span class="comment">// 上来先判断是否是元音字母</span></span><br><span class="line">            <span class="keyword">if</span>(s[r] == <span class="string">&#x27;a&#x27;</span> || s[r] == <span class="string">&#x27;e&#x27;</span> || s[r] == <span class="string">&#x27;i&#x27;</span> || s[r] == <span class="string">&#x27;o&#x27;</span> || s[r] == <span class="string">&#x27;u&#x27;</span>) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(count, res); </span><br><span class="line">            <span class="comment">// 看看是否超过了窗口的长度</span></span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">            <span class="comment">// 左边要离开滑动窗口，看看s[l]是否是元音字母</span></span><br><span class="line">                <span class="keyword">if</span>(s[l] == <span class="string">&#x27;a&#x27;</span> || s[l] == <span class="string">&#x27;e&#x27;</span> || s[l] == <span class="string">&#x27;i&#x27;</span> || s[l] == <span class="string">&#x27;o&#x27;</span> || s[l] == <span class="string">&#x27;u&#x27;</span>) &#123;</span><br><span class="line">                    count--;</span><br><span class="line">                &#125;</span><br><span class="line">                l++; <span class="comment">// 左侧元素离开窗口</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度：O(n)</li><li>空间复杂度：O(1)</li></ul><blockquote><p>这是一个<code>定长滑动窗口</code>的题，一般会有l、r两个指针，这一过程主要有三个问题：</p><ol><li>右侧元素进入窗口：只要r &lt; s.size()，每次都会进入窗口</li><li>左侧元素离开窗口：当前窗口长度 &#x3D; k</li><li>更新res的最大值</li></ol></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 滑动窗口 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 滑动窗口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>1343. 大小为 K 且平均值大于等于阈值的子数组数目</title>
+      <link href="/post/e9cb7dc4.html"/>
+      <url>/post/e9cb7dc4.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/9a7f8baf21f243779595bc6a89f043be.png" alt="9a7f8baf21f243779595bc6a89f043be.png"><br>【题目】：<a href="https://leetcode.cn/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/description/">1343. 大小为 K 且平均值大于等于阈值的子数组数目</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numOfSubarrays</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; arr, <span class="type">int</span> k, <span class="type">int</span> threshold)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>; <span class="comment">// 计算满足条件的数</span></span><br><span class="line">        <span class="type">int</span> curSum = <span class="number">0</span>; <span class="comment">// 计算当前滑窗内的总数</span></span><br><span class="line">        <span class="type">int</span> targetSum = k * threshold; <span class="comment">// 当前滑窗内的总数满足条件的最小值</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; arr.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            curSum += arr[r];</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123; <span class="comment">// 条件1. 长度为k</span></span><br><span class="line">                <span class="keyword">if</span>(curSum &gt;= targetSum) &#123; <span class="comment">// 条件2. 平均值大于等于threshold</span></span><br><span class="line">                    ++count;<span class="comment">// 满足条件1和2</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 缩小窗口</span></span><br><span class="line">                curSum -= arr[l];</span><br><span class="line">                l++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>这题有两个条件，长度为k、平均值大于等于threshold。所以需要依次满足这两个条件后，才能更新count值。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 滑动窗口 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 滑动窗口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>1052. 爱生气的书店老板</title>
+      <link href="/post/cc4621fb.html"/>
+      <url>/post/cc4621fb.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/bf841e57b01a4e23bf1a35d4d00f5e23.png" alt="bf841e57b01a4e23bf1a35d4d00f5e23.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/grumpy-bookstore-owner/description/">1052. 爱生气的书店老板</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxSatisfied</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; customers, vector&lt;<span class="type">int</span>&gt;&amp; grumpy, <span class="type">int</span> minutes)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxAddCount = <span class="number">0</span>; <span class="comment">// 在minutes长度内，还能增加的最大顾客满意人数</span></span><br><span class="line">        <span class="type">int</span> curAddCount = <span class="number">0</span>; <span class="comment">// 当前窗口内还能增加的顾客满意数</span></span><br><span class="line">        <span class="type">int</span> curCount = <span class="number">0</span>; <span class="comment">// 原本有的顾客满意数</span></span><br><span class="line">        <span class="type">int</span> n = customers.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; n; ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(grumpy[r] == <span class="number">1</span>) &#123; <span class="comment">// 把老板从生气变成不生气</span></span><br><span class="line">                curAddCount += customers[r]; </span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                curCount += customers[r]; <span class="comment">// 原有的顾客满意数</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == minutes) &#123;</span><br><span class="line">                maxAddCount = <span class="built_in">max</span>(maxAddCount, curAddCount);</span><br><span class="line">                <span class="keyword">if</span>(grumpy[l] == <span class="number">1</span>) &#123;</span><br><span class="line">                    curAddCount -= customers[l];</span><br><span class="line">                &#125;</span><br><span class="line">                l++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxAddCount + curCount; <span class="comment">// 当天内最大顾客满意数 = 可以增加的最大顾客满意数 + 原本有的顾客满意数</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>当天内最大顾客满意数 &#x3D; 可以增加的最大顾客满意数 + 原本有的顾客满意数<br>原本有的顾客满意数是动不了的，所以只需要求可以增加的最大顾客满意数。<br>书店老板可以让自己连续minutes分钟不生气，说明滑动窗口的长度为minutes<br>所以本题只需要求在minutes的滑动窗口内，可以增加的最大顾客满意数，即在滑动窗口内，可以从grumpy[i]为1变为0后增加的最大顾客满意数。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 滑动窗口 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 滑动窗口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>643. 子数组最大平均数 I</title>
+      <link href="/post/9730100f.html"/>
+      <url>/post/9730100f.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/092c3f51831e422ead89e06101ad7c9f.png" alt="092c3f51831e422ead89e06101ad7c9f.png"><br>【链接】：<a href="https://blog.csdn.net/qq_57882997/article/details/145240772?spm=1001.2014.3001.5501">643. 子数组最大平均数 I</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">findMaxAverage</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> maxSum = INT_MIN, curSum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; nums.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            curSum += nums[r]; <span class="comment">// 更新curSum</span></span><br><span class="line">            <span class="keyword">if</span>(r - l + <span class="number">1</span> == k) &#123;</span><br><span class="line">                maxSum = <span class="built_in">max</span>(maxSum, curSum); <span class="comment">// 更新maxSum(因为题目要求长度为k，所以需要在这里更新maxSum)</span></span><br><span class="line">                curSum -= nums[l]; <span class="comment">// 扣除左侧元素（保持一致）</span></span><br><span class="line">                ++l; <span class="comment">// 左侧元素离开</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxSum / (<span class="type">double</span>)k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度：O(n)</li><li>空间复杂度：O(1)</li></ul><blockquote><p>题目关键字：连续子数组，说明可以采用滑动窗口。<br>maxSum的初始值：因为数组内有负数，maxSum的初始值不应该设置成0，应该设置为int的最小值。<br>更新的位置：因为题目说明长度必须要为k，所以更新的位置应该在if里边，长度为k时才进行更新。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 滑动窗口 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 滑动窗口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>15. 三数之和</title>
+      <link href="/post/e192590d.html"/>
+      <url>/post/e192590d.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/7c3fb12fc1d241d4af62180ff5fc4b04.png" alt="7c3fb12fc1d241d4af62180ff5fc4b04.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/3sum/description/?envType=study-plan-v2&envId=top-100-liked">15. 三数之和</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">threeSum</span>(vector&lt;<span class="type">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;<span class="comment">// 因为是升序排列，如果当前数&gt;0，三数值和一定&gt;0，后边的数字都可以做剪枝</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(i != <span class="number">0</span> &amp;&amp; nums[i] == nums[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>; <span class="comment">// 去除重复的三元组</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">int</span> target = -nums[i];</span><br><span class="line">            <span class="comment">// -4,-1,-1,0,1,2</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> l = i + <span class="number">1</span>, r = nums.<span class="built_in">size</span>() - <span class="number">1</span>; l &lt; r;) &#123;</span><br><span class="line">                <span class="type">int</span> cur = nums[l] + nums[r];</span><br><span class="line">                <span class="keyword">if</span>(target == cur) &#123;</span><br><span class="line">                    res.<span class="built_in">push_back</span>(&#123;nums[i], nums[l], nums[r]&#125;);</span><br><span class="line">                    <span class="keyword">while</span>(l &lt; r &amp;&amp; nums[l] == nums[l + <span class="number">1</span>]) ++l;</span><br><span class="line">                    <span class="keyword">while</span>(l &lt; r &amp;&amp; nums[r] == nums[r - <span class="number">1</span>]) --r;</span><br><span class="line">                    ++l;</span><br><span class="line">                    --r;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(target &gt; cur) &#123;</span><br><span class="line">                    ++l;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    --r;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n^2)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>这题要求不能重复的三元组，只要三元组的三个数是按照顺序进行排列的，这样就可以不用借助set来去充了。<br>所以可以先把数组进行排序，用i指针从头到尾遍历数组，遍历的时候可以利用三元组和为0的特性进行剪枝。如果i遍历的元素已经是&gt;0，但是数组又是升序排列，后边不可能有和&lt;0的数字，所以当i遍历到元素&gt;0时，直接break。<br>遍历的时候要注意，可能会有相同的数字连续出现多次。<br>情况1. nums[i] &#x3D;&#x3D; nums[i - 1]，这种情况可以直接continue。<br>情况2. 当已经找到一个三元组后，可能nums[l] &#x3D;&#x3D; nums[l + 1]，此时都应该使用while循环（可能有多个）排除在外。但是要注意，退出循环的时候，如果是nums[l] !&#x3D; nums[l + 1]，但是此时nums[l] &#x3D;&#x3D; nums[l - 1]，这样就会出现死循环。所以一定要在推出while循环后再做一次++l的操作。</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt;tags:</span><br><span class="line"> - 算法</span><br><span class="line"> - LeetCode热题100</span><br><span class="line"> - 双指针</span><br><span class="line">&gt;categories: LeetCode热题100</span><br><span class="line">&gt;type: LeetCode热题100</span><br><span class="line">&gt;top_img: false</span><br></pre></td></tr></table></figure></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode热题100 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> LeetCode热题100 </tag>
+            
+            <tag> 双指针 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>49. 字母异位词分组</title>
+      <link href="/post/b390ba48.html"/>
+      <url>/post/b390ba48.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/550eba79e4d6445a801eec931869ca85.png" alt="550eba79e4d6445a801eec931869ca85.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&envId=top-100-liked">49. 字母异位词分组</a></p><p>方法1：直接对字符串进行排序后使用map存储相同的字母异位词，再把map的value依次存放到结果中。</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">groupAnagrams</span>(vector&lt;string&gt;&amp; strs) &#123;</span><br><span class="line">        vector&lt;vector&lt;string&gt;&gt; res;</span><br><span class="line">        unordered_map&lt;string, vector&lt;string&gt;&gt; mp;</span><br><span class="line">        <span class="keyword">for</span>(string str : strs) &#123;</span><br><span class="line">            string temp = str;</span><br><span class="line">            <span class="built_in">sort</span>(str.<span class="built_in">begin</span>(), str.<span class="built_in">end</span>());</span><br><span class="line">            mp[str].<span class="built_in">push_back</span>(temp);</span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> [key, value] : mp) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(value);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n<em>k</em>logk)</li><li>空间复杂度: O(n)</li></ul><blockquote><p>字母异位词对应的排序后的字符串是一样的，所以把每个字符串排序后插入以排序后字符串作为key，以原字符串作为value的map中。这个方法虽然简洁，但是取决于每个字符串的长度，排序的时间复杂度是k * logk</p></blockquote><p>方法2：自定义哈希函数</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">groupAnagrams</span>(vector&lt;string&gt;&amp; strs) &#123;</span><br><span class="line">        vector&lt;vector&lt;string&gt;&gt; res;</span><br><span class="line">        unordered_map&lt;string, vector&lt;string&gt;&gt; mp;</span><br><span class="line">        <span class="keyword">for</span>(string str : strs) &#123;</span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">count</span><span class="params">(<span class="number">26</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">char</span> c : str) &#123;</span><br><span class="line">                count[c - <span class="string">&#x27;a&#x27;</span>]++;</span><br><span class="line">            &#125;</span><br><span class="line">            string key = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; ++i) &#123;</span><br><span class="line">                key += count[i] + i + <span class="string">&#x27;a&#x27;</span>;<span class="comment">// 使用：每个字符出现的次数 + 字符 作为key</span></span><br><span class="line">            &#125;</span><br><span class="line">            mp[key].<span class="built_in">push_back</span>(str);</span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> [key, value] : mp) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(value);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n*max(k, 26))</li><li>空间复杂度: O(n)</li></ul><blockquote><p>使用每个字符出现的次数 + 字符 作为key。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode热题100 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> LeetCode热题100 </tag>
+            
+            <tag> 哈希表 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>283. 移动零</title>
+      <link href="/post/c150202b.html"/>
+      <url>/post/c150202b.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/86dccd30c4424cccaf651f7c42d6becc.png" alt="86dccd30c4424cccaf651f7c42d6becc.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/move-zeroes/description/?envType=study-plan-v2&envId=top-100-liked">283. 移动零</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">moveZeroes</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = <span class="number">0</span>; r &lt; nums.<span class="built_in">size</span>(); ++r) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[r] != <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="built_in">swap</span>(nums[l++], nums[r]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>先把非0的元素移到前边，后边剩下的就是0了。<br>l：非0元素的末尾<br>r：0元素的开头</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode热题100 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> LeetCode热题100 </tag>
+            
+            <tag> 双指针 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>11. 盛最多水的容器</title>
+      <link href="/post/d910afda.html"/>
+      <url>/post/d910afda.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/30ceac9344b04484b321e1b32b48184f.png" alt="30ceac9344b04484b321e1b32b48184f.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/container-with-most-water/description/?envType=study-plan-v2&envId=top-100-liked">11. 盛最多水的容器</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxArea</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = height.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> res = (n - <span class="number">1</span>) * <span class="built_in">min</span>(height[<span class="number">0</span>], height[n - <span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> l = <span class="number">0</span>, r = n - <span class="number">1</span>; r &gt; l;) &#123;</span><br><span class="line">            <span class="keyword">if</span>(height[l] &lt; height[r]) &#123; <span class="comment">// 移动更短的木棍</span></span><br><span class="line">                l++;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                --r;</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(res, (r - l) * <span class="built_in">min</span>(height[l], height[r])); <span class="comment">// 每次记录当前遍历过的最大值</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(1)</li></ul><blockquote><p>短板原理：可以容纳的水 &#x3D; min(height[l], height[r]) * (r - l)<br>因为可以容纳的水取决于高和宽，初始时，先让宽最大，即l &#x3D; 0，r &#x3D; n - 1，每次只要移动更短的木棍，虽然宽在缩小，但是有可能找到比当前更大的高。Z</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode热题100 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> LeetCode热题100 </tag>
+            
+            <tag> 双指针 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>128. 最长连续序列</title>
+      <link href="/post/b4efa8b3.html"/>
+      <url>/post/b4efa8b3.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/8bbb8394bc2c4ddfb91488e74e651c98.png" alt="8bbb8394bc2c4ddfb91488e74e651c98.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/longest-consecutive-sequence/description/?envType=study-plan-v2&envId=top-100-liked">128. 最长连续序列</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">longestConsecutive</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="function">unordered_set&lt;<span class="type">int</span>&gt; <span class="title">ss</span><span class="params">(nums.begin(), nums.end())</span></span>;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> s : ss) &#123;</span><br><span class="line">            <span class="keyword">if</span>(ss.<span class="built_in">find</span>(s - <span class="number">1</span>) != ss.<span class="built_in">end</span>()) &#123;</span><br><span class="line">                <span class="keyword">continue</span>; <span class="comment">// 说明s一定不是开头</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// s是开头</span></span><br><span class="line">            <span class="type">int</span> y = s + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span>(ss.<span class="built_in">find</span>(y) != ss.<span class="built_in">end</span>()) &#123;</span><br><span class="line">                y++;</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(y - s, res);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(n)</li></ul><blockquote><p>可以把这题理解成，有好多条不同长度的线段，要找到最长那条线，只需要找到所有线的线段头，从头开始计算。<br>例如：**[100,4,101,200,1,3,2]**<br>本题一共有三条线段，分别是：<code>100,101</code> 和 <code>200</code> 和 <code>1,2,3,4</code>，先把这些数存在set中，遍历set。<br>如果遍历到2，先判断2前面是否还有数字，由于2前边还有，说明2不是开头，直接跳过后续操作。<br>如果遍历到1，1前边已经没有数字了，说明1就是开头，从头开始计算，看看这个线段长度是多长。<br>这里虽然是两个循环，但是内循环只有遍历到线段头的时候才会执行，所以时间复杂度为O(n)</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode热题100 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> LeetCode热题100 </tag>
+            
+            <tag> 哈希表 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>C++算法</title>
+      <link href="/post/6e93dd78.html"/>
+      <url>/post/6e93dd78.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="algorithm库函数"><a href="#algorithm库函数" class="headerlink" title="algorithm库函数"></a>algorithm库函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br></pre></td></tr></table></figure><p><strong>排序</strong>：sort(beigin,end)   范围：[begin , end)</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例1.</span></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line"><span class="comment">//一顿操作后...</span></span><br><span class="line"><span class="built_in">sort</span>(vec.<span class="built_in">begin</span>(),vec.<span class="built_in">end</span>());</span><br><span class="line"><span class="comment">//例2.</span></span><br><span class="line"><span class="type">int</span> num[<span class="number">20</span>];</span><br><span class="line"><span class="built_in">sort</span>(num,num<span class="number">+20</span>);</span><br></pre></td></tr></table></figure><p><strong>设置排序的规则</strong>：sort(begin,end,comp)</p><ul><li>comp相当于函数的函数名</li><li>bool comp(lhs,rhs)<ul><li>lhs、rhs是待排序元素</li><li>不发生交换：返回真</li><li>发生交换：返回假</li></ul></li></ul><blockquote><p>如果排序不是稳定的，但是题目要求定，可以加入int seq;用来记录录入的顺序，实现稳定排序</p></blockquote><h1 id="String"><a href="#String" class="headerlink" title="String"></a>String</h1><ol><li>关于字符数据的两种输入：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> buf[<span class="number">100</span>];</span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,buf);<span class="comment">//只能读取一个单词（遇到空格停止）</span></span><br><span class="line"><span class="comment">//2</span></span><br><span class="line"><span class="built_in">fgets</span>(buf,<span class="number">100</span>,stdin);<span class="comment">//只能读取一整行（包括换行符）</span></span><br><span class="line"><span class="comment">//去掉末尾换行符：</span></span><br><span class="line">string str = buf;</span><br><span class="line">str.<span class="built_in">pop_back</span>();</span><br></pre></td></tr></table></figure><ol start="2"><li>C风格的字符串：字符数组（以’\0’结尾）<br>C++风格的字符串：string</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br></pre></td></tr></table></figure><ol start="3"><li>C风格&#x3D;&#x3D;&gt;C++风格： <code>str = char_str</code><br>C++风格&#x3D;&#x3D;&gt;C风格：<code>char_str = str.c_str()</code></li><li>输入输出都要先转化（都转成C风格的字符串）<ul><li>输入：<code>scanf(&quot;%s&quot;,char_str);</code></li><li>输出：<code>printf(&quot;%s&quot;,str.c_str());</code></li></ul></li></ol><blockquote><p>如果想用string[i] &#x3D; ‘h’来插入元素，必须先初始化大小：string s1(10,’c’); 否则会报异常</p></blockquote><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">string s1;           <span class="comment">//默认初始化，s1是一个空串</span></span><br><span class="line"><span class="function">string <span class="title">s2</span><span class="params">(s1)</span></span>;       <span class="comment">//s2是s1的副本(string类的拷贝构造)</span></span><br><span class="line">string s2 = s1;      <span class="comment">//等价于s2(s1)，s2是s1的副本(string类的拷贝赋值)</span></span><br><span class="line"><span class="function">string <span class="title">s3</span><span class="params">(<span class="string">&quot;value&quot;</span>)</span></span>;  <span class="comment">//s3是字面值&quot;value&quot;的副本，除了字面值最后的那个空字符外</span></span><br><span class="line">string s3 = <span class="string">&quot;value&quot;</span>; <span class="comment">//等价于s3(&quot;value&quot;)，s3是字面值&quot;value&quot;的副本</span></span><br><span class="line"><span class="function">string <span class="title">s4</span><span class="params">(n,<span class="string">&#x27;c&#x27;</span>)</span></span>;    <span class="comment">//把s4初始化为由连续n个字符c组成的串 </span></span><br></pre></td></tr></table></figure><h2 id="常见操作"><a href="#常见操作" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>判断相等：<code>str == &quot;hello&quot;</code></li><li>比较字典序：<code>str&gt;&quot;abandon&quot;</code></li><li>访问字符串长度：<code>str.size()</code> 或 <code>str.length()</code></li><li>访问字符串的每个元素：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1.下标访问</span></span><br><span class="line"><span class="comment">// 2.迭代器访问</span></span><br><span class="line"><span class="keyword">for</span>(string::iterator it = str.<span class="built_in">begin</span>();it!=str.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>,*it);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="5"><li>连接操作：<code>+</code>（只对c++风格有效）</li><li>删除操作：<ul><li><code>str.erase(4)</code> 删除下标为4的元素</li><li><code>str.erase(str.size()-1)</code>删除最后一个元素</li></ul></li><li>清空操作：<code>str.clear()</code></li><li>字符串匹配：<code>find()</code>方法<ul><li>找到返回：匹配内容起点的下标</li><li>未找到返回：str::npos</li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">string str = <span class="string">&quot;how are you&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>(str.<span class="built_in">find</span>(<span class="string">&quot;are&quot;</span>)!=string::npos) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;找到了&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="9"><li>字符串string截取：<code>str.substr(起始下标，截取长度)</code></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">string str = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">str.<span class="built_in">substr</span>(<span class="number">1</span>,<span class="number">2</span>); <span class="comment">// 得到el</span></span><br></pre></td></tr></table></figure><ol start="10"><li>数字转成字符串：<code>to_string(123);</code>&#x2F;&#x2F;“123”  &#x3D;&#x3D;&gt;返回string类型<ul><li>应用场景：如果想知道一个数字num的位数有几位，可以<code>to_string(num).size()</code></li></ul></li><li>字符串转成数字：<code>stoi(&quot;919&quot;);</code> &#x2F;&#x2F;919</li><li>字符串末尾加一个字符c：<code>str.push_back(c);</code></li><li>从字符串末尾弹出一个字符：<code>str.pop_back();</code></li><li>计算字符串某个字符数：<code>count(str.begin(),str.end(),&#39; &#39;);</code></li></ol><h1 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h1><p>数组的限制：</p><ul><li>在定义的时候，就要指定大小（常量）</li><li>函数内部定义的数组不能太长（如果需要很长的，只能定义成全局变量）</li></ul><p>解决：引入向量（动态数组）</p><ul><li>顺序存储&#x2F;线性表</li></ul><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vec;</span><br></pre></td></tr></table></figure><blockquote><p>如果想用vec[i] &#x3D; 5来插入元素，必须事先初始化大小：<code>vector&lt;int&gt; vec(10);</code> 否则会报异常</p></blockquote><hr><h2 id="初始化-1"><a href="#初始化-1" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vec1&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">vec2</span><span class="params">(<span class="number">100</span>)</span></span>; </span><br><span class="line"><span class="comment">// 给这100个地方都附上-1，即：&#123;-1,-1,-1,.....,-1&#125;</span></span><br><span class="line"><span class="built_in">fill</span>(vec<span class="number">2.</span><span class="built_in">begin</span>(),vec<span class="number">2.</span><span class="built_in">end</span>(),<span class="number">-1</span>);</span><br></pre></td></tr></table></figure><h2 id="常见操作-1"><a href="#常见操作-1" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>获取长度：<code>vec.size()</code> 或 <code>vec.length()</code></li><li>尾部扩容：<code>vec.push_back(1)</code></li><li>弹出最后一个元素：<code>vec.pop_back()</code></li><li>访问：<ul><li><code>vec[i]</code></li><li>迭代器访问：<ul><li><code>vec.begin()</code>：指向第一个元素</li><li><code>vec.end()</code>：指向最后一个元素的后一个元素</li></ul></li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(vector&lt;<span class="type">int</span>&gt;::it = vec.<span class="built_in">begin</span>();it&lt;vec.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,*it);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="5"><li>修改：<code>vec[i] = 3</code></li><li>随机位置的插入：<ul><li>假设有数组：1,2,3,4。在2号元素后面插入元素5，插入后&#x3D;&#x3D;&#x3D;&gt;1,2,5,3,4</li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator it = vec.begin<span class="number">+2</span>;<span class="comment">//找到3号元素的迭代器</span></span><br><span class="line">vec.<span class="built_in">insert</span>(it,<span class="number">5</span>);<span class="comment">//在3号元素的前面插入5</span></span><br></pre></td></tr></table></figure><ol start="7"><li>随机位置的删除：<ul><li>假设有数组：1,2,3,4。删除2号元素，删除后&#x3D;&#x3D;&#x3D;&gt;1,3,4</li></ul></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator it = vec.begin<span class="number">+1</span>;<span class="comment">//找到2号元素的迭代器</span></span><br><span class="line">vec.<span class="built_in">erase</span>(it);<span class="comment">//删除2号元素</span></span><br></pre></td></tr></table></figure><h1 id="map"><a href="#map" class="headerlink" title="map"></a>map</h1><p>map的底层是二叉搜索树：构建O(nlogn)、查找O(logn)<br><code>map&lt;string,int&gt; myMap;</code></p><h2 id="常见操作-2"><a href="#常见操作-2" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>判空：<code>myMap.empty()</code></li><li>获取键值对的个数：<code>myMap.size()</code></li><li>插入一对键值对：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">myMap[<span class="string">&quot;xiaolin&quot;</span>] = <span class="number">3</span>;</span><br><span class="line">myMap.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;string,<span class="type">int</span>&gt;(<span class="string">&quot;03&quot;</span>,<span class="number">3</span>));</span><br><span class="line">myMap.<span class="built_in">insert</span>(&#123;<span class="string">&quot;33&quot;</span>, <span class="number">3</span>&#125;);</span><br></pre></td></tr></table></figure><ol start="4"><li>删除一对键值对：<code>myMap.erase(&quot;xiaolin&quot;);</code></li><li>键值对的个数：<code>myMap.size();</code></li><li>迭代器：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">map&lt;string,<span class="type">int</span>&gt;::iterator beginIt = myMap.<span class="built_in">begin</span>(); <span class="comment">// 指向第一个元素</span></span><br><span class="line">map&lt;string,<span class="type">int</span>&gt;::iterator endIt = myMap.<span class="built_in">end</span>();   <span class="comment">//指向最后一个元素的后一个元素（尾后）</span></span><br></pre></td></tr></table></figure><ol start="7"><li>遍历：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(map&lt;string,<span class="type">int</span>&gt;::iterator it = myMap.<span class="built_in">begin</span>();it!=myMap.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;key=%c,value=%d&quot;</span>,it-&gt;first,it-&gt;second);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">map&lt;string,<span class="type">int</span>&gt; myMap;</span><br><span class="line"><span class="comment">// 法1</span></span><br><span class="line"><span class="keyword">for</span>(map&lt;string,<span class="type">int</span>&gt;::iterator it = myMap.<span class="built_in">begin</span>();it!=myMap.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;key=%c,value=%d&quot;</span>,it-&gt;first,it-&gt;second);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 法2</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">const</span> <span class="keyword">auto</span>&amp;[key,value] : myMap) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;key=%c,value=%d&quot;</span>,key,value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="8"><li>某个键是否存在：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(myMap.<span class="built_in">find</span>(<span class="string">&quot;xiaolin&quot;</span>) == myMap.<span class="built_in">end</span>()) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;未找到&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="set"><a href="#set" class="headerlink" title="set"></a>set</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;set&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">set&lt;<span class="type">int</span>&gt; s;</span><br></pre></td></tr></table></figure><h2 id="常见操作-3"><a href="#常见操作-3" class="headerlink" title="常见操作"></a>常见操作</h2><ol><li>插入：<code>s.insert(333);</code> 往集合中添加元素，它的参数也是只有一个，就是你想要添加的元素，无返回值。</li><li>删除：<code>s.erase(333);</code> 用来删除指定的元素，参数只有一个，并且是你想要删除的元素，无返回值</li><li>查找在集合中出现的元素个数：<code>s.count(333); </code> 因为集合的互异性，它的返回值要么是1要么是0，一般也可以用它来判断某个元素是否在该集合中。</li><li>查找某元素是否在集合中：<code>find()</code></li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(s.<span class="built_in">find</span>(<span class="string">&quot;33&quot;</span>)!=s.<span class="built_in">end</span>()) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;在集合中&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;不在集合中&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="5"><li>得出集合中的元素个数：<code>s.size()</code></li><li>判断该集合是否为空：<code>s.empty()</code></li><li>清空集合中的元素：<code>a.clear()</code></li><li>遍历：</li></ol><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//法一：</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i:s) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//法二：</span></span><br><span class="line"><span class="keyword">for</span>(set&lt;<span class="type">int</span>&gt;::iterator it = s.<span class="built_in">begin</span>();it&lt;s.<span class="built_in">end</span>();++it) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,*it);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="stack"><a href="#stack" class="headerlink" title="stack"></a>stack</h1><p>栈：先进后出（场景：“优先级差别”等待）</p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">stack&lt;<span class="type">int</span>&gt; myStack;</span><br></pre></td></tr></table></figure><ol><li>大小：<code>size()</code></li><li>压栈：<code>push()</code></li><li>取栈顶元素：top()&#96;</li><li>弹栈：<code>pop()</code></li><li>判断栈是否为空：<code>empty()</code></li></ol><h1 id="queue"><a href="#queue" class="headerlink" title="queue"></a>queue</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">queue&lt;<span class="type">int</span>&gt; myQueue;</span><br></pre></td></tr></table></figure><ol><li>入队：push</li><li>出队：pop</li><li>判断为空：empty</li><li>队首元素：front</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Mybatis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> C++容器 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>mysql语法中not in会把null值过滤掉</title>
+      <link href="/post/cfa2118.html"/>
+      <url>/post/cfa2118.html</url>
+      
+        <content type="html"><![CDATA[<p>null在SQL中表示“未知”或“不存在”，所以not in会认为null是一个具体的值，需要被排除。</p><hr><p>在这个查询中，所有的column列为null值得都会被排除。</p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> temp</span><br><span class="line"><span class="keyword">where</span> <span class="keyword">column</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;value1&#x27;</span>, <span class="string">&#x27;value2&#x27;</span> <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure><hr><p>如果不希望not in过滤null值，可以使用 <strong>not in 结合 or</strong> </p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> temp</span><br><span class="line"><span class="keyword">where</span> <span class="keyword">column</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;value1&#x27;</span>, <span class="string">&#x27;value2&#x27;</span>) </span><br><span class="line">      <span class="keyword">or</span> <span class="keyword">column</span> <span class="keyword">is</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> mysql </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> mysql </tag>
+            
+            <tag> null值 </tag>
+            
+            <tag> 数据库 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>基本的ResultMap</title>
+      <link href="/post/d634e4f9.html"/>
+      <url>/post/d634e4f9.html</url>
+      
+        <content type="html"><![CDATA[<p>在 MyBatis 中，resultMap用来将数据库查询结果映射到 Java 对象。定义了如何将 SQL 查询结果的列与 Java 对象的属性进行映射。它支持复杂的映射关系，如一对多、多对一等。</p><hr><h1 id="基本的ResultMap"><a href="#基本的ResultMap" class="headerlink" title="基本的ResultMap"></a>基本的ResultMap</h1><p>假设有一个User类：</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_name&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure><p>id表示主键映射，通常对应数据库表中的主键字段。【<strong>要放在第一行</strong>】</p><p>result表示普通字段映射，property是Java类的属性，column是数据库表中的列名</p><p>上边的resultMap对应的select语句就可以这么写：</p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> id &quot;user_id&quot;, username &quot;user_name&quot;</span><br><span class="line"><span class="keyword">from</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure><h2 id="开启autoMapping映射"><a href="#开启autoMapping映射" class="headerlink" title="开启autoMapping映射"></a>开启autoMapping映射</h2><p>autoMapping映射是一种自动映射机制，用于自动将 SQL 查询结果的列与 Java 对象的属性进行匹配。它简化了映射的配置，不需要显式地为每个属性定义映射关系。</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span> <span class="attr">autoMapping</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure><p>上边的resultMap对应的select语句就可以这么写：</p><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> id, username</span><br><span class="line"><span class="keyword">from</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure><blockquote><p>在启用了 <code>autoMapping</code> 后，<code>user_id</code> 会自动映射到 <code>userId</code>。</p></blockquote><h1 id="复杂的ResultMap"><a href="#复杂的ResultMap" class="headerlink" title="复杂的ResultMap"></a>复杂的ResultMap</h1><h2 id="一对多映射-collection"><a href="#一对多映射-collection" class="headerlink" title="一对多映射[collection]"></a>一对多映射[collection]</h2><p>场景：有一个user对象，和一个Order对象，一个用户可以有多个订单。</p><p>一个User类如下：</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String User;</span><br><span class="line">    List&lt;Order&gt; orders;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> Date orderDate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在这个例子中，<code>User</code> 类有一个 <code>orders</code> 属性（一个 <code>List&lt;Order&gt;</code>）。<code>collection</code> 元素用于指定一对多的映射关系，<code>ofType</code> 属性指定集合中元素的类型。</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span> <span class="attr">autoMapping</span> = <span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;orders&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Order&quot;</span> <span class="attr">autoMapping</span> = <span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;order_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure><p>使用Mybatis-Plus的分页插件进行分页查询时，如果结果需要使用<code>&lt;collection&gt;</code>进行映射，只能使用<strong>嵌套查询</strong>，而不能使用嵌套结果映射。</p><h2 id="多对一映射-association"><a href="#多对一映射-association" class="headerlink" title="多对一映射[association]"></a>多对一映射[association]</h2><p>场景：有一个 <code>Order</code> 对象，它关联到一个 <code>User</code> 对象。</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String User;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> Date orderDate;</span><br><span class="line">    <span class="keyword">private</span> User user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在这个例子中，<code>Order</code> 对象的 <code>user</code> 属性是通过 <code>association</code> 映射的，它表示多对一关系。</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;orderResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Order&quot;</span> <span class="attr">autoMapping</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;orderId&quot;</span> <span class="attr">column</span>=<span class="string">&quot;order_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;user&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;User&quot;</span> <span class="attr">autoMapping</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure><h1 id="ResultMap中的属性"><a href="#ResultMap中的属性" class="headerlink" title="ResultMap中的属性"></a>ResultMap中的属性</h1><ul><li><strong>property</strong>：映射的 Java 类的属性名称。</li><li><strong>column</strong>：数据库表中的列名。</li><li><strong>javaType</strong>：用于指定映射的 Java 类型。</li><li><strong>typeHandler</strong>：用于指定类型处理器，处理数据库列和 Java 属性之间的转换。</li><li><strong>ofType</strong>：用于集合映射时，指定集合中元素的类型。</li><li><strong>association</strong>：用于表示一对多或多对一关系映射。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Mybatis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据库 </tag>
+            
+            <tag> ResultMap </tag>
+            
+            <tag> Mybatis </tag>
             
         </tags>
       
