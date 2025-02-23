@@ -615,7 +615,7 @@
       
       <categories>
           
-          <category> 算法 </category>
+          <category> 二分查找 </category>
           
       </categories>
       
@@ -676,9 +676,9 @@
       
         <tags>
             
-            <tag> 树 </tag>
-            
             <tag> 算法 </tag>
+            
+            <tag> 树 </tag>
             
         </tags>
       
@@ -925,9 +925,9 @@
       
         <tags>
             
-            <tag> 树 </tag>
-            
             <tag> 算法 </tag>
+            
+            <tag> 树 </tag>
             
         </tags>
       
@@ -1066,9 +1066,9 @@
       
         <tags>
             
-            <tag> 树 </tag>
-            
             <tag> 算法 </tag>
+            
+            <tag> 树 </tag>
             
         </tags>
       
@@ -1093,11 +1093,11 @@
       
         <tags>
             
-            <tag> 树 </tag>
-            
             <tag> 算法 </tag>
             
             <tag> 数据结构 </tag>
+            
+            <tag> 树 </tag>
             
             <tag> 链表 </tag>
             
@@ -1124,9 +1124,9 @@
       
         <tags>
             
-            <tag> 树 </tag>
-            
             <tag> 算法 </tag>
+            
+            <tag> 树 </tag>
             
         </tags>
       
@@ -1151,9 +1151,9 @@
       
         <tags>
             
-            <tag> 树 </tag>
-            
             <tag> 算法 </tag>
+            
+            <tag> 树 </tag>
             
         </tags>
       
@@ -2328,7 +2328,7 @@
       
       <categories>
           
-          <category> Mybatis </category>
+          <category> C++ </category>
           
       </categories>
       
