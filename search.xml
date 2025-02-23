@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>102. 二叉树的层序遍历</title>
+      <link href="/post/ddbff69.html"/>
+      <url>/post/ddbff69.html</url>
+      
+        <content type="html"><![CDATA[<p><img src="/assets/6d38201234a545f1a0b043ec8db0d5c6.png" alt="6d38201234a545f1a0b043ec8db0d5c6.png"></p><p>【题目】：<a href="https://leetcode.cn/problems/binary-tree-level-order-traversal/description/?envType=study-plan-v2&envId=top-100-liked">102. 二叉树的层序遍历</a></p><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">levelOrder</span>(TreeNode* root) &#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        queue&lt;TreeNode*&gt; q;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">        q.<span class="built_in">push</span>(root);</span><br><span class="line">        <span class="keyword">while</span>(!q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            vector&lt;<span class="type">int</span>&gt; tempVec; <span class="comment">// 存储一整行的数据</span></span><br><span class="line">            <span class="type">int</span> n = q.<span class="built_in">size</span>();</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123; <span class="comment">// 遍历q队列（此时q队列中存储一层的数据 -&gt; 全部出队）</span></span><br><span class="line">                TreeNode* node = q.<span class="built_in">front</span>();</span><br><span class="line">                q.<span class="built_in">pop</span>();</span><br><span class="line">                <span class="comment">// 入队</span></span><br><span class="line">                <span class="keyword">if</span>(node-&gt;left != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                    q.<span class="built_in">push</span>(node-&gt;left);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(node-&gt;right != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                    q.<span class="built_in">push</span>(node-&gt;right);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                tempVec.<span class="built_in">push_back</span>(node-&gt;val); </span><br><span class="line">            &#125;</span><br><span class="line">            res.<span class="built_in">push_back</span>(tempVec);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><ul><li>时间复杂度: O(n)</li><li>空间复杂度: O(n)</li></ul><blockquote><p>这题的难点在于，题目要求是要返回一个二维数组，那怎么去记录每一层的节点呢？在每一次循环的时候，当前队列中的节点就是这一层的节点，因此可以用一个tempVec来存储当前队列中的数据，在每一轮的循环结束时，把tempVec插入结果数组中。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode热题100 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 树 </tag>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>生命周期&amp;数据共享</title>
       <link href="/post/567bfae1.html"/>
       <url>/post/567bfae1.html</url>
