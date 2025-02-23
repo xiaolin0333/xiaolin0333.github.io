@@ -1,0 +1,396 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【复习】Java基础 | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="概念Java的特点 平台无关性：一次编译，处处运行 面向对象：封装、继承、多态 内存管理：Java有自己的垃圾回收机制，不需要手动管理内存。  Java为什么是跨平台的？JVM不同平台有不同的版本。 我们编写的Java源码，编译后会生成.class文件（字节码文件）。虚拟机就是将字节码文件翻译成指定平台下的机器码运行的。只要在不同平台上安装对应的JVM，就可以运行字节码文件。 编译的结果不是生成机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【复习】Java基础">
+<meta property="og:url" content="http://example.com/post/ceeb1a09.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="概念Java的特点 平台无关性：一次编译，处处运行 面向对象：封装、继承、多态 内存管理：Java有自己的垃圾回收机制，不需要手动管理内存。  Java为什么是跨平台的？JVM不同平台有不同的版本。 我们编写的Java源码，编译后会生成.class文件（字节码文件）。虚拟机就是将字节码文件翻译成指定平台下的机器码运行的。只要在不同平台上安装对应的JVM，就可以运行字节码文件。 编译的结果不是生成机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover3.jpg">
+<meta property="article:published_time" content="2025-02-23T12:33:41.000Z">
+<meta property="article:modified_time" content="2025-02-23T12:46:18.824Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover3.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【复习】Java基础",
+  "url": "http://example.com/post/ceeb1a09.html",
+  "image": "http://example.com/img/default_cover3.jpg",
+  "datePublished": "2025-02-23T12:33:41.000Z",
+  "dateModified": "2025-02-23T12:46:18.824Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/ceeb1a09.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【复习】Java基础',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><script src="https://npm.elemecdn.com/echarts@4.9.0/dist/echarts.min.js"></script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-复习" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">【复习】Java基础</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">【复习】Java基础</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-23T12:33:41.000Z" title="发表于 2025-02-23 20:33:41">2025-02-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-23T12:46:18.824Z" title="更新于 2025-02-23 20:46:18">2025-02-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A4%8D%E4%B9%A0/">复习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/ceeb1a09.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><h2 id="Java的特点"><a href="#Java的特点" class="headerlink" title="Java的特点"></a>Java的特点</h2><ol>
+<li>平台无关性：一次编译，处处运行</li>
+<li>面向对象：封装、继承、多态</li>
+<li>内存管理：Java有自己的垃圾回收机制，不需要手动管理内存。</li>
+</ol>
+<h2 id="Java为什么是跨平台的？"><a href="#Java为什么是跨平台的？" class="headerlink" title="Java为什么是跨平台的？"></a>Java为什么是跨平台的？</h2><p>JVM不同平台有不同的版本。</p>
+<p>我们编写的Java源码，编译后会生成.class文件（字节码文件）。虚拟机就是将字节码文件翻译成指定平台下的机器码运行的。只要在不同平台上安装对应的JVM，就可以运行字节码文件。</p>
+<p>编译的结果不是生成机器码，而是生成字节码，字节码不能直接运行，需要通过JVM翻译成机器码才能运行，不同平台下的机器码不同，但是字节码却是一样的。</p>
+<h2 id="JVM、JDK、JRE的关系？"><a href="#JVM、JDK、JRE的关系？" class="headerlink" title="JVM、JDK、JRE的关系？"></a>JVM、JDK、JRE的关系？</h2><p>JVM：Java虚拟机，负责将字节码编译成机器码并执行程序（解释自己的指令集并映射到本地CPU指令集和OS的系统调用）</p>
+<p>JRE：Java运行时的环境，是Java程序所需的最小环境，包含JVM和一组类库，用来支持程序的运行。（JRE不包含开发工具，只提供Java程序所需的运行环境）</p>
+<p>JDK：Java开发工具包，包含了JVM、编译器（javac）等开发工具。JDK提供了开发、编译、调试和运行Java程序所需的全部工具和环境</p>
+<h2 id="Java的解释性和编译性"><a href="#Java的解释性和编译性" class="headerlink" title="Java的解释性和编译性"></a>Java的解释性和编译性</h2><ol>
+<li>编译性：Java源码先被编译成字节码，JIT会把编译后的机器码保存起来，以备下次使用</li>
+<li>解释性：JVM中的一个方法调用计数器，当累计技术大于一定值的时候，就是用JIT进行编译生成机器码文件，否则就是解释器进行解释执行。（字节码也是通过解释器进行解释运行的）</li>
+</ol>
+<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="八种基本的数据类型"><a href="#八种基本的数据类型" class="headerlink" title="八种基本的数据类型"></a>八种基本的数据类型</h2><ul>
+<li>数值类型：long（8）、int（4）、short（2）、byte（1）、double（8）、float（4）</li>
+<li>字符类型：char（2）</li>
+<li>布尔类型：boolean（1）</li>
+</ul>
+<h2 id="数据类型转换的方式"><a href="#数据类型转换的方式" class="headerlink" title="数据类型转换的方式"></a>数据类型转换的方式</h2><ol>
+<li>自动类型转换：int转long、float转double</li>
+<li>强制类型转换：long转int、double转float</li>
+</ol>
+<h2 id="为什么用BigDecimal不用double？"><a href="#为什么用BigDecimal不用double？" class="headerlink" title="为什么用BigDecimal不用double？"></a>为什么用BigDecimal不用double？</h2><p>double会出现精度丢失的问题，double执行的是二进制的浮点运算，二进制有些情况下不能准确的表示一个小数。</p>
+<p>Decimal是精确计算的，一般涉及到金钱的计算都会使用Decimal</p>
+<blockquote>
+<p>在创建BigDecimal对象时，需要使用字符串作为参数，而不是直接使用浮点运算作为数值，以避免浮点数精度丢失。</p>
+</blockquote>
+<h2 id="装箱和拆箱"><a href="#装箱和拆箱" class="headerlink" title="装箱和拆箱"></a>装箱和拆箱</h2><p>装箱是基本数据类型转成对应的包装类</p>
+<p>拆箱是包装类转成对应的基本数据类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">10</span>; <span class="comment">// 装箱</span></span><br><span class="line"><span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> i; <span class="comment">// 拆箱</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>自动装箱的问题</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i) &#123;</span><br><span class="line">sum += i; <span class="comment">// 一直发生装箱、拆箱</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>基本数据类型和引用数据类型不能直接转换，必须使用包装类来实现。</p>
+<p>int类型转成String类型：int类型先转成Integer类型；Integer类型转成String类型</p>
+</blockquote>
+<h2 id="Integer的缓存"><a href="#Integer的缓存" class="headerlink" title="Integer的缓存"></a>Integer的缓存</h2><p>Integer类的内部实现了一个静态缓存池，用来存储特定范围内（默认：-128~127）的整数值对应的Integer对象。</p>
+<p>当创建一个在指定范围内的整数对象时，并不会每次都生成新的对象，而是复用缓存中的现有对象，会直接从内存中取出，不需要新建一个对象</p>
+<h1 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h1><h2 id="怎么理解面向对象？"><a href="#怎么理解面向对象？" class="headerlink" title="怎么理解面向对象？"></a>怎么理解面向对象？</h2><p>面向对象是一种编程范式，将现实世界中的事物抽象为对象。面向对象的设计思想以对象为中心，通过对象之间的交互来完成程序的功能。</p>
+<ul>
+<li>封装：将对象的数据和方法结合在一起，对外隐藏对象内部的实现细节，只通过对象提供的接口与外界交互</li>
+<li>继承：使得子类自动共享父类数据结构和方法的机制，是代码复用的重要手段，通过继承可以实现建立类和类之间的层次关系</li>
+<li>多态：允许不同类的对象对同一个消息做出不同的响应。（编译时多态、运行时多态）<ul>
+<li>方法重载：同一个类可以有多个同名的方法（通过参数列表来区分）</li>
+<li>方法重写：子类可以提供对父类同名方法的具体实现</li>
+<li>接口的使用：多个类可以实现同一个接口，并通过接口类型的引用来调用这些类的方法</li>
+<li>向上转型和向下转型：<ul>
+<li>向上转型：使用父类的引用指向子类对象</li>
+<li>向下转型：将父类引用转化成子类类型（需要确认引用实际指向的对象类型）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="面向对象的设计原则"><a href="#面向对象的设计原则" class="headerlink" title="面向对象的设计原则"></a>面向对象的设计原则</h2><ol>
+<li>单一职责原则：一个类应该只有一个引起他变化的原因</li>
+<li>开放封闭原则：软件实体应该对扩展开放，对修改封闭</li>
+<li>里氏替换原则：子类对象应该能够替换所有的父类对象</li>
+<li>接口隔离原则：客户端不应该依赖那些它不需要的接口</li>
+<li>依赖倒置原则：高层模块不应该依赖底层模块</li>
+<li>最少知识原则：一个对象应该对其他对象有最少的了解</li>
+</ol>
+<h2 id="抽象类和接口的区别"><a href="#抽象类和接口的区别" class="headerlink" title="抽象类和接口的区别"></a>抽象类和接口的区别</h2><ol>
+<li><strong>抽象类</strong>用来描述类的共同行为和特性，可以有成员变量、构造方法、具体方法；<strong>接口</strong>用来定义行为规范，可以多实现，只有常量和抽象方法</li>
+<li>一个类可以实现（implements）多个接口，但是只能继承（extends）一个类</li>
+<li><strong>接口</strong>中只能有定义，不能有方法的实现；<strong>抽象类</strong>中可以有定义和实现</li>
+<li><strong>接口</strong>成员变量默认为public static final，成员方法默认为public abstract；<strong>抽象类</strong>中成员变量默认default，可以在子类中被重新定义，也可以被重新赋值，抽象类方法被abstract修饰，不能被private、static、synchronized、native修饰，必须以分号结尾。</li>
+<li><strong>抽象类</strong>可以包含实例变量和静态遍历；<strong>接口</strong>只能包含常量</li>
+</ol>
+<h2 id="new子类对象的加载顺序？"><a href="#new子类对象的加载顺序？" class="headerlink" title="new子类对象的加载顺序？"></a>new子类对象的加载顺序？</h2><ul>
+<li>父类静态成员变量、静态代码块</li>
+<li>子类静态成员变量、静态代码块</li>
+<li>父类构造方法</li>
+<li>子类构造方法</li>
+</ul>
+<h2 id="浅拷贝和深拷贝"><a href="#浅拷贝和深拷贝" class="headerlink" title="浅拷贝和深拷贝"></a>浅拷贝和深拷贝</h2><ul>
+<li>浅拷贝：只创建一个新的对象，将原对象的字段值放入新对象中，两个对象指向的是同一个引用对象</li>
+<li>深拷贝：递归复制对象内部所有引用类型的字段，生成一个全新的对象以及其内部的所有对象，实现方式如下：<ul>
+<li>实现Cloneable接口并重写clone()方法</li>
+<li>将对象序列化为字节流，再从字节流反序列化为对象</li>
+<li>手动赋值</li>
+</ul>
+</li>
+</ul>
+<h1 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h1><h2 id="Java创建对象的方式"><a href="#Java创建对象的方式" class="headerlink" title="Java创建对象的方式"></a>Java创建对象的方式</h2><ol>
+<li><p>使用new关键字</p>
+</li>
+<li><p>使用Class类的newInstance()方法【反射】</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">MyClass</span> <span class="variable">obj</span> <span class="operator">=</span> (MyClass)Class.forName(<span class="string">&quot;com.example.MyClass&quot;</span>).newInstance();</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>使用Constructor的newInstance()方法【反射】</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Constructor&lt;MyClass&gt; constructor = MyClass.class.getConstructor();</span><br><span class="line"><span class="type">MyClass</span> <span class="variable">obj</span> <span class="operator">=</span> constructor.newInstance();</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>使用clone方法：如果类实现了Cloneable接口，可以使用clone()方法复制对象</li>
+<li>使用反序列化：将对象序列化到文件中，再使用反序列化创建对象</li>
+</ol>
+<h2 id="new出的对象什么时候回收？"><a href="#new出的对象什么时候回收？" class="headerlink" title="new出的对象什么时候回收？"></a>new出的对象什么时候回收？</h2><p>通过new创建出的对象，是由gc负责回收的，再程序运行过程中自动进行的，它会周期性检查不再被引用的对象，将其回收释放内存。gc主要是根据一些算法来决定的，主要有：</p>
+<ol>
+<li>可达计数器：某个对象的引用计数器为0，表示该对象可以被回收</li>
+<li>可达分析算法：从GC Root出发，一层层找所引用的对象，如果被找到就是存活对象，其他不可达的对象就是垃圾对象，垃圾对象就会被回收</li>
+<li>终结器（Finalizer）：如果对象重写了finalize()方法，gc会在回收该对象之前调用finalize()方法，对象可以在finalize()方法中进行一些清理操作。【不推荐】</li>
+</ol>
+<h1 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h1><h2 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h2><p>在运行过程中，任意一个类，都能够知道这个类的所有属性和方法，任意一个对象，都能调用它的任意一个方法和属性。</p>
+<ol>
+<li>允许在运行时获取类的完整结构信息</li>
+<li>可以使用反射API动态创建对象实例</li>
+<li>可以在运行时动态调用对象的方法</li>
+<li>允许在运行时访问和修改对象的字段值（包括私有的）</li>
+</ol>
+<h1 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h1><h2 id="Java注解的原理"><a href="#Java注解的原理" class="headerlink" title="Java注解的原理"></a>Java注解的原理</h2><p>注解本质是继承了Annotation的特殊接口，具体实现类是Java运行时生成的动态代理类。</p>
+<p>通过反射获取注解，其实返回的是Java运行时生成的动态代理对象，通过代理对象调用自定义注解的的方法，最后会调用invoke方法。</p>
+<h2 id="注解的作用域"><a href="#注解的作用域" class="headerlink" title="注解的作用域"></a>注解的作用域</h2><ol>
+<li>类级别作用域：描述类的注解，放在类上，用来指定类的一些属性</li>
+<li>方法级别作用域：描述方法的注解，放在方法定义上，用来指定方法的一些属性</li>
+<li>字段级别作用域：用来描述字段的注解，放在字段上，用来指定字段的一些属性</li>
+</ol>
+<h1 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h1><h2 id="与-equals的区别？"><a href="#与-equals的区别？" class="headerlink" title="&#x3D;&#x3D; 与 equals的区别？"></a>&#x3D;&#x3D; 与 equals的区别？</h2><ol>
+<li>功能不同：&#x3D;&#x3D;是操作符，用于比较两个变量或对象的引用地址是否相同；equals是一个方法，用于比较两个对象的内容是否相同，他是Object类中的一个方法，子类可以重写这个方法。</li>
+<li>比较对象不同：&#x3D;&#x3D;适用于基本数据类型（比较值是否相同）和对象引用（比较引用地址是否相同）；equals适合于对象内容的比较，对于基本数据类型不能直接用equals，但是可以包装成对应的包装类对象，再使用equals比较</li>
+<li>默认行为不同：equals对于未重写equals方法的子类来说，equals方法的行为与&#x3D;&#x3D;相同，只有在类里重写了equals方法后，才会根据重写的方法逻辑进行比较</li>
+<li>性能不同：&#x3D;&#x3D;速度比较快，equals速度比较慢</li>
+</ol>
+<h2 id="String、StringBuffer、StringBuilder的区别？"><a href="#String、StringBuffer、StringBuilder的区别？" class="headerlink" title="String、StringBuffer、StringBuilder的区别？"></a>String、StringBuffer、StringBuilder的区别？</h2><ol>
+<li>String是不可变的字符串，因为他的不可变性，在拼接字符串的时候就会产生很多无用的中间对象（线程安全）</li>
+<li>StringBuffer就是为了解决String在拼接字符串的时候产生大量中间对象而提供的类。它是可变的，是线程安全的。</li>
+<li>StringBuilder和StringBuffer本质上没什么区别，但是它是线程不安全的，减少了开销。</li>
+</ol>
+<blockquote>
+<p>速度：String &lt; StringBuffer &lt; StringBuilder</p>
+<p>适用场景：</p>
+<ul>
+<li>String：操作少量数据</li>
+<li>StringBuffer：多线程操作大量数据</li>
+<li>StringBuilder：单线程操作大量数据</li>
+</ul>
+</blockquote>
+<h1 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h1><h2 id="怎么把一个对象从一个jvm转移到另一个jvm"><a href="#怎么把一个对象从一个jvm转移到另一个jvm" class="headerlink" title="怎么把一个对象从一个jvm转移到另一个jvm"></a>怎么把一个对象从一个jvm转移到另一个jvm</h2><ol>
+<li>使用序列化和反序列化：将一个对象序列化为字节流，并将其发送到另一个JVM，在另一个JVM进行反序列化恢复对象。</li>
+<li>使用消息队列</li>
+<li>使用远程方法调用（RPC）：在分布式系统中调用远程JVM上对象的方法</li>
+<li>使用共享数据库或缓存：将对象存储在共享数据库或共享缓存中，让不同的JVM可以访问这些共享数据。</li>
+</ol>
+<h1 id="I-O"><a href="#I-O" class="headerlink" title="I&#x2F;O"></a>I&#x2F;O</h1><h2 id="Java怎么实现网络IO高并发编程"><a href="#Java怎么实现网络IO高并发编程" class="headerlink" title="Java怎么实现网络IO高并发编程"></a>Java怎么实现网络IO高并发编程</h2><p>传统的BIO：如果TCP RecvBuffer里没有数据，函数会一直阻塞，直到收到数据，返回读取到的数据，如果BIO想要并发处理多个客户端的IO，只能使用多线程模式，一个线程专门处理一个客户端io，随着客户端越来越多，所需要的线程也会增多，会消耗系统的性能。</p>
+<p>Java NIO：同步非阻塞的I&#x2F;O模型，基于IO多路复用，可以用一个线程处理多个客户端IO</p>
+<blockquote>
+<ul>
+<li>BIO：传统的java.io包，基于流模型实现，在读写动作完成之前，线程会阻塞。代码比较直观，但是IO的效率和扩展性差</li>
+<li>NIO：java.nio包，提供了Channel、Selector、Buffer等抽象，同步非阻塞的IO程序，同时提供了更接近操作系统底层高性能的数据操作方式</li>
+<li>AIO：是NIO的升级版，提供了异步非阻塞的IO，应用操作后会直接返回，不会阻塞在那里，当后台处理完成后，操作系统会通知响应的线程进行后续的操作。</li>
+</ul>
+</blockquote>
+<h2 id="NIO是怎么实现的？"><a href="#NIO是怎么实现的？" class="headerlink" title="NIO是怎么实现的？"></a>NIO是怎么实现的？</h2><p>NIO：同步非阻塞的IO模型。</p>
+<ul>
+<li><p>同步：线程不断轮询IO事件是否就绪</p>
+</li>
+<li><p>非阻塞：线程在等待IO的时候可以同时做其他任务</p>
+</li>
+</ul>
+<p>同步的核心是Selector，Selector代替线程本身的IO实践，避免了阻塞同时减少了不必要的线程消耗</p>
+<p>非阻塞的核心是通道和缓冲区，当IO事件就绪时，可以通过写到缓冲区保证IO的成功，而无需线程阻塞式等待</p>
+<p>NIO由一个专门的线程处理所有的IO事件，负责并发。</p>
+<blockquote>
+<p>Netty的IO模型式基于非阻塞IO实现的。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/ceeb1a09.html">http://example.com/post/ceeb1a09.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a><a class="post-meta__tags" href="/tags/java/">java</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover3.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/abd111cb.html" title="Java动态代理"><img class="cover" src="/img/default_cover4.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">Java动态代理</div></div><div class="info-2"><div class="info-item-1"> 为什么需要代理？对象如果嫌自己的事太多了，可以通过代理来转移部分职责。 代理长什么样？对象有什么方法想被代理，代理就一定要有对应的方法。但是方法做的事不同，代理是去调对象的方法。 中介如何知道要派唱歌、跳舞方法的代理？通过继承接口   实现： interface Star &#123;    String sing(String name);    void dance();&#125;@Data@AllArgsConstructorclass BigStart implements Star &#123;    String name;    @Override    public String sing(String name) &#123;        System.out.println(this.name + &quot;唱歌：&quot; + name);        return &quot;唱完了，谢谢&quot;;    &#125;    @Override    public void dance() &#123;       ...</div></div></div></a><a class="pagination-related" href="/post/3d566045.html" title="【复习】Java集合"><img class="cover" src="/img/default_cover14.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">【复习】Java集合</div></div><div class="info-2"><div class="info-item-1">集合概念集合与数组数组是固定长度；集合是动态长度的数据结构，需要动态增加或删除元素 数组可以包含基本数据类型和对象；集合只能包含对象 数组可以直接访问元素；集合需要通过迭代器访问元素 线程安全的集合？java.util包：  Vector：线程安全的动态数组，内部方法大部分都经过synchronized修饰 Hashtable：线程安全的哈希表，内部方法大部分都经过synchronized修饰，这样被所著的就是整个Table对象（底层是数组+链表）  并发Map：  ConcurrentHashMap：   JDK7，ConcurrentMap加的是分段锁（Segment锁），每个分段锁含有整个table的一部分，不同分段之间的并发互不影响【每个Segment都类似一个小的HashMap，对于插入、更新、删除操作时，需要先定位到具体的Segment，再在Segment上加锁】 JDK8，取消了Segment字段，直接在table元素上枷锁，实现对每一行进行加锁，进一步减少了并发冲突。主要通过volatile + CAS（乐观锁）或...</div></div></div></a><a class="pagination-related" href="/post/49caf527.html" title="【复习】Spring"><img class="cover" src="/img/default_cover21.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">【复习】Spring</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/post/f5f9fa9b.html" title="Docker"><img class="cover" src="/img/default_cover12.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">Docker</div></div><div class="info-2"><div class="info-item-1">安装Docker1. 卸载已有的Dockeryum remove docker \    docker-client \    docker-client-latest \    docker-common \    docker-latest \    docker-latest-logrotate \    docker-logrotate \    docker-engine \    docker-selinux   2. 配置yum源 安装yum工具  yum install -y yum-utils device-mapper-persistent-data lvm2   配置yum源  yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo  3. 安装Dockeryum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin...</div></div></div></a><a class="pagination-related" href="/post/88db839a.html" title="ElasticSearch上"><img class="cover" src="/img/default_cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch上</div></div><div class="info-2"><div class="info-item-1">安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --name es \  -e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot; \  -e &quot;discovery.type=single-node&quot; \  -v es-data:/usr/share/elasticsearch/data \  -v es-plugins:/usr/share/elasticsearch/plugins \  --privileged \  --network hm-net \  -p 9200:9200 \  -p 9300:9300 \  --restart=always \ ...</div></div></div></a><a class="pagination-related" href="/post/ffdcb30c.html" title="ElasticSearch下"><img class="cover" src="/img/default_cover16.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch下</div></div><div class="info-2"><div class="info-item-1">DSL查询 叶子查询：在特定字段里查询特定值，属于简单查询，很少单独使用 复合查询：以逻辑方式组合多个叶子查询或更改叶子查询的行为方式 在查询后还可以对查询结果做处理： 排序：按照1个或多个字段做排序 分页：根据from或size做分页，类似MySQL 高亮：对搜索结果中的关键字添加特殊样式 聚合：对搜索结果做数据统计以形成报表      基本语法GET /&#123;索引库名&#125;/_search&#123;  &quot;query&quot;: &#123;    &quot;查询类型&quot;: &#123;      &quot;查询条件&quot;: &quot;条件值&quot;    &#125;  &#125;&#125;  【例】： GET /items/_search &#123;  &quot;query&quot;: &#123;    &quot;match_all&quot;: &#123;&#125;  &#125;&#125;   叶子查询1....</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">Java的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%9A%84%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">Java为什么是跨平台的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM%E3%80%81JDK%E3%80%81JRE%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">JVM、JDK、JRE的关系？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E7%9A%84%E8%A7%A3%E9%87%8A%E6%80%A7%E5%92%8C%E7%BC%96%E8%AF%91%E6%80%A7"><span class="toc-number">1.4.</span> <span class="toc-text">Java的解释性和编译性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E7%A7%8D%E5%9F%BA%E6%9C%AC%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">八种基本的数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">数据类型转换的方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8BigDecimal%E4%B8%8D%E7%94%A8double%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">为什么用BigDecimal不用double？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E7%AE%B1%E5%92%8C%E6%8B%86%E7%AE%B1"><span class="toc-number">2.4.</span> <span class="toc-text">装箱和拆箱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Integer%E7%9A%84%E7%BC%93%E5%AD%98"><span class="toc-number">2.5.</span> <span class="toc-text">Integer的缓存</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.</span> <span class="toc-text">面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">怎么理解面向对象？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">3.2.</span> <span class="toc-text">面向对象的设计原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">3.3.</span> <span class="toc-text">抽象类和接口的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#new%E5%AD%90%E7%B1%BB%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F%EF%BC%9F"><span class="toc-number">3.4.</span> <span class="toc-text">new子类对象的加载顺序？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%85%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="toc-number">3.5.</span> <span class="toc-text">浅拷贝和深拷贝</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.</span> <span class="toc-text">对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">4.1.</span> <span class="toc-text">Java创建对象的方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#new%E5%87%BA%E7%9A%84%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%9B%9E%E6%94%B6%EF%BC%9F"><span class="toc-number">4.2.</span> <span class="toc-text">new出的对象什么时候回收？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84"><span class="toc-number">5.</span> <span class="toc-text">反射</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%B0%84"><span class="toc-number">5.1.</span> <span class="toc-text">什么是反射</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E8%A7%A3"><span class="toc-number">6.</span> <span class="toc-text">注解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E6%B3%A8%E8%A7%A3%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">6.1.</span> <span class="toc-text">Java注解的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">6.2.</span> <span class="toc-text">注解的作用域</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Object"><span class="toc-number">7.</span> <span class="toc-text">Object</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E-equals%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">7.1.</span> <span class="toc-text">&#x3D;&#x3D; 与 equals的区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#String%E3%80%81StringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">7.2.</span> <span class="toc-text">String、StringBuffer、StringBuilder的区别？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">8.</span> <span class="toc-text">序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E6%8A%8A%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E4%BB%8E%E4%B8%80%E4%B8%AAjvm%E8%BD%AC%E7%A7%BB%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AAjvm"><span class="toc-number">8.1.</span> <span class="toc-text">怎么把一个对象从一个jvm转移到另一个jvm</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#I-O"><span class="toc-number">9.</span> <span class="toc-text">I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%BD%91%E7%BB%9CIO%E9%AB%98%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B"><span class="toc-number">9.1.</span> <span class="toc-text">Java怎么实现网络IO高并发编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NIO%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F"><span class="toc-number">9.2.</span> <span class="toc-text">NIO是怎么实现的？</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="把本地搭建的hexo博客部署到自己的服务器上"/></a><div class="content"><a class="title" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上">把本地搭建的hexo博客部署到自己的服务器上</a><time datetime="2025-02-23T12:36:50.000Z" title="发表于 2025-02-23 20:36:50">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/c47d8526.html" title="安装Jenkins"><img src="/img/default_cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="安装Jenkins"/></a><div class="content"><a class="title" href="/post/c47d8526.html" title="安装Jenkins">安装Jenkins</a><time datetime="2025-02-23T12:36:39.000Z" title="发表于 2025-02-23 20:36:39">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/45d365e2.html" title="二分查找！！！！"><img src="/img/default_cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二分查找！！！！"/></a><div class="content"><a class="title" href="/post/45d365e2.html" title="二分查找！！！！">二分查找！！！！</a><time datetime="2025-02-23T12:36:27.000Z" title="发表于 2025-02-23 20:36:27">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"/></a><div class="content"><a class="title" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词">【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词</a><time datetime="2025-02-23T12:35:17.000Z" title="发表于 2025-02-23 20:35:17">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【热点文章-定时计算】分布式任务调度框架xxl-job"/></a><div class="content"><a class="title" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job">【热点文章-定时计算】分布式任务调度框架xxl-job</a><time datetime="2025-02-23T12:35:03.000Z" title="发表于 2025-02-23 20:35:03">2025-02-23</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

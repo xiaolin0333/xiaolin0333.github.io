@@ -1,0 +1,319 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>安装Jenkins | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux中安装jenkins 采用RPM安装包方式：Jenkins安装包下载地址  wget https:&#x2F;&#x2F;pkg.jenkins.io&#x2F;redhat-stable&#x2F;jenkins-2.190.1-1.1.noarch.rpm   执行安装  rpm -ivh jenkins-2.190.1-1.1.noarch.rpm   修改配置文件：  vi &#x2F;etc&#x2F;sysconfig&#x2F;jenkins">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装Jenkins">
+<meta property="og:url" content="http://example.com/post/c47d8526.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="Linux中安装jenkins 采用RPM安装包方式：Jenkins安装包下载地址  wget https:&#x2F;&#x2F;pkg.jenkins.io&#x2F;redhat-stable&#x2F;jenkins-2.190.1-1.1.noarch.rpm   执行安装  rpm -ivh jenkins-2.190.1-1.1.noarch.rpm   修改配置文件：  vi &#x2F;etc&#x2F;sysconfig&#x2F;jenkins">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover1.jpg">
+<meta property="article:published_time" content="2025-02-23T12:36:39.000Z">
+<meta property="article:modified_time" content="2025-02-23T12:54:28.967Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="springcloud">
+<meta property="article:tag" content="jenkins">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover1.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "安装Jenkins",
+  "url": "http://example.com/post/c47d8526.html",
+  "image": "http://example.com/img/default_cover1.jpg",
+  "datePublished": "2025-02-23T12:36:39.000Z",
+  "dateModified": "2025-02-23T12:54:28.967Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/c47d8526.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '安装Jenkins',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><script src="https://npm.elemecdn.com/echarts@4.9.0/dist/echarts.min.js"></script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-微服务" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">安装Jenkins</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">安装Jenkins</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-23T12:36:39.000Z" title="发表于 2025-02-23 20:36:39">2025-02-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-23T12:54:28.967Z" title="更新于 2025-02-23 20:54:28">2025-02-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">589</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/c47d8526.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h1 id="Linux中安装jenkins"><a href="#Linux中安装jenkins" class="headerlink" title="Linux中安装jenkins"></a>Linux中安装jenkins</h1><ol>
+<li>采用RPM安装包方式：<a target="_blank" rel="noopener" href="https://pkg.jenkins.io/redhat-stable/">Jenkins安装包下载地址</a></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget https://pkg.jenkins.io/redhat-stable/jenkins-2.190.1-1.1.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>执行安装</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh jenkins-2.190.1-1.1.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改配置文件：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vi /etc/sysconfig/jenkins</span><br></pre></td></tr></table></figure>
+
+<p>修改内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改为对应的目标用户</span><br><span class="line">$JENKINS_USER=&quot;root&quot;</span><br><span class="line"># 服务监听端口</span><br><span class="line">JENKINS_PORT=&quot;16060&quot;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>修改目录权限：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chown -R root:root /var/lib/jenkins</span><br><span class="line">chown -R root:root /var/cache/jenkins</span><br><span class="line">chown -R root:root /var/log/jenkins</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>重启Jenkins：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl restart jenkins</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>重启时出现报错不要慌，先查看一下jenkins日志：<code>cat /var/log/jenkins/jenkins.log</code></p>
+</blockquote>
+<h1 id="报错1-签名验证失败"><a href="#报错1-签名验证失败" class="headerlink" title="报错1. 签名验证失败"></a>报错1. 签名验证失败</h1><p><img src="D:\project\kaiFa\Blog\source_posts\assets\03f1f32ae9604de5bbc709a548aa3b7e.png" alt="03f1f32ae9604de5bbc709a548aa3b7e.png"><br>解决：通过修改 Jenkins 的启动参数来禁用签名验证，Jenkins 将跳过签名验证，从而解决证书过期或验证失败的问题。</p>
+<ol>
+<li>修改 Jenkins 配置文件：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/sysconfig/jenkins</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在 JENKINS_JAVA_OPTIONS 参数中添加以下内容：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-Dhudson.model.DownloadService.noSignatureCheck=true</span><br></pre></td></tr></table></figure>
+
+<p><img src="D:\project\kaiFa\Blog\source_posts\assets\4669cdac3ad94548a200daaa41ed53ae.png" alt="4669cdac3ad94548a200daaa41ed53ae.png"></p>
+<ol start="3">
+<li>重启jenkins：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl restart jenkins</span><br></pre></td></tr></table></figure>
+
+<h1 id="报错2-找不到java路径"><a href="#报错2-找不到java路径" class="headerlink" title="报错2. 找不到java路径"></a>报错2. 找不到java路径</h1><p><img src="D:\project\kaiFa\Blog\source_posts\assets\739a0c5ea9174fabba691145c44c7797.png" alt="739a0c5ea9174fabba691145c44c7797.png"></p>
+<ol>
+<li>查看当前java环境位置</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo $JAVA_HOME</span><br></pre></td></tr></table></figure>
+
+<p><img src="D:\project\kaiFa\Blog\source_posts\assets\d7cc05840e3d4e68adf9ab610aad2b53.png" alt="d7cc05840e3d4e68adf9ab610aad2b53.png"></p>
+<ol start="2">
+<li>修改环境变量</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/init.d/jenkins</span><br></pre></td></tr></table></figure>
+
+<p><img src="D:\project\kaiFa\Blog\source_posts\assets\d77fa50022ef45cb9e835c3fedb0367d.png" alt="d77fa50022ef45cb9e835c3fedb0367d.png"></p>
+<blockquote>
+<p>这里注意要进入到<code>/bin/java</code>下</p>
+</blockquote>
+<ol start="3">
+<li>加载并重启jenkins：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start jenkins</span><br></pre></td></tr></table></figure>
+
+<h1 id="进入管理后台初始化设置"><a href="#进入管理后台初始化设置" class="headerlink" title="进入管理后台初始化设置"></a>进入管理后台初始化设置</h1><p>在浏览器输入：<code>http://192.168.140.102:16060/</code>即可进入jenkins控制台，注册jenkins账号：<br><img src="D:\project\kaiFa\Blog\source_posts\assets\47de000d702e4d62b7cc3b258aa32189.png" alt="47de000d702e4d62b7cc3b258aa32189.png"></p>
+<blockquote>
+<p>如果登录进去没有“系统管理”和“用户列表”的解决办法：</p>
+<ol>
+<li>进入jenkins目录：<code>cd /var/lib/jenkins/</code></li>
+<li>备份config.xml文件：<code>cp config.xml config.xml.bak</code></li>
+<li>删除这块内容<br>  <img src="D:\project\kaiFa\Blog\source_posts\assets\d0a9cfbd74c844a69f02e7c156f31a6c.png" alt="d0a9cfbd74c844a69f02e7c156f31a6c.png"><br>  替换为：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">&gt;<span class="tag">&lt;<span class="name">authorizationStrategy</span> <span class="attr">class</span>=<span class="string">&quot;hudson.security.FullControlOnceLoggedInAuthorizationStrategy&quot;</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">denyAnonymousReadAccess</span>&gt;</span>true<span class="tag">&lt;/<span class="name">denyAnonymousReadAccess</span>&gt;</span></span><br><span class="line">&gt;<span class="tag">&lt;/<span class="name">authorizationStrategy</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>重启jenkins：<code>systemctl restart jenkins</code></li>
+</ol>
+</blockquote>
+<h2 id="jenkins插件安装"><a href="#jenkins插件安装" class="headerlink" title="jenkins插件安装"></a>jenkins插件安装</h2><p>进入“系统管理” - “插件管理”，点击“可选插件”，在搜索框中搜索插件名称，安装如下插件：</p>
+<ol>
+<li>Maven Integration plugin： Maven 集成管理插件。</li>
+<li>Docker plugin： Docker集成插件。</li>
+<li>GitLab Plugin： GitLab集成插件。</li>
+<li>Publish Over SSH：远程文件发布插件。</li>
+<li>SSH: 远程脚本执行插件。</li>
+</ol>
+<blockquote>
+<p>注：虽然在jenkins这里安装了插件，但是仍需要在服务器里安装对应的环境（maven、docker、jdk、git）</p>
+</blockquote>
+<h2 id="jenkins工具配置"><a href="#jenkins工具配置" class="headerlink" title="jenkins工具配置"></a>jenkins工具配置</h2><p>在jenkins控制台安装完jenkins插件，并且在服务器里也安装了对应的环境后，需要对这些环境在jenkins中进行配置。<br>进入“系统管理” - “全局工具配置”，指定这些插件在服务器中的位置，命令：<code>whereis jdk</code>，<br><img src="D:\project\kaiFa\Blog\source_posts\assets\82d21d77cb504b3d9c262ee0adf53a94.png" alt="82d21d77cb504b3d9c262ee0adf53a94.png"><br>填入<code>JAVA_HOME</code>里。<br><img src="D:\project\kaiFa\Blog\source_posts\assets\1bf54c35fbcb4a8caeeec924ba7bd090.png" alt="1bf54c35fbcb4a8caeeec924ba7bd090.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/c47d8526.html">http://example.com/post/c47d8526.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a><a class="post-meta__tags" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a><a class="post-meta__tags" href="/tags/springcloud/">springcloud</a><a class="post-meta__tags" href="/tags/jenkins/">jenkins</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/bae4ff13.html" title="Redis"><img class="cover" src="/img/default_cover20.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">Redis</div></div><div class="info-2"><div class="info-item-1">Redis主从搭建主从集群单节点Redis的并发能力有上限（上万），要进一步提高Redis的并发能力，就要搭建主从集群，实现读写分离。  主节点会把数据同步给从节点，让每个从节点的数据和主节点一样。   启动多个Redis实例 建立集群  在从节点通过命令配置主从关系：slaveof &lt;masterip&gt; &lt;masterport&gt; info replication：查看节点状态  临时：在控制台输入slaveof命令 永久：在redis.conf文件中利用slaveof命令指定master节点  成功后，进入主节点，输入info...</div></div></div></a><a class="pagination-related" href="/post/16ac59c1.html" title="【热点文章-实时计算】kafkaStream"><img class="cover" src="/img/default_cover13.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">【热点文章-实时计算】kafkaStream</div></div><div class="info-2"><div class="info-item-1">实时计算与定时计算  定时计算是争对首页推荐文章更新实时计算是争对点赞、收藏数的  流式计算应用场景 日志分析：网站的用户访问日志进行实时的分析，计算访问量、用户画像、留存率等。实时的进行数据分析。 大屏看板统计：实时的查看网站注册数量，订单数量，购买数量，金额等。 公交的实时数据：可以随时更新公交车方位，计算多久到达站牌。 实时文章热度计算：头条类文章的分值计算，通过用户的行为实时更新文章的分值，分值越高的就越被推荐。  Kafka Stream源处理器（Source Processor）：消息的生产者（可以有多个），发送消息给Stream流式处理，Stream汇总数据后往下游发送给当前某个topic。 案例. 统计单词个数  引入依赖  &lt;dependency&gt;   &lt;groupId&gt;org.apache.kafka&lt;/groupId&gt;   &lt;artifactId&gt;kafka-streams&lt;/artifactId&gt;&lt;/dependency&gt;   编写流式处理代码  /** * 流式处理...</div></div></div></a><a class="pagination-related" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job"><img class="cover" src="/img/default_cover17.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">【热点文章-定时计算】分布式任务调度框架xxl-job</div></div><div class="info-2"><div class="info-item-1">分布式任务调度在分布式架构下，一个服务会部署多个实例来运行业务；如果在这种分布式系统环境下运行任务调度，称为分布式任务调度。分布式任务调度框架：xxl-job xxl-job环境搭建本机仓库源码：xxl-job  初始化调度数据库 修改数据库连接信息   此时启动xxl-job-admin项目，在浏览器输入http://localhost:8080/xxl-job-admin即可看到调度中心页面  dockerdocker安装xxl-job docker run -d \-e PARAMS=&quot;--spring.datasource.url=jdbc:mysql://192.168.140.102:3306/xxl_job?Unicode=true&amp;characterEncoding=UTF-8 \--spring.datasource.username=root \--spring.datasource.password=123&quot; \-p 8888:8080 -v /tmp:/data/applogs \--name xxl-job-admin...</div></div></div></a><a class="pagination-related" href="/post/dbbefa8a.html" title="【项目】黑马头条 - 自媒体端"><img class="cover" src="/img/default_cover11.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">【项目】黑马头条 - 自媒体端</div></div><div class="info-2"><div class="info-item-1">图片上传   前端发请求后到达网关，网关会解析用户token后可以得到用户信息，把用户信息放入请求头中继续向自媒体微服务发请求，在自媒体用户微服务的拦截器中就可以获得用户信息。 在自媒体微服务会把图片存储到minio中，并在数据库中存储图片的路径    网关传递userId给自媒体微服务：  @Component@Slf4jpublic class AuthorizeFilter implements Ordered, GlobalFilter &#123;    @Override    public Mono&lt;Void&gt; filter(ServerWebExchange exchange, GatewayFilterChain chain) &#123;        //1.获取request和response对象        ServerHttpRequest request = exchange.getRequest();        ServerHttpResponse response = exchange.getResponse();      ...</div></div></div></a><a class="pagination-related" href="/post/e8b36ae1.html" title="微服务架构"><img class="cover" src="/img/default_cover11.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">微服务架构</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/post/88db839a.html" title="ElasticSearch上"><img class="cover" src="/img/default_cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch上</div></div><div class="info-2"><div class="info-item-1">安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --name es \  -e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot; \  -e &quot;discovery.type=single-node&quot; \  -v es-data:/usr/share/elasticsearch/data \  -v es-plugins:/usr/share/elasticsearch/plugins \  --privileged \  --network hm-net \  -p 9200:9200 \  -p 9300:9300 \  --restart=always \ ...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E4%B8%AD%E5%AE%89%E8%A3%85jenkins"><span class="toc-number">1.</span> <span class="toc-text">Linux中安装jenkins</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8A%A5%E9%94%991-%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E5%A4%B1%E8%B4%A5"><span class="toc-number">2.</span> <span class="toc-text">报错1. 签名验证失败</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8A%A5%E9%94%992-%E6%89%BE%E4%B8%8D%E5%88%B0java%E8%B7%AF%E5%BE%84"><span class="toc-number">3.</span> <span class="toc-text">报错2. 找不到java路径</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E8%AE%BE%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">进入管理后台初始化设置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#jenkins%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="toc-number">4.1.</span> <span class="toc-text">jenkins插件安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jenkins%E5%B7%A5%E5%85%B7%E9%85%8D%E7%BD%AE"><span class="toc-number">4.2.</span> <span class="toc-text">jenkins工具配置</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="把本地搭建的hexo博客部署到自己的服务器上"/></a><div class="content"><a class="title" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上">把本地搭建的hexo博客部署到自己的服务器上</a><time datetime="2025-02-23T12:36:50.000Z" title="发表于 2025-02-23 20:36:50">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/c47d8526.html" title="安装Jenkins"><img src="/img/default_cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="安装Jenkins"/></a><div class="content"><a class="title" href="/post/c47d8526.html" title="安装Jenkins">安装Jenkins</a><time datetime="2025-02-23T12:36:39.000Z" title="发表于 2025-02-23 20:36:39">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/45d365e2.html" title="二分查找！！！！"><img src="/img/default_cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二分查找！！！！"/></a><div class="content"><a class="title" href="/post/45d365e2.html" title="二分查找！！！！">二分查找！！！！</a><time datetime="2025-02-23T12:36:27.000Z" title="发表于 2025-02-23 20:36:27">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"/></a><div class="content"><a class="title" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词">【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词</a><time datetime="2025-02-23T12:35:17.000Z" title="发表于 2025-02-23 20:35:17">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【热点文章-定时计算】分布式任务调度框架xxl-job"/></a><div class="content"><a class="title" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job">【热点文章-定时计算】分布式任务调度框架xxl-job</a><time datetime="2025-02-23T12:35:03.000Z" title="发表于 2025-02-23 20:35:03">2025-02-23</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

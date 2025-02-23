@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>54. 螺旋矩阵 | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="【题目】：54. 螺旋矩阵 class Solution &#123;public:    vector&lt;int&gt; spiralOrder(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;        int startx &#x3D; 0, starty &#x3D; 0; &#x2F;&#x2F; 起始坐标        vector&lt;int&gt; res;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="54. 螺旋矩阵">
+<meta property="og:url" content="http://example.com/post/e2205fc0.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="【题目】：54. 螺旋矩阵 class Solution &#123;public:    vector&lt;int&gt; spiralOrder(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) &#123;        int startx &#x3D; 0, starty &#x3D; 0; &#x2F;&#x2F; 起始坐标        vector&lt;int&gt; res;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover21.jpg">
+<meta property="article:published_time" content="2025-02-23T12:31:43.000Z">
+<meta property="article:modified_time" content="2025-02-23T12:42:48.556Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="矩阵">
+<meta property="article:tag" content="模拟">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover21.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "54. 螺旋矩阵",
+  "url": "http://example.com/post/e2205fc0.html",
+  "image": "http://example.com/img/default_cover21.jpg",
+  "datePublished": "2025-02-23T12:31:43.000Z",
+  "dateModified": "2025-02-23T12:42:48.556Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/e2205fc0.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '54. 螺旋矩阵',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><script src="https://npm.elemecdn.com/echarts@4.9.0/dist/echarts.min.js"></script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-LeetCode热题100" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">54. 螺旋矩阵</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">54. 螺旋矩阵</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-23T12:31:43.000Z" title="发表于 2025-02-23 20:31:43">2025-02-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-23T12:42:48.556Z" title="更新于 2025-02-23 20:42:48">2025-02-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LeetCode%E7%83%AD%E9%A2%98100/">LeetCode热题100</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">279</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/e2205fc0.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><p><img src="D:\project\kaiFa\Blog\source_posts\assets\fb86a25fba0c4696a4a93f0fe3c6fe6d.png" alt="fb86a25fba0c4696a4a93f0fe3c6fe6d.png"><br>【题目】：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/spiral-matrix/description/?envType=study-plan-v2&envId=top-100-liked">54. 螺旋矩阵</a></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">spiralOrder</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; matrix)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> startx = <span class="number">0</span>, starty = <span class="number">0</span>; <span class="comment">// 起始坐标</span></span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; res;</span><br><span class="line">        <span class="type">int</span> m = matrix.<span class="built_in">size</span>(), n = matrix[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> count = <span class="built_in">min</span>(m, n) / <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span> i, j;</span><br><span class="line">        <span class="type">int</span> offset = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 填充边缘</span></span><br><span class="line">        <span class="keyword">while</span>(count--) &#123;</span><br><span class="line">            <span class="comment">// 向右</span></span><br><span class="line">            <span class="keyword">for</span>(j = startx; j &lt; n - offset; ++j) &#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(matrix[startx][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 向下</span></span><br><span class="line">            <span class="keyword">for</span>(i = starty; i &lt; m - offset; ++i) &#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(matrix[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 向左</span></span><br><span class="line">            <span class="keyword">for</span>(; j &gt; starty; --j) &#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(matrix[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 向上</span></span><br><span class="line">            <span class="keyword">for</span>(; i &gt; startx; --i) &#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(matrix[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            ++offset;</span><br><span class="line">            ++startx;</span><br><span class="line">            ++starty;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 考虑只剩一行的情况</span></span><br><span class="line">        <span class="keyword">if</span>(m &lt;= n &amp;&amp; m % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span>(; starty &lt;= n - offset; ++starty) &#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(matrix[startx][starty]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 考虑只剩一列的情况</span></span><br><span class="line">        <span class="keyword">if</span>(n &lt; m &amp;&amp; n % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span>(; startx &lt;= m - offset; ++startx) &#123;</span><br><span class="line">                res.<span class="built_in">push_back</span>(matrix[startx][starty]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度: O(n)</li>
+<li>空间复杂度: O(1)</li>
+</ul>
+<blockquote>
+<p>这题主要是要抓住循环不变量，每次一圈循环都应该遵循左闭右开的原则。<br><img src="D:\project\kaiFa\Blog\source_posts\assets\498811d5936948cab45002fbc6a1e84e.png" alt="498811d5936948cab45002fbc6a1e84e.png"><br>由于题目不一定是个正方形，所以最后要考虑<code>只剩一行</code>或<code>只剩一列</code>的情况<br><img src="D:\project\kaiFa\Blog\source_posts\assets\e989b2988f544c72bda25fafe68b8a57.png" alt="e989b2988f544c72bda25fafe68b8a57.png"></p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/e2205fc0.html">http://example.com/post/e2205fc0.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a><a class="post-meta__tags" href="/tags/%E7%9F%A9%E9%98%B5/">矩阵</a><a class="post-meta__tags" href="/tags/%E6%A8%A1%E6%8B%9F/">模拟</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover21.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/ddbff69.html" title="102. 二叉树的层序遍历"><img class="cover" src="/img/default_cover8.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">102. 二叉树的层序遍历</div></div><div class="info-2"><div class="info-item-1"> 【题目】：102. 二叉树的层序遍历 class Solution &#123;public:    vector&lt;vector&lt;int&gt;&gt; levelOrder(TreeNode* root) &#123;        if(root == nullptr) &#123;            return &#123;&#125;;        &#125;        queue&lt;TreeNode*&gt; q;        vector&lt;vector&lt;int&gt;&gt; res;        q.push(root);        while(!q.empty()) &#123;            vector&lt;int&gt; tempVec; // 存储一整行的数据            int n = q.size();            for(int i = 0; i &lt; n; ++i) &#123; // 遍历q队列（此时q队列中存储一层的数据 -&gt; 全部出队）       ...</div></div></div></a><a class="pagination-related" href="/post/cc4621fb.html" title="1052. 爱生气的书店老板"><img class="cover" src="/img/default_cover6.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-25</div><div class="info-item-2">1052. 爱生气的书店老板</div></div><div class="info-2"><div class="info-item-1"> 【题目】：1052. 爱生气的书店老板 class Solution &#123;public:    int maxSatisfied(vector&lt;int&gt;&amp; customers, vector&lt;int&gt;&amp; grumpy, int minutes) &#123;        int maxAddCount = 0; // 在minutes长度内，还能增加的最大顾客满意人数        int curAddCount = 0; // 当前窗口内还能增加的顾客满意数        int curCount = 0; // 原本有的顾客满意数        int n = customers.size();        for(int l = 0, r = 0; r &lt; n; ++r) &#123;            if(grumpy[r] == 1) &#123; // 把老板从生气变成不生气                curAddCount += customers[r];            ...</div></div></div></a><a class="pagination-related" href="/post/adb4e3e5.html" title="114. 二叉树展开为链表"><img class="cover" src="/img/default_cover11.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">114. 二叉树展开为链表</div></div><div class="info-2"><div class="info-item-1"> 【题目】：114. 二叉树展开为链表这题要将一个二叉树转成单链表，且展开后的单链表应该和二叉树的先序遍历相同。如果直接正向思考：能不能先序遍历，先处理当前节点（把当前遍历到的节点插入到单链表中），但是这样存在一个问题，此时当前节点的右孩子还没有被遍历到，这样会出现孩子丢失的情况。 考虑逆向思考：题目要求先序遍历（根左右）的结果，那能不能用后序遍历（左右根）呢？这样就不会出现孩子丢失的问题，因为当去更新当前的右指针时，已经遍历过他的右节点了。 但是如果是后序遍历的话，结点的顺序应该怎么处理呢？目前节点的顺序是和题目所求的节点顺序相反，因此可以考虑头插法。 class Solution &#123;public:    TreeNode* res = nullptr;    void help(TreeNode* root) &#123;        if(root == nullptr) &#123;            return;        &#125;        // 右        help(root-&gt;right);        // 左   ...</div></div></div></a><a class="pagination-related" href="/post/b4efa8b3.html" title="128. 最长连续序列"><img class="cover" src="/img/default_cover18.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-25</div><div class="info-item-2">128. 最长连续序列</div></div><div class="info-2"><div class="info-item-1"> 【题目】：128. 最长连续序列 class Solution &#123;public:    int longestConsecutive(vector&lt;int&gt;&amp; nums) &#123;        unordered_set&lt;int&gt; ss(nums.begin(), nums.end());        int res = 0;        for(int s : ss) &#123;            if(ss.find(s - 1) != ss.end()) &#123;                continue; // 说明s一定不是开头            &#125;            // s是开头            int y = s + 1;            while(ss.find(y) != ss.end()) &#123;                y++;            &#125;            res = max(y - s, res);      ...</div></div></div></a><a class="pagination-related" href="/post/d910afda.html" title="11. 盛最多水的容器"><img class="cover" src="/img/default_cover7.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-25</div><div class="info-item-2">11. 盛最多水的容器</div></div><div class="info-2"><div class="info-item-1"> 【题目】：11. 盛最多水的容器 class Solution &#123;public:    int maxArea(vector&lt;int&gt;&amp; height) &#123;        int n = height.size();        int res = (n - 1) * min(height[0], height[n - 1]);        for(int l = 0, r = n - 1; r &gt; l;) &#123;            if(height[l] &lt; height[r]) &#123; // 移动更短的木棍                l++;            &#125;else &#123;                --r;            &#125;            res = max(res, (r - l) * min(height[l], height[r])); // 每次记录当前遍历过的最大值        &#125;        return...</div></div></div></a><a class="pagination-related" href="/post/d794b48b.html" title="124. 二叉树中的最大路径和"><img class="cover" src="/img/default_cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">124. 二叉树中的最大路径和</div></div><div class="info-2"><div class="info-item-1"> 【题目】：124. 二叉树中的最大路径和 这题有两个关键点：  更新res：res = max(l + r + root-&gt;val, res)，左子树最大链长 + 右子树最大链长 + 根节点的值其实也可以当成一条链 子树root的最大链长：max(max(l, r) + root-&gt;val, 0)，由于一个子树的链长只能取左子树的最大链长或右子树的最大链长，所以这里先max(l, r)，也别忘了+root-&gt;val，由于这个值可能比0还小，如果比0小那要你还有什么用？直接舍弃好了（0表示什么都不取）  class Solution &#123;public:    int res = INT_MIN;    int help(TreeNode* root) &#123;        if(root == nullptr) &#123;            return 0;        &#125;        int l = help(root-&gt;left); // 左子树的最大链和        int r =...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="把本地搭建的hexo博客部署到自己的服务器上"/></a><div class="content"><a class="title" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上">把本地搭建的hexo博客部署到自己的服务器上</a><time datetime="2025-02-23T12:36:50.000Z" title="发表于 2025-02-23 20:36:50">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/c47d8526.html" title="安装Jenkins"><img src="/img/default_cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="安装Jenkins"/></a><div class="content"><a class="title" href="/post/c47d8526.html" title="安装Jenkins">安装Jenkins</a><time datetime="2025-02-23T12:36:39.000Z" title="发表于 2025-02-23 20:36:39">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/45d365e2.html" title="二分查找！！！！"><img src="/img/default_cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二分查找！！！！"/></a><div class="content"><a class="title" href="/post/45d365e2.html" title="二分查找！！！！">二分查找！！！！</a><time datetime="2025-02-23T12:36:27.000Z" title="发表于 2025-02-23 20:36:27">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"/></a><div class="content"><a class="title" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词">【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词</a><time datetime="2025-02-23T12:35:17.000Z" title="发表于 2025-02-23 20:35:17">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【热点文章-定时计算】分布式任务调度框架xxl-job"/></a><div class="content"><a class="title" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job">【热点文章-定时计算】分布式任务调度框架xxl-job</a><time datetime="2025-02-23T12:35:03.000Z" title="发表于 2025-02-23 20:35:03">2025-02-23</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

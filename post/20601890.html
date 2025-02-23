@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>redis实现延迟任务 | 欢迎来到小林的博客</title><meta name="author" content="小林"><meta name="copyright" content="小林"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="定时任务：有固定周期，有明确的触发时间延迟任务：没有固定的开始时间，由一个事件触发，在这个事件触发之后的一段时间内触发另一个事件，任务可以立即执行，也可以延迟执行。  场景1：订单下单30分钟后，如果用户没有付钱，则系统自动取消订单；如果期间下单成功，任务取消。场景2：接口对接接口出现网络问题，1分钟后重试，如果失败，2分钟后重试，直到出现阈值终止。  实现方式  DelayQueue，基于JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis实现延迟任务">
+<meta property="og:url" content="http://example.com/post/20601890.html">
+<meta property="og:site_name" content="欢迎来到小林的博客">
+<meta property="og:description" content="定时任务：有固定周期，有明确的触发时间延迟任务：没有固定的开始时间，由一个事件触发，在这个事件触发之后的一段时间内触发另一个事件，任务可以立即执行，也可以延迟执行。  场景1：订单下单30分钟后，如果用户没有付钱，则系统自动取消订单；如果期间下单成功，任务取消。场景2：接口对接接口出现网络问题，1分钟后重试，如果失败，2分钟后重试，直到出现阈值终止。  实现方式  DelayQueue，基于JVM">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/default_cover6.jpg">
+<meta property="article:published_time" content="2025-02-23T12:34:36.000Z">
+<meta property="article:modified_time" content="2025-02-23T12:48:00.764Z">
+<meta property="article:author" content="小林">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="缓存">
+<meta property="article:tag" content="延迟任务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/default_cover6.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "redis实现延迟任务",
+  "url": "http://example.com/post/20601890.html",
+  "image": "http://example.com/img/default_cover6.jpg",
+  "datePublished": "2025-02-23T12:34:36.000Z",
+  "dateModified": "2025-02-23T12:48:00.764Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小林",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/post/20601890.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":303,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'redis实现延迟任务',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><script src="https://npm.elemecdn.com/echarts@4.9.0/dist/echarts.min.js"></script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post type-微服务" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">欢迎来到小林的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">redis实现延迟任务</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">redis实现延迟任务</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-23T12:34:36.000Z" title="发表于 2025-02-23 20:34:36">2025-02-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-23T12:48:00.764Z" title="更新于 2025-02-23 20:48:00">2025-02-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/20601890.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><p>定时任务：有固定周期，有明确的触发时间<br>延迟任务：没有固定的开始时间，由一个事件触发，在这个事件触发之后的一段时间内触发另一个事件，任务可以立即执行，也可以延迟执行。<br><img src="D:\project\kaiFa\Blog\source_posts\assets\3f808a9512304e7fa614c5993e7a234b.png" alt="3f808a9512304e7fa614c5993e7a234b.png"></p>
+<blockquote>
+<p>场景1：订单下单30分钟后，如果用户没有付钱，则系统自动取消订单；如果期间下单成功，任务取消。<br>场景2：接口对接接口出现网络问题，1分钟后重试，如果失败，2分钟后重试，直到出现阈值终止。</p>
+</blockquote>
+<p>实现方式</p>
+<ol>
+<li>DelayQueue，基于JVM</li>
+<li>RabbitMQ：TTL+死信队列</li>
+<li>Redis：zset（本项目实现）</li>
+</ol>
+<hr>
+<h1 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h1><ol>
+<li>添加任务的时候会先放入数据库中</li>
+<li>list队列存储的是<strong>立即执行的任务</strong>，如果<code>执行时间&lt;=当前时间</code>，则任务进入list队列中，立即执行。</li>
+<li>zset队列中存储的是<strong>未来要执行的任务</strong>，如果<code>执行时间&lt;=当前时间+5min</code>（不需要把所有未来执行的任务都放入zset中，如果<code>执行时间&gt;当前时间+5min</code>，则还是放入数据库中），则任务进入zset队列，每分钟定时刷新把到期的任务再放入list队列中。<br><img src="D:\project\kaiFa\Blog\source_posts\assets\1d72b397f91847fb940c218859c5fc01.png" alt="1d72b397f91847fb940c218859c5fc01.png"></li>
+</ol>
+<blockquote>
+<p>延迟任务是一个通用的服务，任何有延迟需求的任务都可以调用该服务，内存数据库的存储是有限的，需要考虑数据持久化的问题，存储到数据库中可以保证数据安全。<br>任务量过大以后，zset的性能会下降<br>如果任务数据特别大，为了防止阻塞，所以只需要把未来几分钟要执行的数据存入缓存即可，是一种优化的形式。</p>
+</blockquote>
+<h1 id="数据库自身解决并发的两种策略"><a href="#数据库自身解决并发的两种策略" class="headerlink" title="数据库自身解决并发的两种策略"></a>数据库自身解决并发的两种策略</h1><ol>
+<li><p>悲观锁：每次拿数据的时候都认为别人会修改，所以在每次拿数据的时候都会上锁。</p>
+</li>
+<li><p>乐观锁：每次拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据（版本号）。</p>
+</li>
+</ol>
+<h2 id="乐观锁的实现步骤"><a href="#乐观锁的实现步骤" class="headerlink" title="乐观锁的实现步骤"></a>乐观锁的实现步骤</h2><ol>
+<li>在版本号上加<code>@Version</code>注解</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Version</span></span><br><span class="line"><span class="keyword">private</span> Integer version;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在mybatis-plus开启乐观锁支持</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * mybatis-plus乐观锁支持</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">optimisticLockerInterceptor</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">MybatisPlusInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line">    interceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">OptimisticLockerInnerInterceptor</span>());</span><br><span class="line">    <span class="keyword">return</span> interceptor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置redis"><a href="#配置redis" class="headerlink" title="配置redis"></a>配置redis</h1><ol>
+<li>安装redis：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d --name redis --restart=always -p 6379:6379 redis --requirepass &quot;leadnews&quot;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>项目中集成redis</li>
+</ol>
+<ul>
+<li>导入依赖：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- redis依赖commons-pool 这个依赖一定要添加 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-pool2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加配置：</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.140</span><span class="number">.102</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">leadnews</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">6379</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="1-拉取任务"><a href="#1-拉取任务" class="headerlink" title="1. 拉取任务"></a>1. 拉取任务</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 拉取任务</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> task</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">addTask</span><span class="params">(Task task)</span> &#123;</span><br><span class="line">    <span class="comment">// 1. 添加任务到数据库中</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> addTaskToDb(task);</span><br><span class="line">    <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;添加任务到数据库失败&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2. 添加任务到redis中</span></span><br><span class="line">    addTaskToCache(task);</span><br><span class="line">    <span class="keyword">return</span> task.getTaskId();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加任务到数据库中</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> task</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">addTaskToDb</span><span class="params">(Task task)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 1. 保存任务表</span></span><br><span class="line">        <span class="type">Taskinfo</span> <span class="variable">taskinfo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Taskinfo</span>();</span><br><span class="line">        BeanUtils.copyProperties(task, taskinfo);</span><br><span class="line">        taskinfo.setExecuteTime(<span class="keyword">new</span> <span class="title class_">Date</span>(task.getExecuteTime()));</span><br><span class="line">        taskinfoMapper.insert(taskinfo);</span><br><span class="line">        <span class="comment">// 2. 保存任务日志数据</span></span><br><span class="line">        <span class="type">TaskinfoLogs</span> <span class="variable">taskinfoLogs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TaskinfoLogs</span>();</span><br><span class="line">        BeanUtils.copyProperties(taskinfo, taskinfoLogs);</span><br><span class="line">        taskinfoLogs.setVersion(<span class="number">1</span>);</span><br><span class="line">        taskinfoLogs.setStatus(ScheduleConstants.SCHEDULED);</span><br><span class="line">        taskinfoLogsMapper.insert(taskinfoLogs);</span><br><span class="line">        <span class="comment">// 设置taskId</span></span><br><span class="line">        task.setTaskId(taskinfo.getTaskId());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (BeansException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加任务到redis中</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> task</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">addTaskToCache</span><span class="params">(Task task)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> task.getTaskType() + <span class="string">&quot;_&quot;</span> + task.getPriority();</span><br><span class="line">    <span class="type">Calendar</span> <span class="variable">calendar</span> <span class="operator">=</span> Calendar.getInstance();</span><br><span class="line">    calendar.add(Calendar.MINUTE, <span class="number">5</span>);</span><br><span class="line">    <span class="type">long</span> <span class="variable">nextScheduledTime</span> <span class="operator">=</span> calendar.getTimeInMillis();</span><br><span class="line">    <span class="keyword">if</span>(task.getExecuteTime() &lt;= System.currentTimeMillis()) &#123;</span><br><span class="line">        <span class="comment">// 如果任务的执行时间≤当前时间，存入list中</span></span><br><span class="line">        cacheService.lLeftPush(ScheduleConstants.TOPIC + key, JSON.toJSONString(task));</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(task.getExecuteTime() &lt;= nextScheduledTime) &#123;</span><br><span class="line">        <span class="comment">// 如果任务的执行时间＞当前时间 &amp;&amp; 任务的执行时间&gt;预设时间（未来五分钟），存入zset中</span></span><br><span class="line">        cacheService.zAdd(ScheduleConstants.FUTURE + key, JSON.toJSONString(task), task.getExecuteTime());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li>在数据库中保存一份，要保存到任务表和任务数据表中</li>
+<li>添加任务到redis中，如果≤当前时间的，要存入list中，如果≤预设时间的，要存入zset中。</li>
+</ol>
+</blockquote>
+<h2 id="2-取消任务"><a href="#2-取消任务" class="headerlink" title="2. 取消任务"></a>2. 取消任务</h2><p><img src="D:\project\kaiFa\Blog\source_posts\assets\0b8bb5b034804a75bccbd9f5e23eb154.png" alt="0b8bb5b034804a75bccbd9f5e23eb154.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 取消任务</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> taskId</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">cancelTask</span><span class="params">(<span class="type">long</span> taskId)</span> &#123;</span><br><span class="line">    <span class="comment">// 1.删除任务，更新任务日志</span></span><br><span class="line">    <span class="type">Task</span> <span class="variable">task</span> <span class="operator">=</span> updateDb(taskId, ScheduleConstants.CANCELLED);</span><br><span class="line">    <span class="keyword">if</span>(task == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;删除任务失败&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2.删除redis的数据</span></span><br><span class="line">    removeTaskFromCache(task);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除缓存中的数据</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> task</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">removeTaskFromCache</span><span class="params">(Task task)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> task.getTaskType() + <span class="string">&quot;_&quot;</span> + task.getPriority();</span><br><span class="line">        <span class="keyword">if</span>(task.getExecuteTime() &lt;= System.currentTimeMillis()) &#123;</span><br><span class="line">            <span class="comment">// 如果任务的执行时间≤当前时间，从list中删除</span></span><br><span class="line">            cacheService.lRemove(ScheduleConstants.TOPIC + key, <span class="number">0</span>, JSON.toJSONString(task));</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// task任务不是在list中，就是在zset中，这里就不需要再判断一次了</span></span><br><span class="line">            cacheService.zRemove(ScheduleConstants.FUTURE + key, JSON.toJSONString(task));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除任务，更新任务日志</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> taskId</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> status</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> Task <span class="title function_">updateDb</span><span class="params">(<span class="type">long</span> taskId, <span class="type">int</span> status)</span> &#123;</span><br><span class="line">    <span class="type">Task</span> <span class="variable">task</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 删除任务</span></span><br><span class="line">        taskinfoMapper.deleteById(taskId);</span><br><span class="line">        <span class="comment">// 更新任务日志</span></span><br><span class="line">        <span class="type">TaskinfoLogs</span> <span class="variable">taskinfoLogs</span> <span class="operator">=</span> taskinfoLogsMapper.selectById(taskId);</span><br><span class="line">        taskinfoLogs.setStatus(status);</span><br><span class="line">        taskinfoLogsMapper.updateById(taskinfoLogs);</span><br><span class="line">        task = <span class="keyword">new</span> <span class="title class_">Task</span>();</span><br><span class="line">        BeanUtils.copyProperties(taskinfoLogs, task);</span><br><span class="line">        task.setExecuteTime(taskinfoLogs.getExecuteTime().getTime());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> task;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li>在数据库中，从任务表中删除taskId的任务，更新任务日志表中的日志状态</li>
+<li>在缓存中，删除list或zset中的任务</li>
+</ol>
+</blockquote>
+<h2 id="3-消费任务"><a href="#3-消费任务" class="headerlink" title="3. 消费任务"></a>3. 消费任务</h2><h3 id="从list中消费任务"><a href="#从list中消费任务" class="headerlink" title="从list中消费任务"></a>从list中消费任务</h3><p><img src="D:\project\kaiFa\Blog\source_posts\assets\73129db38fc945bd9d5375c43a53d300.png" alt="73129db38fc945bd9d5375c43a53d300.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Task <span class="title function_">poll</span><span class="params">(<span class="type">int</span> type, <span class="type">int</span> priority)</span> &#123;</span><br><span class="line">    <span class="type">Task</span> <span class="variable">task</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 从redis中拉取数据</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> type + <span class="string">&quot;_&quot;</span> + priority;</span><br><span class="line">        <span class="type">String</span> <span class="variable">taskJson</span> <span class="operator">=</span> cacheService.lRightPop(ScheduleConstants.TOPIC + key);</span><br><span class="line">        <span class="keyword">if</span>(taskJson != <span class="literal">null</span>) &#123;</span><br><span class="line">            task = JSON.parseObject(taskJson, Task.class);</span><br><span class="line">            <span class="comment">// 修改数据库信息</span></span><br><span class="line">            updateDb(task.getTaskId(), ScheduleConstants.EXECUTED);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> task;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="未来数据定时刷新"><a href="#未来数据定时刷新" class="headerlink" title="未来数据定时刷新"></a>未来数据定时刷新</h3><p>从zset中定时刷新任务到list中<br><img src="D:\project\kaiFa\Blog\source_posts\assets\4ce9e74e47d443f9aeeece5d7ac94f65.png" alt="4ce9e74e47d443f9aeeece5d7ac94f65.png"><br><strong>获取zset中所有的key</strong>：</p>
+<ul>
+<li>keys模糊匹配：效率低</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Set&lt;String&gt; keys = cacheService.keys(<span class="string">&quot;future_*&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>scan命令：是一个基于游标的迭代器，每次被调用之后，都会向用户返回一个新的游标，用户在下次迭代时需要使用这个新的游标作为SCAN命令的游标参数。<br><img src="D:\project\kaiFa\Blog\source_posts\assets\3247deaa714c493f83aa3e4f0dfb98c0.png" alt="3247deaa714c493f83aa3e4f0dfb98c0.png"></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Set&lt;String&gt; scan = cacheService.scan(<span class="string">&quot;future_*&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>添加定时任务，每分钟刷新，从zset中取出符合条件的数据后放入redis管道中<br><img src="D:\project\kaiFa\Blog\source_posts\assets\ce2ae71d1b544ab98d972da4d9a84644.png" alt="ce2ae71d1b544ab98d972da4d9a84644.png"></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 未来数据定时刷新</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Scheduled(cron = &quot;0 */1 * * * ?&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">refresh</span><span class="params">()</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;refresh...&quot;</span>);</span><br><span class="line">    <span class="comment">// 获取未来数据的keys集合</span></span><br><span class="line">    Set&lt;String&gt; futureKeys = cacheService.scan(ScheduleConstants.FUTURE + <span class="string">&quot;*&quot;</span>);</span><br><span class="line">    <span class="comment">// 按照key和分值查询符合条件的数据</span></span><br><span class="line">    <span class="keyword">for</span> (String futureKey : futureKeys) &#123; <span class="comment">// future_100_50</span></span><br><span class="line">        <span class="comment">// 获取当前数据的topicKey</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">topicKey</span> <span class="operator">=</span> ScheduleConstants.TOPIC + futureKey.split(ScheduleConstants.FUTURE)[<span class="number">1</span>];</span><br><span class="line">        <span class="comment">// 0到当前时间所有查询符合条件的数据</span></span><br><span class="line">        Set&lt;String&gt; tasks = cacheService.zRangeByScore(futureKey, <span class="number">0</span>, System.currentTimeMillis());</span><br><span class="line">        <span class="keyword">if</span>(!tasks.isEmpty()) &#123;</span><br><span class="line">            cacheService.refreshWithPipeline(futureKey, topicKey, tasks);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在启动类上开启定时任务</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@EnableScheduling</span> <span class="comment">// 开启定时任务</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>【目前存在的问题】：如果启动了两个服务，那么这两个服务会在同一时间去执行定时任务，会导致方法抢占的问题。但是我们的需求是只要时间到了，有一台服务在执行定时任务即可。<br>【解决办法】：分布式锁来解决方法抢占的问题</p>
+</blockquote>
+<p><strong>分布式锁</strong>：控制分布式系统有序的去对共享资源进行操作，通过互斥来保证数据的一致性。<br><img src="D:\project\kaiFa\Blog\source_posts\assets\668c8755ac614eee8ae3857e271347ba.png" alt="668c8755ac614eee8ae3857e271347ba.png"></p>
+<blockquote>
+<p>服务A在访问的Redis服务的时候，先加锁，此时只有A可以访问Redis服务，B访问Redis服务会失败。A释放锁后，B才可以访问。<br>A获取锁后，其他客户端不能操作，只能等待A释放锁以后，其他客户端才能操作。</p>
+</blockquote>
+<ol start="3">
+<li>加锁代码：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 加锁</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> name</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> expire</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">tryLock</span><span class="params">(String name, <span class="type">long</span> expire)</span> &#123;</span><br><span class="line">    name = name + <span class="string">&quot;_lock&quot;</span>;</span><br><span class="line">    <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> UUID.randomUUID().toString();</span><br><span class="line">    <span class="type">RedisConnectionFactory</span> <span class="variable">factory</span> <span class="operator">=</span> stringRedisTemplate.getConnectionFactory();</span><br><span class="line">    <span class="type">RedisConnection</span> <span class="variable">conn</span> <span class="operator">=</span> factory.getConnection();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//参考redis命令：</span></span><br><span class="line">        <span class="comment">//set key value [EX seconds] [PX milliseconds] [NX|XX]</span></span><br><span class="line">        <span class="type">Boolean</span> <span class="variable">result</span> <span class="operator">=</span> conn.set(</span><br><span class="line">                name.getBytes(),</span><br><span class="line">                token.getBytes(),</span><br><span class="line">                Expiration.from(expire, TimeUnit.MILLISECONDS),</span><br><span class="line">                RedisStringCommands.SetOption.SET_IF_ABSENT <span class="comment">//NX</span></span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">if</span> (result != <span class="literal">null</span> &amp;&amp; result)</span><br><span class="line">            <span class="keyword">return</span> token;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        RedisConnectionUtils.releaseConnection(conn, factory,<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>修改refresh()方法：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Scheduled(cron = &quot;0 */1 * * * ?&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">refresh</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> cacheService.tryLock(<span class="string">&quot;FUTRUE_TASK_SYNC&quot;</span>, <span class="number">1000</span> * <span class="number">30</span>);</span><br><span class="line">    <span class="keyword">if</span>(StringUtils.isNotBlank(token)) &#123;</span><br><span class="line">        <span class="comment">// 原本的refresh逻辑...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-数据库任务定时同步到redis中"><a href="#4-数据库任务定时同步到redis中" class="headerlink" title="4. 数据库任务定时同步到redis中"></a>4. 数据库任务定时同步到redis中</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 数据库任务定时同步到redis中</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"> <span class="meta">@PostConstruct</span> <span class="comment">// 微服务启动的时候执行</span></span><br><span class="line"> <span class="meta">@Scheduled(cron = &quot;0 */5 * * * ?&quot;)</span><span class="comment">// 每五分钟执行</span></span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">reloadData</span><span class="params">()</span> &#123;</span><br><span class="line">     <span class="comment">// 清理缓存中的数据 list、zset</span></span><br><span class="line">     clearCache();</span><br><span class="line">     <span class="comment">// 查询符合条件的任务(小于未来五分钟的数据)</span></span><br><span class="line">     <span class="type">Calendar</span> <span class="variable">calendar</span> <span class="operator">=</span> Calendar.getInstance();</span><br><span class="line">     calendar.add(Calendar.MINUTE, <span class="number">5</span>);</span><br><span class="line">     <span class="type">long</span> <span class="variable">nextScheduledTime</span> <span class="operator">=</span> calendar.getTimeInMillis();</span><br><span class="line">     List&lt;Taskinfo&gt; taskinfoList = taskinfoMapper.selectList(Wrappers.&lt;Taskinfo&gt;lambdaQuery().lt(Taskinfo::getExecuteTime, calendar.getTime()));</span><br><span class="line">     <span class="comment">// 把任务添加到redis中</span></span><br><span class="line">     <span class="keyword">if</span>(taskinfoList != <span class="literal">null</span> &amp;&amp; !taskinfoList.isEmpty()) &#123;</span><br><span class="line">         <span class="keyword">for</span> (Taskinfo taskinfo : taskinfoList) &#123;</span><br><span class="line">             <span class="type">Task</span> <span class="variable">task</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Task</span>();</span><br><span class="line">             BeanUtils.copyProperties(taskinfo, task);</span><br><span class="line">             task.setExecuteTime(taskinfo.getExecuteTime().getTime());</span><br><span class="line">             addTaskToCache(task);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     log.info(<span class="string">&quot;数据库任务同步到redis中&quot;</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小林</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/20601890.html">http://example.com/post/20601890.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">欢迎来到小林的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><a class="post-meta__tags" href="/tags/redis/">redis</a><a class="post-meta__tags" href="/tags/%E7%BC%93%E5%AD%98/">缓存</a><a class="post-meta__tags" href="/tags/%E5%BB%B6%E8%BF%9F%E4%BB%BB%E5%8A%A1/">延迟任务</a></div><div class="post-share"><div class="social-share" data-image="/img/default_cover6.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/post/bae4ff13.html" title="Redis"><img class="cover" src="/img/default_cover20.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">Redis</div></div><div class="info-2"><div class="info-item-1">Redis主从搭建主从集群单节点Redis的并发能力有上限（上万），要进一步提高Redis的并发能力，就要搭建主从集群，实现读写分离。  主节点会把数据同步给从节点，让每个从节点的数据和主节点一样。   启动多个Redis实例 建立集群  在从节点通过命令配置主从关系：slaveof &lt;masterip&gt; &lt;masterport&gt; info replication：查看节点状态  临时：在控制台输入slaveof命令 永久：在redis.conf文件中利用slaveof命令指定master节点  成功后，进入主节点，输入info...</div></div></div></a><a class="pagination-related" href="/post/f5f9fa9b.html" title="Docker"><img class="cover" src="/img/default_cover12.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">Docker</div></div><div class="info-2"><div class="info-item-1">安装Docker1. 卸载已有的Dockeryum remove docker \    docker-client \    docker-client-latest \    docker-common \    docker-latest \    docker-latest-logrotate \    docker-logrotate \    docker-engine \    docker-selinux   2. 配置yum源 安装yum工具  yum install -y yum-utils device-mapper-persistent-data lvm2   配置yum源  yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo  3. 安装Dockeryum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin...</div></div></div></a><a class="pagination-related" href="/post/88db839a.html" title="ElasticSearch上"><img class="cover" src="/img/default_cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch上</div></div><div class="info-2"><div class="info-item-1">安装ElasticSearch Lucene：Java语言的搜索引擎类库，易扩展；高性能（基于倒排索引） Elasticsearch基于Lucene，支持分布式，可水平扩展；提供Restful接口，可被任何语言调用 Elasticsearch结合kibana、logstash、Beats，是一套完整的技术栈，被叫做ELK。  安装ElasticSearchdocker run -d \  --name es \  -e &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot; \  -e &quot;discovery.type=single-node&quot; \  -v es-data:/usr/share/elasticsearch/data \  -v es-plugins:/usr/share/elasticsearch/plugins \  --privileged \  --network hm-net \  -p 9200:9200 \  -p 9300:9300 \  --restart=always \ ...</div></div></div></a><a class="pagination-related" href="/post/ffdcb30c.html" title="ElasticSearch下"><img class="cover" src="/img/default_cover16.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">ElasticSearch下</div></div><div class="info-2"><div class="info-item-1">DSL查询 叶子查询：在特定字段里查询特定值，属于简单查询，很少单独使用 复合查询：以逻辑方式组合多个叶子查询或更改叶子查询的行为方式 在查询后还可以对查询结果做处理： 排序：按照1个或多个字段做排序 分页：根据from或size做分页，类似MySQL 高亮：对搜索结果中的关键字添加特殊样式 聚合：对搜索结果做数据统计以形成报表      基本语法GET /&#123;索引库名&#125;/_search&#123;  &quot;query&quot;: &#123;    &quot;查询类型&quot;: &#123;      &quot;查询条件&quot;: &quot;条件值&quot;    &#125;  &#125;&#125;  【例】： GET /items/_search &#123;  &quot;query&quot;: &#123;    &quot;match_all&quot;: &#123;&#125;  &#125;&#125;   叶子查询1....</div></div></div></a><a class="pagination-related" href="/post/768410d8.html" title="Freemarker模板引擎技术"><img class="cover" src="/img/default_cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="info-item-2">Freemarker模板引擎技术</div></div><div class="info-2"><div class="info-item-1">【问题】当渲染文章数据时，由于文章的数据很多，直接去查询文章内容表的话，效率比较低。【解决】使用freemarker将文章的内容通过模板技术生成静态的html文件存储到minio中，这样用户就只需要拿着minio的url去minio里获取静态页面即可。效率大大提高 模板引擎Freemarker是一种模板引擎：一种基于模板和要改变的数据，并用来生成输出文本（html网页、电子邮件、配置文件、源代码…）的通用工具。不是面向最终用户的，而是一个Java类库。 步骤 导入依赖  &lt;dependencies&gt;    &lt;!-- freemarker --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;        &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;   ...</div></div></div></a><a class="pagination-related" href="/post/abd111cb.html" title="Java动态代理"><img class="cover" src="/img/default_cover4.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-23</div><div class="info-item-2">Java动态代理</div></div><div class="info-2"><div class="info-item-1"> 为什么需要代理？对象如果嫌自己的事太多了，可以通过代理来转移部分职责。 代理长什么样？对象有什么方法想被代理，代理就一定要有对应的方法。但是方法做的事不同，代理是去调对象的方法。 中介如何知道要派唱歌、跳舞方法的代理？通过继承接口   实现： interface Star &#123;    String sing(String name);    void dance();&#125;@Data@AllArgsConstructorclass BigStart implements Star &#123;    String name;    @Override    public String sing(String name) &#123;        System.out.println(this.name + &quot;唱歌：&quot; + name);        return &quot;唱完了，谢谢&quot;;    &#125;    @Override    public void dance() &#123;       ...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小林</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">99</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaolin0333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_57882997" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="mailto:1160014051@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是小林的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">实现思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%87%AA%E8%BA%AB%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E7%9A%84%E4%B8%A4%E7%A7%8D%E7%AD%96%E7%95%A5"><span class="toc-number">2.</span> <span class="toc-text">数据库自身解决并发的两种策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.1.</span> <span class="toc-text">乐观锁的实现步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEredis"><span class="toc-number">3.</span> <span class="toc-text">配置redis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%8B%89%E5%8F%96%E4%BB%BB%E5%8A%A1"><span class="toc-number">4.1.</span> <span class="toc-text">1. 拉取任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8F%96%E6%B6%88%E4%BB%BB%E5%8A%A1"><span class="toc-number">4.2.</span> <span class="toc-text">2. 取消任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%B6%88%E8%B4%B9%E4%BB%BB%E5%8A%A1"><span class="toc-number">4.3.</span> <span class="toc-text">3. 消费任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8Elist%E4%B8%AD%E6%B6%88%E8%B4%B9%E4%BB%BB%E5%8A%A1"><span class="toc-number">4.3.1.</span> <span class="toc-text">从list中消费任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E6%95%B0%E6%8D%AE%E5%AE%9A%E6%97%B6%E5%88%B7%E6%96%B0"><span class="toc-number">4.3.2.</span> <span class="toc-text">未来数据定时刷新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%BB%E5%8A%A1%E5%AE%9A%E6%97%B6%E5%90%8C%E6%AD%A5%E5%88%B0redis%E4%B8%AD"><span class="toc-number">4.4.</span> <span class="toc-text">4. 数据库任务定时同步到redis中</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="把本地搭建的hexo博客部署到自己的服务器上"/></a><div class="content"><a class="title" href="/post/920afe3c.html" title="把本地搭建的hexo博客部署到自己的服务器上">把本地搭建的hexo博客部署到自己的服务器上</a><time datetime="2025-02-23T12:36:50.000Z" title="发表于 2025-02-23 20:36:50">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/c47d8526.html" title="安装Jenkins"><img src="/img/default_cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="安装Jenkins"/></a><div class="content"><a class="title" href="/post/c47d8526.html" title="安装Jenkins">安装Jenkins</a><time datetime="2025-02-23T12:36:39.000Z" title="发表于 2025-02-23 20:36:39">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/45d365e2.html" title="二分查找！！！！"><img src="/img/default_cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二分查找！！！！"/></a><div class="content"><a class="title" href="/post/45d365e2.html" title="二分查找！！！！">二分查找！！！！</a><time datetime="2025-02-23T12:36:27.000Z" title="发表于 2025-02-23 20:36:27">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"><img src="/img/default_cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词"/></a><div class="content"><a class="title" href="/post/84848620.html" title="【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词">【搜索文章】：搜索（es）+ 搜索记录（mongodb）+ 搜索联想词</a><time datetime="2025-02-23T12:35:17.000Z" title="发表于 2025-02-23 20:35:17">2025-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job"><img src="/img/default_cover17.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【热点文章-定时计算】分布式任务调度框架xxl-job"/></a><div class="content"><a class="title" href="/post/fa1dd5d9.html" title="【热点文章-定时计算】分布式任务调度框架xxl-job">【热点文章-定时计算】分布式任务调度框架xxl-job</a><time datetime="2025-02-23T12:35:03.000Z" title="发表于 2025-02-23 20:35:03">2025-02-23</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2025 By 小林</div><div class="footer_custom_text">Hi, welcome to my blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-api-orcin-kappa.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><div class="aplayer no-destroy" data-id="162024453" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
